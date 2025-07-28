@@ -1,0 +1,13 @@
+<h1>{{ title }}</h1>
+
+<div class="dashboard-grid">
+  <div class="chart-card">
+    <canvas
+      baseChart
+      [data]="barChartData"
+      [type]="barChartType"
+      [options]="barChartOptions"
+      height="150">
+    </canvas>
+  </div>
+</div>
