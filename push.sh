@@ -1,3 +1,3 @@
 git add .
-git commit -m "last project update"
+git commit -m "test"
 git push
