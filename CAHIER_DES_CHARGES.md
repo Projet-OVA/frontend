@@ -1,7 +1,3 @@
-Bien sûr ! Voici une description **détaillée et exhaustive** par fonctionnalité, organisée et structurée pour guider le développement du backoffice Angular de SIRA, destiné aux administrateurs uniquement.
-
----
-
 # Backoffice SIRA — Détails complets des fonctionnalités
 
 ---
