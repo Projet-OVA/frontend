@@ -5,16 +5,18 @@
 
 ## 🎯 Objectif
 
-Créer l’interface web d’administration permettant aux ONG, mentors et partenaires de :
-- Gérer les contenus (parcours, récits, défis, quiz)
-- Suivre les statistiques d’engagement
-- Publier du contenu multilingue et localisé
+La partie backoffice est l’outil interne pour l’équipe OVA afin de:
+- Gérer les contenus (parcours éducatifs, défis, récits audio, quiz).
+- Gérer les utilisateurs (employés, jeunes participants, mentors).
+- Analyser les statistiques (complétion, rétention, badges obtenus…).
+- Produire des rapports et visualisations (diagrammes, graphiques, cartes).
+- Contrôler la qualité et valider les contenus avant publication.
 
 ---
 
 ## 🚀 Stack technique
 
-- Angular 17+
+- Angular 20+
 - TypeScript
 - Angular Material
 - NGXS ou RxJS pour la gestion d’état
