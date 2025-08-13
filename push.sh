@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# Ne commit que s'il y a des changements
-if ! git diff-index --quiet HEAD --; then
-    git add .
-    git commit -m "dashboard user-list user-profile ..."
-fi
+# Ajouter tous les changements et commit
+git add .
+git commit -m "dashboard user-list user-profile ..." 2>/dev/null
 
-# Pousser sur gitea et origin séparément, sortie silencieuse
-git push gitea main >/dev/null 2>&1
-git push origin main >/dev/null 2>&1
+# Pousser sur gitea
+git push gitea main
 
-echo "✅ Push terminé sur gitea et origin."
+# Pousser sur origin
+git push origin main
