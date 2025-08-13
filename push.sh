@@ -7,6 +7,7 @@ if ! git diff-index --quiet HEAD --; then
                     dashboard
                     user-list
                     user-profile
+                    login
                     ...
                     "
 fi
