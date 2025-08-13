@@ -4,4 +4,5 @@ dashboard
 user-list
 user-profile
 "
-git push
+git push github
+git push gitea
