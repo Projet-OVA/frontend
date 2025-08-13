@@ -1,18 +1,11 @@
 #!/bin/bash
 
-# Ajouter tous les fichiers modifiés
+# Ajouter tous les changements et commit
 git add .
+git commit -m "dashboard user-list user-profile ..." 2>/dev/null
 
-# Commit avec message multi-lignes
-git commit -m "
-dashboard
-user-list
-user-profile
-...
-"
-
-# Pousser sur Gitea
+# Pousser sur gitea
 git push gitea main
 
-# Pousser sur GitHub
+# Pousser sur origin
 git push origin main
