@@ -1,3 +1,5 @@
+#!/bin/bash
+
 git add .
 git commit -m "
 dashboard
@@ -5,5 +7,5 @@ user-list
 user-profile
 ...
 "
-git push
+git push origin
 git push gitea
