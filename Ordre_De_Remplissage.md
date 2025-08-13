@@ -58,22 +58,3 @@ Le remplissage suit la logique fonctionnelle de ton application.
 * `main.ts` (client bootstrap)
 * `main.server.ts` (serveur bootstrap)
 * `server.ts` (serveur Node pour SSR)
-
-Ces fichiers concernent la compilation, lancement du serveur SSR, et ne sont modifiés qu’après que l’app côté client et routes sont fonctionnelles.
-
----
-
-### En résumé
-
-```plaintext
-1. app.config.ts + app.config.server.ts
-2. app.routes.ts + app.routes.server.ts
-3. Composants/pages dans src/app/ (login, dashboard, badges, contents, etc)
-4. app.ts + app.html + app.scss
-5. Tests (optionnellement en parallèle)
-6. main.ts + main.server.ts + server.ts (SSR)
-```
-
----
-
-Si tu veux, on peut commencer ensemble par un fichier précis — dis-moi ce que tu préfères !
