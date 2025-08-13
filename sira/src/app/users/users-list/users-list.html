@@ -1,1 +1,27 @@
-<p>users-list works!</p>
+<h1>{{ pageTitle }}</h1>
+
+<table class="user-table">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Email</th>
+      <th>Rôle</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.role }}</td>
+      <td>
+        <span class="status" [ngClass]="user.status.toLowerCase()">{{ user.status }}</span>
+      </td>
+      <td>
+        <button class="btn edit" (click)="editUser(user)">✏️</button>
+        <button class="btn delete" (click)="deleteUser(user)">🗑️</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
