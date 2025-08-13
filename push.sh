@@ -5,5 +5,5 @@ user-list
 user-profile
 ...
 "
-git push origin
+git push
 git push gitea
