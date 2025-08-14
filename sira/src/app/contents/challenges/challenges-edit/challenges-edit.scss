@@ -1,0 +1,36 @@
+.challenge-form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+  }
+
+  .btn {
+    margin-right: 10px;
+  }
+}

@@ -1,1 +1,35 @@
-<p>challenges-edit works!</p>
+<div class="challenge-form-container">
+  <h2>Modifier le Défi #{{ challengeId }}</h2>
+
+  <form [formGroup]="challengeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">Titre</label>
+      <input id="title" type="text" formControlName="title" />
+      <div *ngIf="challengeForm.get('title')?.invalid && challengeForm.get('title')?.touched" class="error">
+        Le titre est requis.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+      <div *ngIf="challengeForm.get('description')?.invalid && challengeForm.get('description')?.touched" class="error">
+        La description doit contenir au moins 10 caractères.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Statut</label>
+      <select id="status" formControlName="status">
+        <option value="À venir">À venir</option>
+        <option value="En cours">En cours</option>
+        <option value="Terminé">Terminé</option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="challengeForm.invalid" class="btn btn-primary">
+      💾 Enregistrer les modifications
+    </button>
+    <a routerLink="/challenges" class="btn btn-secondary">⬅️ Annuler</a>
+  </form>
+</div>
