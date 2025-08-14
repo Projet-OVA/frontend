@@ -14,10 +14,10 @@
 - http://localhost:4200/users/profile/1     # Profil utilisateur ID=1 **done**
 
 # Défis communautaires
-- http://localhost:4200/challenges           # Liste défis
-- http://localhost:4200/challenges/create    # Création défi
-- http://localhost:4200/challenges/edit/1    # Édition défi ID=1
-- http://localhost:4200/participations       # Liste participations
+- http://localhost:4200/challenges           # Liste défis **done**
+- http://localhost:4200/challenges/create    # Création défi **done**
+- http://localhost:4200/challenges/edit/1    # Édition défi ID=1 **done**
+- http://localhost:4200/participations       # Liste participations **done**
 
 # Badges
 - http://localhost:4200/badges               # Liste badges

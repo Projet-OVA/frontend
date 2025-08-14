@@ -1,1 +1,32 @@
-<p>participations works!</p>
+<div class="participations-container">
+  <h2>Liste des Participations</h2>
+
+  <table class="participations-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Utilisateur</th>
+        <th>Défi</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of participations">
+        <td>{{ p.id }}</td>
+        <td>{{ p.user }}</td>
+        <td>{{ p.challenge }}</td>
+        <td>{{ p.date }}</td>
+        <td>
+          <span class="badge" [ngClass]="p.status.toLowerCase()">
+            {{ p.status }}
+          </span>
+        </td>
+        <td>
+          <button (click)="deleteParticipation(p.id)" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
