@@ -8,6 +8,7 @@ if ! git diff-index --quiet HEAD --; then
                     user-list
                     user-profile
                     login
+                    educational
                     ...
                     "
 fi
@@ -16,4 +17,4 @@ fi
 git push gitea main >/dev/null 2>&1
 git push origin main >/dev/null 2>&1
 
-echo "✅ Push terminé sur gitea et origin."
+echo "✅ Push terminé sur gitea et github."
