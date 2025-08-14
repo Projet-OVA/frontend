@@ -11,6 +11,7 @@ if ! git diff-index --quiet HEAD --; then
                     educational
                     educational/create
                     educational/edit
+                    challenges
                     ...
                     "
 fi

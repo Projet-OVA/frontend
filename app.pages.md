@@ -5,19 +5,19 @@
 - http://localhost:4200/dashboard **done**
 
 # Contenus éducatifs
-- http://localhost:4200/educational          # Liste des parcours
-- http://localhost:4200/educational/create   # Création parcours
-- http://localhost:4200/educational/edit/1   # Édition parcours ID=1
+- http://localhost:4200/educational          # Liste des parcours **done**
+- http://localhost:4200/educational/create   # Création parcours **done**
+- http://localhost:4200/educational/edit/1   # Édition parcours ID=1 **done**
+
+# Utilisateurs
+- http://localhost:4200/users                # Liste utilisateurs **done**
+- http://localhost:4200/users/profile/1     # Profil utilisateur ID=1 **done**
 
 # Défis communautaires
 - http://localhost:4200/challenges           # Liste défis
 - http://localhost:4200/challenges/create    # Création défi
 - http://localhost:4200/challenges/edit/1    # Édition défi ID=1
 - http://localhost:4200/participations       # Liste participations
-
-# Utilisateurs
-- http://localhost:4200/users                # Liste utilisateurs **done**
-- http://localhost:4200/users/profile/1     # Profil utilisateur ID=1 **done**
 
 # Badges
 - http://localhost:4200/badges               # Liste badges

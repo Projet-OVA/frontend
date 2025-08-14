@@ -1,1 +1,35 @@
-<p>challenges-list works!</p>
+<div class="challenges-container">
+  <h2>Liste des Défis Communautaires</h2>
+
+  <div class="actions">
+    <a routerLink="/challenges/create" class="btn btn-primary">+ Nouveau Défi</a>
+  </div>
+
+  <table class="challenges-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titre</th>
+        <th>Description</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let challenge of challenges">
+        <td>{{ challenge.id }}</td>
+        <td>{{ challenge.title }}</td>
+        <td>{{ challenge.description }}</td>
+        <td>
+          <span class="badge" [ngClass]="challenge.status.toLowerCase()">
+            {{ challenge.status }}
+          </span>
+        </td>
+        <td>
+          <a [routerLink]="['/challenges/edit', challenge.id]" class="btn btn-sm btn-warning">✏️ Modifier</a>
+          <button (click)="deleteChallenge(challenge.id)" class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
