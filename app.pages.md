@@ -11,7 +11,7 @@
 
 # Utilisateurs
 - http://localhost:4200/users                # Liste utilisateurs **done**
-- http://localhost:4200/users/profile/1     # Profil utilisateur ID=1 **done**
+- http://localhost:4200/users/profile/1      # Profil utilisateur ID=1 **done**
 
 # Défis communautaires
 - http://localhost:4200/challenges           # Liste défis **done**
@@ -20,13 +20,13 @@
 - http://localhost:4200/participations       # Liste participations **done**
 
 # Badges
-- http://localhost:4200/badges               # Liste badges
+- http://localhost:4200/badges               # Liste badges **done**
 - http://localhost:4200/badges/create        # Création badge
-- http://localhost:4200/badges/edit/1       # Édition badge ID=1
+- http://localhost:4200/badges/edit/1        # Édition badge ID=1
 
 # Podcasts / récits audio
 - http://localhost:4200/podcasts             # Liste podcasts
-- http://localhost:4200/podcasts/validate/1 # Validation podcast ID=1
+- http://localhost:4200/podcasts/validate/1  # Validation podcast ID=1
 
 # Paramètres généraux
 - http://localhost:4200/settings/languages      # Liste langues
