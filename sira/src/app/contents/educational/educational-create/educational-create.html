@@ -1,1 +1,29 @@
-<p>educational-create works!</p>
+<h1>{{ pageTitle }}</h1>
+
+<form (ngSubmit)="saveCourse()" #courseForm="ngForm" class="create-form">
+  <div class="form-group">
+    <label for="title">Titre *</label>
+    <input id="title" name="title" [(ngModel)]="newCourse.title" required />
+  </div>
+
+  <div class="form-group">
+    <label for="level">Niveau</label>
+    <select id="level" name="level" [(ngModel)]="newCourse.level">
+      <option value="Débutant">Débutant</option>
+      <option value="Intermédiaire">Intermédiaire</option>
+      <option value="Avancé">Avancé</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="duration">Durée (ex: 4h) *</label>
+    <input id="duration" name="duration" [(ngModel)]="newCourse.duration" required />
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" [(ngModel)]="newCourse.description"></textarea>
+  </div>
+
+  <button type="submit" class="btn save">💾 Sauvegarder</button>
+</form>

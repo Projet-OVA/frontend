@@ -9,6 +9,7 @@ if ! git diff-index --quiet HEAD --; then
                     user-profile
                     login
                     educational
+                    educational/create
                     ...
                     "
 fi
