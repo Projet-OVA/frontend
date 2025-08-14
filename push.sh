@@ -10,6 +10,7 @@ if ! git diff-index --quiet HEAD --; then
                     login
                     educational
                     educational/create
+                    educational/edit
                     ...
                     "
 fi
