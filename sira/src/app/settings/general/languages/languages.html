@@ -1,1 +1,30 @@
-<p>languages works!</p>
+<div class="settings-container">
+  <h2>{{ pageTitle }}</h2>
+
+  <table class="settings-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Langue</th>
+        <th>Active</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lang of languages">
+        <td>{{ lang.code }}</td>
+        <td>{{ lang.name }}</td>
+        <td>
+          <span [ngClass]="lang.active ? 'active' : 'inactive'">
+            {{ lang.active ? 'Oui' : 'Non' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm" (click)="toggleLanguage(lang)">
+            {{ lang.active ? 'Désactiver' : 'Activer' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

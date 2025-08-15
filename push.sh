@@ -20,6 +20,8 @@ if ! git diff-index --quiet HEAD --; then
                     badges/edit
                     podcasts
                     podcasts/validate
+                    settings/languages
+                    settings/translations
                     ...
                     "
 fi

@@ -29,8 +29,8 @@
 - http://localhost:4200/podcasts/validate/1  # Validation podcast ID=1 **done**
 
 # Paramètres généraux
-- http://localhost:4200/settings/languages      # Liste langues
-- http://localhost:4200/settings/translations   # Traductions
+- http://localhost:4200/settings/languages      # Liste langues **done**
+- http://localhost:4200/settings/translations   # Traductions **done**
 
 # Notifications
 - http://localhost:4200/settings/notifications # Paramètres notifications
