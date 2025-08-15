@@ -17,6 +17,7 @@ if ! git diff-index --quiet HEAD --; then
                     participations
                     badges
                     badges/create
+                    badges/edit
                     ...
                     "
 fi
