@@ -1,1 +1,9 @@
-<p>podcast-validate works!</p>
+<div class="podcast-validate-container">
+  <h2>Validation du podcast #{{ podcastId }}</h2>
+
+  <div class="actions">
+    <button class="btn btn-success" (click)="approvePodcast()">✅ Approuver</button>
+    <button class="btn btn-danger" (click)="rejectPodcast()">❌ Rejeter</button>
+    <button class="btn btn-secondary" (click)="goBack()">⬅️ Retour</button>
+  </div>
+</div>

@@ -19,6 +19,7 @@ if ! git diff-index --quiet HEAD --; then
                     badges/create
                     badges/edit
                     podcasts
+                    podcasts/validate
                     ...
                     "
 fi

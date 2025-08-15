@@ -25,8 +25,8 @@
 - http://localhost:4200/badges/edit/1        # Édition badge ID=1 **done**
 
 # Podcasts / récits audio
-- http://localhost:4200/podcasts             # Liste podcasts
-- http://localhost:4200/podcasts/validate/1  # Validation podcast ID=1
+- http://localhost:4200/podcasts             # Liste podcasts **done**
+- http://localhost:4200/podcasts/validate/1  # Validation podcast ID=1 **done**
 
 # Paramètres généraux
 - http://localhost:4200/settings/languages      # Liste langues
