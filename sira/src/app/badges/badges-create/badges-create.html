@@ -1,1 +1,45 @@
-<p>badges-create works!</p>
+<div class="form-container">
+  <h2>Créer un Nouveau Badge</h2>
+
+  <form (ngSubmit)="saveBadge()" #badgeForm="ngForm">
+    <div class="form-group">
+      <label for="title">Titre</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        [(ngModel)]="badge.title"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="badge.description"
+        required
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="icon">Icône (URL ou classe CSS)</label>
+      <input
+        type="text"
+        id="icon"
+        name="icon"
+        [(ngModel)]="badge.icon"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="!badgeForm.form.valid" class="btn btn-primary">
+        💾 Enregistrer
+      </button>
+      <button type="button" (click)="cancel()" class="btn btn-secondary">
+        ❌ Annuler
+      </button>
+    </div>
+  </form>
+</div>

@@ -21,7 +21,7 @@
 
 # Badges
 - http://localhost:4200/badges               # Liste badges **done**
-- http://localhost:4200/badges/create        # Création badge
+- http://localhost:4200/badges/create        # Création badge **done**
 - http://localhost:4200/badges/edit/1        # Édition badge ID=1
 
 # Podcasts / récits audio

@@ -15,6 +15,8 @@ if ! git diff-index --quiet HEAD --; then
                     challenges/create
                     challenges/edit
                     participations
+                    badges
+                    badges/create
                     ...
                     "
 fi
