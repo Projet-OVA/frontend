@@ -1,0 +1,66 @@
+.podcasts-container {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: #fafafa;
+    }
+
+    .en\ attente {
+      color: #f39c12;
+      font-weight: 500;
+    }
+
+    .validé {
+      color: #27ae60;
+      font-weight: 500;
+    }
+
+    .rejeté {
+      color: #e74c3c;
+      font-weight: 500;
+    }
+  }
+
+  .btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &.btn-primary {
+      background: #3498db;
+      color: #fff;
+      transition: 0.2s;
+
+      &:hover {
+        background: #2980b9;
+      }
+    }
+  }
+}

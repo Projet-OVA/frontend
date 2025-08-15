@@ -1,1 +1,32 @@
-<p>podcasts-list works!</p>
+<div class="podcasts-container">
+  <h2>🎙️ Liste des Podcasts</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let podcast of podcasts">
+        <td>{{ podcast.id }}</td>
+        <td>{{ podcast.title }}</td>
+        <td>{{ podcast.author }}</td>
+        <td>{{ podcast.date }}</td>
+        <td>
+          <span [ngClass]="podcast.status">{{ podcast.status }}</span>
+        </td>
+        <td>
+          <button (click)="validatePodcast(podcast.id)" class="btn btn-primary">
+            ✔️ Valider / Gérer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
