@@ -33,7 +33,7 @@
 - http://localhost:4200/settings/translations   # Traductions **done**
 
 # Notifications
-- http://localhost:4200/settings/notifications # Paramètres notifications
+- http://localhost:4200/settings/notifications # Paramètres notifications **done**
 
 # Quotas
-- http://localhost:4200/settings/quotas        # Quotas
+- http://localhost:4200/settings/quotas        # Quotas **done**

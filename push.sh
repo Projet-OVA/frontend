@@ -22,7 +22,8 @@ if ! git diff-index --quiet HEAD --; then
                     podcasts/validate
                     settings/languages
                     settings/translations
-                    ...
+                    settings/notifications
+                    settings/quotas
                     "
 fi
 
