@@ -34,6 +34,21 @@ import { Quotas } from './settings/quotas/quotas';
 import { UsersList } from './users/users-list/users-list';
 import { UserProfile } from './users/user-profile/user-profile';
 
+// Dashboard secondaires
+import { DashboardUsage } from './dashboard/dashboard-usage/dashboard-usage';
+import { DashboardChallenges } from './dashboard/dashboard-challenges/dashboard-challenges';
+import { DashboardBadges } from './dashboard/dashboard-badges/dashboard-badges';
+import { DashboardFeedback } from './dashboard/dashboard-feedback/dashboard-feedback';
+
+// Reports
+import { ReportsExport } from './reports/reports-export/reports-export';
+
+// Educational détail
+import { EducationalDetail } from './contents/educational/educational-detail/educational-detail';
+
+// Badge détail
+import { BadgeDetail } from './badges/badge-detail/badge-detail';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
@@ -72,5 +87,29 @@ export const routes: Routes = [
   { path: 'users/profile/:id', component: UserProfile },
 
   // Wildcard route (pour une page 404 ou redirection)
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: 'dashboard' }, 
+
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
+  // Dashboard
+  { path: 'dashboard', component: Dashboard },
+  { path: 'dashboard/usage', component: DashboardUsage },
+  { path: 'dashboard/challenges', component: DashboardChallenges },
+  { path: 'dashboard/badges', component: DashboardBadges },
+  { path: 'dashboard/feedback', component: DashboardFeedback },
+
+  // Reports
+  { path: 'reports/export', component: ReportsExport },
+
+  // Educational
+  { path: 'educational', component: EducationalList },
+  { path: 'educational/create', component: EducationalCreate },
+  { path: 'educational/edit/:id', component: EducationalEdit },
+  { path: 'educational/:id', component: EducationalDetail },
+
+  // Badges
+  { path: 'badges', component: BadgesList },
+  { path: 'badges/create', component: BadgesCreate },
+  { path: 'badges/edit/:id', component: BadgesEdit },
+  { path: 'badges/:id', component: BadgeDetail }
 ];

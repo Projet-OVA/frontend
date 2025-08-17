@@ -64,3 +64,4 @@ ng serve
 - Statistiques d’usage
 - Multilingue (ngx-translate)
 - Publication et modération de contenus
+

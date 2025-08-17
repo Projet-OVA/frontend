@@ -12,14 +12,14 @@
 
 ## Gestion contenus éducatifs
 
-| Méthode | Endpoint                     | Description                           | Payload / Params                                             |
-| ------- | ---------------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| GET     | /educational-contents        | Liste parcours (filtrage, pagination) | query: {theme, langue, niveau, page}                         |
-| GET     | /educational-contents/\:id   | Détail parcours                       | id parcours                                                  |
-| POST    | /educational-contents        | Création parcours                     | titre, description, thème, niveau, langue(s), media, quiz... |
-| PUT     | /educational-contents/\:id   | Modification parcours                 | idem POST + id                                               |
-| DELETE  | /educational-contents/\:id   | Suppression parcours                  | id                                                           |
-| POST    | /educational-contents/upload | Upload fichier média                  | fichier (audio, vidéo)                                       |
+| Méthode | Endpoint            | Description                           | Payload / Params                                             |
+| ------- | --------------------| ------------------------------------- | ------------------------------------------------------------ |
+| GET     | /educational        | Liste parcours (filtrage, pagination) | query: {theme, langue, niveau, page}                         |
+| GET     | /educational/\:id   | Détail parcours                       | id parcours                                                  |
+| POST    | /educational        | Création parcours                     | titre, description, thème, niveau, langue(s), media, quiz... |
+| PUT     | /educational/\:id   | Modification parcours                 | idem POST + id                                               |
+| DELETE  | /educational/\:id   | Suppression parcours                  | id                                                           |
+| POST    | /educational/upload | Upload fichier média                  | fichier (audio, vidéo)                                       |
 
 
 ---

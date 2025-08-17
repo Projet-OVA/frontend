@@ -24,6 +24,7 @@ if ! git diff-index --quiet HEAD --; then
                     settings/translations
                     settings/notifications
                     settings/quotas
+                    ...
                     "
 fi
 
