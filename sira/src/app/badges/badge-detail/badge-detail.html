@@ -21,7 +21,8 @@
   </div>
 
   <div class="detail-actions">
-    <button class="primary">Modifier</button>
+    <!-- <button class="primary">Modifier</button> -->
+      <button class="primary" [routerLink]="['/badges/edit', id]">Modifier</button>
     <button class="secondary" (click)="goBack()">Retour</button>
   </div>
 </div>

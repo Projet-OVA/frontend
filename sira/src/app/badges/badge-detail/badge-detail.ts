@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-badge-detail',
+  imports: [RouterModule],
   templateUrl: './badge-detail.html',
   styleUrls: ['./badge-detail.scss']
 })
