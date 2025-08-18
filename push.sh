@@ -8,9 +8,6 @@ if ! git diff-index --quiet HEAD --; then
                     user-list
                     user-profile
                     login
-                    educational
-                    educational/create
-                    educational/edit
                     challenges
                     challenges/create
                     challenges/edit
@@ -24,6 +21,10 @@ if ! git diff-index --quiet HEAD --; then
                     settings/translations
                     settings/notifications
                     settings/quotas
+                    educational
+                    educational/create
+                    educational/edit
+                    educational/id
                     ...
                     "
 fi

@@ -15,7 +15,7 @@
 - http://localhost:4200/educational           # Liste des parcours **done**
 - http://localhost:4200/educational/create    # Création parcours **done**
 - http://localhost:4200/educational/edit/1    # Édition parcours ID=1 **done**
-- http://localhost:4200/educational/1         # Détail parcours ID=1
+- http://localhost:4200/educational/1         # Détail parcours ID=1 **done**
 
 # Utilisateurs
 - http://localhost:4200/users                 # Liste utilisateurs **done**
