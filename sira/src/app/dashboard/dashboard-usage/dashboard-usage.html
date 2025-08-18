@@ -1,7 +1,10 @@
-<h2>{{ pageTitle }}</h2>
-<div class="usage-stats">
-  <div class="stat-card" *ngFor="let s of usageStats">
-    <h3>{{ s.value }}</h3>
-    <p>{{ s.label }}</p>
+<div class="usage-container">
+  <h1>{{ pageTitle }}</h1>
+
+  <div class="usage-stats">
+    <div class="usage-card" *ngFor="let stat of usageStats">
+      <h3>{{ stat.value }}</h3>
+      <p>{{ stat.label }}</p>
+    </div>
   </div>
 </div>

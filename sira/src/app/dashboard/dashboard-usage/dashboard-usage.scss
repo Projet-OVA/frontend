@@ -1,0 +1,45 @@
+.usage-container {
+  padding: 20px;
+  background: #f9fbfc;
+  border-radius: 12px;
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
+
+  .usage-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .usage-card {
+    flex: 1 1 200px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+
+    h3 {
+      font-size: 2rem;
+      margin: 0;
+      color: #3498db;
+    }
+
+    p {
+      margin-top: 5px;
+      font-size: 1rem;
+      color: #7f8c8d;
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
