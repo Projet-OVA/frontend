@@ -1,1 +1,11 @@
-<p>reports-export works!</p>
+<div class="reports-export-container">
+  <h1>{{ pageTitle }}</h1>
+
+  <ul class="reports-list">
+    <li *ngFor="let report of reports">
+      <span>{{ report.name }}</span>
+      <button (click)="exportCSV(report.id)">CSV</button>
+      <button (click)="exportPDF(report.id)">PDF</button>
+    </li>
+  </ul>
+</div>

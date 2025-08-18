@@ -30,7 +30,7 @@ if ! git diff-index --quiet HEAD --; then
                     dashboard/challenges
                     dashboard/badges
                     dashboard/feedback
-                    reports/export --> manquant
+                    reports/export
                     ...
                     "
 fi
