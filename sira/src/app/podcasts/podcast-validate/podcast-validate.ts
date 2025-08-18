@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PodcastsService } from '../podcasts.services';
 
 @Component({
   selector: 'app-podcast-validate',
@@ -8,19 +9,27 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PodcastValidate {
   podcastId: number;
+  podcast: any;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private podcastsService: PodcastsService
+  ) {
     this.podcastId = Number(this.route.snapshot.paramMap.get('id'));
+    this.podcast = this.podcastsService.getPodcastById(this.podcastId);
   }
 
   approvePodcast() {
-    console.log(`Podcast ${this.podcastId} approuvé ✅`);
-    // plus tard tu mettras un appel backend ici
+    this.podcastsService.updateStatus(this.podcastId, 'validé');
+    alert(`Podcast "${this.podcast.title}" approuvé ✅`);
+    this.goBack();
   }
 
   rejectPodcast() {
-    console.log(`Podcast ${this.podcastId} rejeté ❌`);
-    // idem pour le back
+    this.podcastsService.updateStatus(this.podcastId, 'rejeté');
+    alert(`Podcast "${this.podcast.title}" rejeté ❌`);
+    this.goBack();
   }
 
   goBack() {
