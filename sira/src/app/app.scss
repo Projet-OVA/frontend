@@ -1,0 +1,73 @@
+/* Barre de navigation */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2c3e50;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  .logo {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+
+    li {
+      position: relative;
+
+      a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 0.8rem;
+        border-radius: 6px;
+        transition: background 0.2s;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+
+      /* Dropdown */
+      &.dropdown:hover .dropdown-menu {
+        display: block;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 2.5rem;
+        left: 0;
+        background: #34495e;
+        list-style: none;
+        padding: 0.5rem 0;
+        border-radius: 6px;
+        min-width: 180px;
+
+        li a {
+          display: block;
+          padding: 0.5rem 1rem;
+          color: white;
+          white-space: nowrap;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Décalage du contenu à cause de la nav */
+router-outlet {
+  display: block;
+  padding: 1rem;
+}

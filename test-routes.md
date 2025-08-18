@@ -27,4 +27,3 @@
 | `/settings/translations`  | `/settings/translations`         | Traductions                        |
 | `/settings/notifications` | `/settings/notifications`        | Paramètres notifications           |
 | `/settings/quotas`        | `/settings/quotas`               | Consultation / modification quotas |
-
