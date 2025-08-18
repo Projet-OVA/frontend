@@ -1,1 +1,7 @@
-<p>dashboard-usage works!</p>
+<h2>{{ pageTitle }}</h2>
+<div class="usage-stats">
+  <div class="stat-card" *ngFor="let s of usageStats">
+    <h3>{{ s.value }}</h3>
+    <p>{{ s.label }}</p>
+  </div>
+</div>

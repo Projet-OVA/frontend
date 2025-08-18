@@ -3,10 +3,10 @@
 
 # Dashboard
 - http://localhost:4200/dashboard **done**
-- http://localhost:4200/dashboard/usage       # Statistiques d’utilisation
-- http://localhost:4200/dashboard/challenges  # Rapports sur les défis
-- http://localhost:4200/dashboard/badges      # Rapports sur les badges
-- http://localhost:4200/dashboard/feedback    # Retours / feedback utilisateurs
+- http://localhost:4200/dashboard/usage       # Statistiques d’utilisation **done**
+- http://localhost:4200/dashboard/challenges  # Rapports sur les défis **done**
+- http://localhost:4200/dashboard/badges      # Rapports sur les badges **done**
+- http://localhost:4200/dashboard/feedback    # Retours / feedback utilisateurs **done**
 
 # Rapports
 - http://localhost:4200/reports/export        # Export des rapports

@@ -1,1 +1,17 @@
-<p>dashboard-challenges works!</p>
+<h2>{{ pageTitle }}</h2>
+<table class="challenges-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Participants</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of challenges">
+      <td>{{ c.id }}</td>
+      <td>{{ c.name }}</td>
+      <td>{{ c.participants }}</td>
+    </tr>
+  </tbody>
+</table>

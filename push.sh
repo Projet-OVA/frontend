@@ -4,7 +4,6 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-                    dashboard
                     user-list
                     user-profile
                     login
@@ -26,6 +25,11 @@ if ! git diff-index --quiet HEAD --; then
                     educational/create
                     educational/edit
                     educational/id
+                    dashboard
+                    dashboard/usage
+                    dashboard/challenges
+                    dashboard/badges
+                    dashboard/feedback 
                     ...
                     "
 fi
