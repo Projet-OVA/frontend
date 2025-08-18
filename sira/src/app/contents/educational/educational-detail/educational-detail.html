@@ -1,13 +1,13 @@
-<div class="detail-card">
+<div class="detail-card" *ngIf="course">
   <div class="detail-header">
-    <h1>Parcours #{{id}}</h1>
-    <span class="tag">En cours</span>
+    <h1>{{ course.title }}</h1>
+    <span class="tag">{{ course.status }}</span>
   </div>
 
   <div class="detail-content">
     <p>
-      Ceci est un template statique pour afficher le détail d’un parcours éducatif.
-      Tu pourras plus tard lier ces données au backend.
+      Ce parcours est de niveau <strong>{{ course.level }}</strong> et dure <strong>{{ course.duration }}</strong>.
+      Tu pourras plus tard lier ces données au backend pour afficher le contenu complet.
     </p>
   </div>
 
@@ -23,7 +23,11 @@
   </div>
 
   <div class="detail-actions">
-    <button class="primary">Modifier</button>
-    <button class="secondary">Retour</button>
+    <button class="primary" (click)="editCourse()">Modifier</button>
+    <button class="secondary" (click)="goBack()">Retour</button>
   </div>
+</div>
+
+<div *ngIf="!course">
+  <p>Parcours introuvable.</p>
 </div>

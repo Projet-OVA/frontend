@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-educational-list',
@@ -19,17 +19,24 @@ export class EducationalList {
     { id: 4, title: 'Machine Learning', level: 'Intermédiaire', duration: '8h', status: 'Publié' },
   ];
 
+  
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {}
+
   createCourse() {
-    alert('Redirection vers la création de parcours');
+    // redirection vers la page de création
+    this.router.navigate(['/educational/create']);
   }
 
   editCourse(course: any) {
-    alert(`Éditer le parcours : ${course.title}`);
+    this.router.navigate(['/educational/edit', course.id]);
   }
 
   deleteCourse(course: any) {
-    if (confirm(`Supprimer le parcours : ${course.title} ?`)) {
-      this.courses = this.courses.filter(c => c.id !== course.id);
+    if (confirm(`Voulez-vous supprimer le parcours "${course.title}" ?`)) {
+      // appeler ton endpoint DELETE /educational/:id ici
+      console.log('Supprimer', course.id);
     }
   }
 }

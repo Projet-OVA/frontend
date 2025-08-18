@@ -12,7 +12,10 @@
   </thead>
   <tbody>
     <tr *ngFor="let user of users">
-      <td>{{ user.name }}</td>
+      <td>
+        <!-- lien cliquable vers le profil -->
+        <a [routerLink]="['/users', user.id]">{{ user.name }}</a>
+      </td>
       <td>{{ user.email }}</td>
       <td>{{ user.role }}</td>
       <td>

@@ -12,6 +12,7 @@ import { DashboardFeedback } from './dashboard/dashboard-feedback/dashboard-feed
 
 // Reports
 import { ReportsExport } from './reports/reports-export/reports-export';
+import { usersRoutes } from './users/users.routes';
 
 // Badges
 import { BadgesList } from './badges/badges-list/badges-list';
@@ -89,6 +90,8 @@ export const routes: Routes = [
   // Users
   { path: 'users', component: UsersList },
   { path: 'users/profile/:id', component: UserProfile },
+  { path: 'users', children: usersRoutes },
+  { path: '', redirectTo: 'users', pathMatch: 'full' },
 
   // Auth
   { path: 'login', component: Login },
