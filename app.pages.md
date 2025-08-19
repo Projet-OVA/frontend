@@ -19,7 +19,7 @@
 
 # Utilisateurs
 - http://localhost:4200/users                 # Liste utilisateurs
-- http://localhost:4200/users/profile/1       # Profil utilisateur ID=1
+- http://localhost:4200/users/1               # Profil utilisateur ID=1
 
 # Défis communautaires
 - http://localhost:4200/challenges            # Liste défis

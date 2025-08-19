@@ -1,65 +1,34 @@
 <nav class="navbar">
   <div class="logo">Sira Admin</div>
   <ul class="nav-links">
-    <li><a routerLink="/login">🔑 Login</a></li>
+    <!-- Auth -->
+    <li><a [routerLink]="'/login'">🔑 Login</a></li>
 
-    <li class="dropdown">
-      <a>📊 Dashboard ▾</a>
-      <ul class="dropdown-menu">
-        <li><a routerLink="/dashboard">Résumé</a></li>
-        <li><a routerLink="/dashboard/usage">Utilisation</a></li>
-        <li><a routerLink="/dashboard/challenges">Défis</a></li>
-        <li><a routerLink="/dashboard/badges">Badges</a></li>
-        <li><a routerLink="/dashboard/feedback">Feedback</a></li>
-      </ul>
-    </li>
+    <!-- Dashboard -->
+    <li><a [routerLink]="'/dashboard'">📊 Dashboard</a></li>
 
-    <li class="dropdown">
-      <a>📑 Rapports ▾</a>
-      <ul class="dropdown-menu">
-        <li><a routerLink="/reports/export">Export</a></li>
-      </ul>
-    </li>
+    <!-- Rapports -->
+    <li><a [routerLink]="'/reports/export'">📑 Rapports</a></li>
 
-    <li class="dropdown">
-      <a>🎓 Éducation ▾</a>
-      <ul class="dropdown-menu">
-        <li><a routerLink="/educational">Liste</a></li>
-        <li><a routerLink="/educational/create">Créer</a></li>
-      </ul>
-    </li>
+    <!-- Contenus éducatifs -->
+    <li><a [routerLink]="'/educational'">🎓 Éducation</a></li>
 
-    <li><a routerLink="/users">👥 Utilisateurs</a></li>
+    <!-- Utilisateurs -->
+    <li><a [routerLink]="'/users'">👥 Utilisateurs</a></li>
 
-    <li class="dropdown">
-      <a>🏆 Défis ▾</a>
-      <ul class="dropdown-menu">
-        <li><a routerLink="/challenges">Liste</a></li>
-        <li><a routerLink="/challenges/create">Créer</a></li>
-      </ul>
-    </li>
+    <!-- Défis -->
+    <li><a [routerLink]="'/challenges'">🏆 Défis</a></li>
 
-    <li class="dropdown">
-      <a>🥇 Badges ▾</a>
-      <ul class="dropdown-menu">
-        <li><a routerLink="/badges">Liste</a></li>
-        <li><a routerLink="/badges/create">Créer</a></li>
-      </ul>
-    </li>
+    <!-- Badges -->
+    <li><a [routerLink]="'/badges'">🥇 Badges</a></li>
 
-    <li><a routerLink="/podcasts">🎙️ Podcasts</a></li>
+    <!-- Podcasts -->
+    <li><a [routerLink]="'/podcasts'">🎙️ Podcasts</a></li>
 
-    <li class="dropdown">
-      <a>⚙️ Paramètres ▾</a>
-      <ul class="dropdown-menu">
-        <li><a routerLink="/settings/languages">Langues</a></li>
-        <li><a routerLink="/settings/translations">Traductions</a></li>
-        <li><a routerLink="/settings/notifications">Notifications</a></li>
-        <li><a routerLink="/settings/quotas">Quotas</a></li>
-      </ul>
-    </li>
+    <!-- Paramètres -->
+    <li><a [routerLink]="'/settings/languages'">⚙️ Paramètres</a></li>
   </ul>
 </nav>
 
-<!-- Contenu des pages -->
+<!-- Contenu principal -->
 <router-outlet></router-outlet>

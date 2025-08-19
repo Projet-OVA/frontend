@@ -1,4 +1,3 @@
-/* Barre de navigation */
 .navbar {
   display: flex;
   align-items: center;
@@ -35,7 +34,6 @@
         }
       }
 
-      /* Dropdown */
       &.dropdown:hover .dropdown-menu {
         display: block;
       }
@@ -49,7 +47,7 @@
         list-style: none;
         padding: 0.5rem 0;
         border-radius: 6px;
-        min-width: 180px;
+        min-width: 200px;
 
         li a {
           display: block;
@@ -66,7 +64,6 @@
   }
 }
 
-/* Décalage du contenu à cause de la nav */
 router-outlet {
   display: block;
   padding: 1rem;
