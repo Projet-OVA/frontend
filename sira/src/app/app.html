@@ -26,7 +26,15 @@
     <li><a [routerLink]="'/podcasts'">🎙️ Podcasts</a></li>
 
     <!-- Paramètres -->
-    <li><a [routerLink]="'/settings/languages'">⚙️ Paramètres</a></li>
+    <li class="dropdown">
+      <a href="#">⚙️ Paramètres ▾</a>
+      <ul class="dropdown-menu">
+        <li><a [routerLink]="'/settings/languages'">Langues</a></li>
+        <li><a [routerLink]="'/settings/translations'">Traductions</a></li>
+        <li><a [routerLink]="'/settings/notifications'">Notifications</a></li>
+        <li><a [routerLink]="'/settings/quotas'">Quotas</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 

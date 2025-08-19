@@ -68,3 +68,39 @@ router-outlet {
   display: block;
   padding: 1rem;
 }
+
+.navbar {
+  .nav-links {
+    li {
+      position: relative; /* important pour que le sous-menu se positionne par rapport au li parent */
+
+      .dropdown-menu {
+        display: none; /* caché par défaut */
+        position: absolute;
+        top: 100%; /* juste en dessous du li parent */
+        left: 0;
+        background: var(--navbar-bg, #2c3e50);
+        list-style: none;
+        padding: 5px 0;
+        min-width: 150px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        z-index: 100;
+
+        li a {
+          display: block;
+          padding: 8px 15px;
+          color: var(--text-color, #f8f1f1);
+          text-decoration: none;
+
+          &:hover {
+            background: rgba(0,0,0,0.05);
+          }
+        }
+      }
+
+      &:hover .dropdown-menu {
+        display: block; /* affiché quand on hover le li parent */
+      }
+    }
+  }
+}
