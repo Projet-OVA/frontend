@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #2c3e50;
+  background: #2980b9;
   color: white;
   padding: 0.8rem 1.5rem;
   position: sticky;
@@ -79,7 +79,7 @@ router-outlet {
         position: absolute;
         top: 100%; /* juste en dessous du li parent */
         left: 0;
-        background: var(--navbar-bg, #2c3e50);
+        background: var(--navbar-bg, #2980b9);
         list-style: none;
         padding: 5px 0;
         min-width: 150px;
