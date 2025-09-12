@@ -1,0 +1,45 @@
+<section class="publications">
+  <header class="publications-header">
+    <h1>📝 Publications</h1>
+
+    <div class="actions">
+      <select [(ngModel)]="selectedType" (change)="filterByType(selectedType)">
+        <option value="all">Tous types</option>
+        <option value="article">Articles</option>
+        <option value="video">Vidéos</option>
+        <option value="podcast">Podcasts</option>
+      </select>
+
+      <button class="btn-primary" (click)="createPublication()">+ Nouvelle publication</button>
+    </div>
+  </header>
+
+  <table class="publications-table" *ngIf="filteredPublications.length; else empty">
+    <thead>
+      <tr>
+        <th>Titre</th>
+        <th>Type</th>
+        <th>Auteur</th>
+        <th>Créée le</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pub of filteredPublications">
+        <td>{{ pub.title }}</td>
+        <td>{{ pub.type }}</td>
+        <td>{{ pub.author }}</td>
+        <td>{{ pub.createdAt | date:'short' }}</td>
+        <td>
+          <button class="btn-ghost small" (click)="deletePublication(pub.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #empty>
+    <div class="empty-state">
+      Aucune publication disponible pour ce type.
+    </div>
+  </ng-template>
+</section>

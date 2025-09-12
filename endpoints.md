@@ -1,5 +1,5 @@
 | Domaine          | Méthode | Endpoint                     | Description brève                                           | ELIMANE        |
-| ---------------- | ------- | ---------------------------- | ----------------------------------------------------------- |-----------------
+| ---------------- | ------- | ---------------------------- | ----------------------------------------------------------- |----------------|
 | **Auth**         | POST    | `/auth/login`                | Authentifie un admin, retourne un token JWT                 |                |
 |                  | POST    | `/auth/logout`               | Invalide le token actuel (optionnel)                        |                |
 |                  | GET     | `/auth/me`                   | Récupère les infos de l’utilisateur connecté                |       x        |
