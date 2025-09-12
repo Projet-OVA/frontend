@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { ApiService } from '../core/api.service';
 
 @Component({
   selector: 'app-users',
@@ -12,35 +11,71 @@ import { ApiService } from '../core/api.service';
   styleUrls: ['./users.scss'],
 })
 export class UsersComponent implements OnInit {
-  q = ''; // ← Ajouter
-  filterStatus = ''; // ← Ajouter
+  q = '';
+  filterStatus = '';
   users: any[] = [];
+  filteredUsers: any[] = [];
 
-  private privateRouter: Router;
-  public get router() {
-    return this.privateRouter;
-  }
+  newUser = { name: '', email: '', age: null };
 
-  constructor(privateRouter: Router) {
-    this.privateRouter = privateRouter;
-  }
+  selectedUser: any = null;
 
-  load() {}
-  reactivateUser(id: number) {}
+  @ViewChild('createDialog') createDialog!: ElementRef<HTMLDialogElement>;
+  @ViewChild('viewDialog') viewDialog!: ElementRef<HTMLDialogElement>;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // TODO: appeler API Nest pour lister les utilisateurs
-    this.users = [
-      { id: 1, name: 'Alice', email: 'alice@test.com' },
-      { id: 2, name: 'Bob', email: 'bob@test.com' },
-    ];
+    this.load();
   }
 
-  deleteUser(id: number) {
-    // TODO: appeler API Nest pour supprimer un utilisateur
-    console.log('Suppression utilisateur', id);
+  load() {
+    this.users = [
+      { id: 1, name: 'Alice', email: 'alice@test.com', age: 30, status: 'Actif', progress: { overall: 50 }, badges: ['⭐'] },
+      { id: 2, name: 'Bob', email: 'bob@test.com', age: 23, status: 'Suspendu', progress: { overall: 10 }, badges: [] },
+    ];
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    const query = this.q.toLowerCase();
+    this.filteredUsers = this.users.filter(u => {
+      const matchesQuery =
+        !query || u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query);
+      const matchesStatus = !this.filterStatus || u.status === this.filterStatus;
+      return matchesQuery && matchesStatus;
+    });
+  }
+
+  openCreateDialog() {
+    this.newUser = { name: '', email: '', age: null };
+    this.createDialog.nativeElement.showModal();
+  }
+
+  createUser(e: Event) {
+    e.preventDefault();
+    const newU = { ...this.newUser, id: Date.now(), status: 'Actif', progress: { overall: 0 }, badges: [] };
+    this.users.push(newU);
+    this.applyFilters();
+    this.createDialog.nativeElement.close();
+  }
+
+  openViewDialog(u: any) {
+    this.selectedUser = u;
+    this.viewDialog.nativeElement.showModal();
+  }
+
+  suspendUser(u: any) {
+    u.status = 'Suspendu';
+    this.applyFilters();
+  }
+
+  reactivateUser(u: any) {
+    u.status = 'Actif';
+    this.applyFilters();
   }
 }
+
 
 
 

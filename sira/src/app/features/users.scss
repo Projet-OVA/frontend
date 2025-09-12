@@ -141,3 +141,69 @@ $danger: #ef4444;
     }
   }
 }
+
+.users-page {
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    .left {
+      display: flex;
+      gap: 0.5rem;
+      input, select {
+        padding: 0.4rem;
+      }
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .progress {
+      background: #eee;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      .bar {
+        background: #3b82f6;
+        height: 100%;
+      }
+    }
+  }
+
+  dialog {
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    max-width: 400px;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      input {
+        padding: 0.4rem;
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+  }
+}

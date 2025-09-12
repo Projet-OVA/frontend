@@ -1,40 +1,96 @@
 <div class="contents-page">
   <div class="toolbar card">
     <div class="left">
-      <select [(ngModel)]="tab">
-        <option value="parcours">Parcours</option>
-        <option value="defis">Défis</option>
-        <option value="temoignages">Témoignages</option>
+      <select [(ngModel)]="tab" (change)="applyFilters()">
+        <option value="">Tous</option>
+        <option value="parcours">Parcours éducatifs</option>
+        <option value="defis">Défis communautaires</option>
       </select>
-      <input type="text" placeholder="Recherche titre / tags..." (input)="q = $any($event.target).value" />
-      <button class="btn" (click)="load()">Filtrer</button>
+
+      <input
+        type="text"
+        placeholder="Recherche titre..."
+        (input)="q = $any($event.target).value; applyFilters()"
+      />
+
+      <button class="btn" (click)="applyFilters()">Filtrer</button>
     </div>
 
     <div class="right">
-      <button class="btn btn-primary" (click)="edit()">+ Ajouter</button>
+      <button class="btn btn-primary" (click)="openDialog()">+ Ajouter</button>
     </div>
   </div>
 
   <div class="card">
     <table class="table">
       <thead>
-        <tr><th>Titre</th><th>Type</th><th>Langue</th><th>Durée</th><th>Statut</th><th>Actions</th></tr>
+        <tr>
+          <th>Titre</th>
+          <th>Type</th>
+          <th>Langue</th>
+          <th>Durée</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
       </thead>
+
       <tbody>
-        <tr *ngFor="let c of contents">
+        <tr *ngFor="let c of filteredContents">
           <td>{{ c.title }}</td>
           <td>{{ c.type }}</td>
           <td>{{ c.language }}</td>
-          <td>{{ c.duration ? (c.duration + ' min') : '—' }}</td>
-          <td>{{ c.published ? 'Publié' : 'Brouillon' }}</td>
+          <td>{{ c.duration }} min</td>
+          <td>{{ c.status }}</td>
           <td>
-            <button class="btn-ghost" (click)="edit(c.id)">Éditer</button>
+            <button class="btn-ghost" (click)="openDialog(c)">Éditer</button>
             <button class="btn-danger" (click)="delete(c.id)">Supprimer</button>
-            <button class="btn" *ngIf="!c.published" (click)="publishContent(c.id)">Publier</button>
+            <button class="btn" (click)="changeStatus(c.id, 'Publié')">Publier</button>
+            <button class="btn" (click)="changeStatus(c.id, 'Suspendu')">Suspendre</button>
           </td>
         </tr>
-        <tr *ngIf="!contents?.length"><td colspan="6">Aucun contenu</td></tr>
+        <tr *ngIf="!filteredContents?.length">
+          <td colspan="6" class="muted">Aucun contenu trouvé</td>
+        </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" *ngIf="showDialog">
+    <div class="modal">
+      <h3>{{ editContent?.id ? 'Modifier' : 'Nouveau' }} contenu</h3>
+
+      <form (ngSubmit)="saveDialog()" #f="ngForm">
+        <label>Titre</label>
+        <input type="text" [(ngModel)]="editContent.title" name="title" required />
+
+        <label>Type</label>
+        <select [(ngModel)]="editContent.type" name="type">
+          <option value="parcours">Parcours</option>
+          <option value="defis">Défis</option>
+        </select>
+
+        <label>Langue</label>
+        <select [(ngModel)]="editContent.language" name="language">
+          <option value="fr">Français</option>
+          <option value="en">Anglais</option>
+        </select>
+
+        <label>Durée (minutes)</label>
+        <input type="number" [(ngModel)]="editContent.duration" name="duration" />
+
+        <label>Statut</label>
+        <select [(ngModel)]="editContent.status" name="status">
+          <option>Publié</option>
+          <option>En attente</option>
+          <option>Suspendu</option>
+        </select>
+
+        <div class="actions">
+          <button type="button" class="btn" (click)="showDialog=false">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

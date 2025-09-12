@@ -4,7 +4,7 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-        publications
+        Contenus complets --> Enregistrement
                     "
 fi
 
