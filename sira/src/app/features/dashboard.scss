@@ -1,0 +1,24 @@
+$muted: #6b7280;
+$card: #fff;
+$primary: #1f6feb;
+
+.dashboard { display:flex; flex-direction:column; gap:16px;
+  .kpi-row { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;
+    .kpi { padding:14px; .kpi-title{ font-weight:700; color:$muted; } .kpi-value{ font-size:28px; margin:8px 0; font-weight:800; } .kpi-sub{ color:$muted; font-size:13px; } }
+  }
+
+  .grid-two { display:grid; grid-template-columns: 2fr 1fr; gap:12px; }
+
+  .list-compact { list-style:none; padding:0; margin:0;
+    li { padding:10px 0; border-bottom:1px solid #f1f5f9;
+      .title{ font-weight:700; } .meta{ color:$muted; font-size:13px; }
+    }
+  }
+
+  .table { width:100%; border-collapse:collapse; thead { background:#fbfcfe; th { text-align:left; padding:10px; color:$muted; } } tbody tr td { padding:10px; border-top:1px solid #f1f5f9; } }
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .dashboard { .kpi-row { grid-template-columns: repeat(2, 1fr); } .grid-two { grid-template-columns: 1fr; } }
+}

@@ -1,0 +1,25 @@
+<div class="badges-page">
+  <div class="card">
+    <h3>Badges disponibles</h3>
+    <div class="badges-grid">
+      <div class="badge-card card" *ngFor="let b of badges">
+        <div class="badge-key">  <span class="badge-icon">{{ b.icon }}</span> {{ b.key }}</div>
+        <div class="badge-title">{{ b.title }}</div>
+        <div class="badge-desc">{{ b.description }}</div>
+        <div class="actions">
+          <button class="btn" (click)="assign('user-id', b.id)">Assigner</button>
+        </div>
+      </div>
+
+      <div class="badge-card card empty">
+        <button class="btn btn-primary" (click)="create()">+ Nouveau badge</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>Statistiques</h4>
+    <p class="muted">Nombre attribués par type (placeholder).</p>
+    <canvas id="chart-badges" width="400" height="140"></canvas>
+  </div>
+</div>

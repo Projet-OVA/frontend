@@ -1,0 +1,71 @@
+<!-- Admin layout: sidebar + topbar + main -->
+<input id="nav-toggle" class="nav-toggle" type="checkbox" aria-hidden="true" />
+
+<div class="sira-admin">
+  <aside class="sidenav" aria-label="Navigation principale">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">SIRA</div>
+      <div class="brand-caption">
+        <strong>OVA</strong>
+        <small>Backoffice</small>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <ul>
+        <li><a routerLink="/dashboard" routerLinkActive="active">🏠 Dashboard</a></li>
+        <li><a routerLink="/users" routerLinkActive="active">👥 Utilisateurs</a></li>
+        <li><a routerLink="/contents" routerLinkActive="active">📚 Contenus</a></li>
+        <li><a routerLink="/badges" routerLinkActive="active">🎖 Badges</a></li>
+        <li><a routerLink="/reports" routerLinkActive="active">📈 Rapports</a></li>
+        <li><a routerLink="/settings" routerLinkActive="active">⚙️ Paramètres</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidenav-footer">
+      <button class="btn-flat" title="Se déconnecter" (click)="logout()">🔒 Déconnexion</button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar" role="banner">
+      <label for="nav-toggle" class="hamburger" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </label>
+
+      <div class="topbar-left">
+        <form class="search" role="search" (submit)="$event.preventDefault()">
+          <input type="search" placeholder="Rechercher utilisateurs, parcours..." aria-label="Recherche" />
+          <button class="btn-ghost" type="submit">🔍</button>
+        </form>
+      </div>
+
+      <div class="topbar-right">
+        <button class="icon-btn" title="Notifications" aria-label="Notifications">🔔</button>
+        <div class="user-info" aria-haspopup="true">
+          <div class="avatar" aria-hidden="true">A</div>
+          <div class="user-name">
+            <div class="name">Admin</div>
+            <div class="role">Super Admin</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content" role="main">
+      <section class="page-header">
+        <ng-container *ngIf="false">
+          <!-- si tu veux un breadcrumb -->
+        </ng-container>
+      </section>
+
+      <section class="page-body">
+        <router-outlet></router-outlet>
+      </section>
+
+      <footer class="tiny-footer" aria-hidden="true">
+        © {{ currentYear }} OVA — SIRA · Admin
+      </footer>
+    </main>
+  </div>
+</div>

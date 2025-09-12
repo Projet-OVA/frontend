@@ -1,0 +1,40 @@
+<div class="contents-page">
+  <div class="toolbar card">
+    <div class="left">
+      <select [(ngModel)]="tab">
+        <option value="parcours">Parcours</option>
+        <option value="defis">Défis</option>
+        <option value="temoignages">Témoignages</option>
+      </select>
+      <input type="text" placeholder="Recherche titre / tags..." (input)="q = $any($event.target).value" />
+      <button class="btn" (click)="load()">Filtrer</button>
+    </div>
+
+    <div class="right">
+      <button class="btn btn-primary" (click)="edit()">+ Ajouter</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr><th>Titre</th><th>Type</th><th>Langue</th><th>Durée</th><th>Statut</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of contents">
+          <td>{{ c.title }}</td>
+          <td>{{ c.type }}</td>
+          <td>{{ c.language }}</td>
+          <td>{{ c.duration ? (c.duration + ' min') : '—' }}</td>
+          <td>{{ c.published ? 'Publié' : 'Brouillon' }}</td>
+          <td>
+            <button class="btn-ghost" (click)="edit(c.id)">Éditer</button>
+            <button class="btn-danger" (click)="delete(c.id)">Supprimer</button>
+            <button class="btn" *ngIf="!c.published" (click)="publishContent(c.id)">Publier</button>
+          </td>
+        </tr>
+        <tr *ngIf="!contents?.length"><td colspan="6">Aucun contenu</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

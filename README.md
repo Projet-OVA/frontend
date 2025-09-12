@@ -36,7 +36,6 @@ La partie backoffice est l’outil interne pour l’équipe OVA afin de:
 ## 🧪 Installation locale
 
 ```bash
-git checkout frontend
 npm install
 ng serve
 ```

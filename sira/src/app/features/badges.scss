@@ -1,0 +1,31 @@
+$muted:#6b7280;
+$primary:#1f6feb;
+
+.badges-page { display:flex; flex-direction:column; gap:12px;
+
+  .badges-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:12px; margin-top:8px;
+    .badge-card { padding:12px; text-align:center;
+      .badge-key { font-weight:800; font-size:20px; color:$primary; margin-bottom:8px; }
+      .badge-title { font-weight:700; margin-bottom:6px; }
+      .badge-desc { color:$muted; font-size:13px; margin-bottom:10px; }
+      .actions { display:flex; justify-content:center; gap:8px; }
+    }
+    .empty { display:flex; align-items:center; justify-content:center; }
+  }
+
+  canvas { width:100% !important; height:160px !important; }
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .badges-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 520px) {
+  .badges-grid { grid-template-columns: 1fr; }
+}
+
+.badge-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 8px;
+}

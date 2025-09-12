@@ -1,0 +1,32 @@
+$primary: #1f6feb;
+$bg: #f6f8fa;
+$card: #ffffff;
+$muted: #6b7280;
+
+.login-page {
+  min-height: calc(100vh - 0px);
+  display:flex; align-items:center; justify-content:center; padding:36px; background: linear-gradient(180deg,#f5f7fb 0%, #ffffff 100%);
+  .login-panel { width:100%; max-width:420px; text-align:left;
+    h1 { margin:0 0 6px; font-size:20px; }
+    .muted { color:$muted; margin-bottom:14px; display:block; }
+
+    .login-form { display:flex; flex-direction:column; gap:12px;
+      label { display:flex; flex-direction:column; gap:6px; .label { font-weight:600; font-size:13px; }
+        input { padding:10px 12px; border-radius:8px; border:1px solid #e6edf3; background:white; width:100%; }
+      }
+
+      .actions { display:flex; align-items:center; gap:12px; margin-top:6px;
+        .btn { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; }
+        .btn-primary { background:$primary; color:white; font-weight:700; }
+        .link-muted { color:$muted; text-decoration:none; font-size:14px; }
+      }
+    }
+
+    .help { margin-top:10px; color:$muted; font-size:13px; }
+  }
+}
+
+/* small screens */
+@media (max-width: 520px) {
+  .login-page { padding:18px; .login-panel { width:100%; } }
+}

@@ -1,0 +1,46 @@
+<div class="settings-page">
+  <div class="grid-two">
+    <div class="card">
+      <h3>Paramètres généraux</h3>
+
+      <label>Nom de l'application
+        <input type="text" [(ngModel)]="appName" />
+      </label>
+
+      <label>Langue par défaut
+        <select [(ngModel)]="selected">
+          <option *ngFor="let l of languages" [value]="l">{{ l }}</option>
+        </select>
+      </label>
+
+      <div class="actions">
+        <button class="btn btn-primary" (click)="saveSettings()">Sauvegarder</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Comptes Admin</h3>
+      <div *ngFor="let a of admins" class="admin-row">
+        <div>
+          <div class="name">{{ a.name }}</div>
+          <div class="meta">{{ a.email }}</div>
+        </div>
+        <div>
+          <button class="btn-ghost" (click)="editAdmin(a.id)">Éditer</button>
+          <button class="btn-danger" (click)="deleteAdmin(a.id)">Supprimer</button>
+        </div>
+      </div>
+
+      <hr />
+
+      <h4>Logs de sécurité</h4>
+      <div class="logs">
+        <div *ngFor="let l of logs" class="log-row">
+          <div class="left">{{ l.action }} — <small class="muted">{{ l.at | date:'short' }}</small></div>
+          <div class="right"><small class="muted">{{ l.ip }}</small></div>
+        </div>
+        <div *ngIf="!logs?.length" class="muted">Aucun log</div>
+      </div>
+    </div>
+  </div>
+</div>

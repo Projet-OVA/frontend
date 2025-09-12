@@ -4,7 +4,7 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-                    NavBar
+    doit gérer les endpoints
                     "
 fi
 

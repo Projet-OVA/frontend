@@ -1,0 +1,62 @@
+<div class="dashboard">
+  <div class="kpi-row">
+    <div class="card kpi">
+      <div class="kpi-title">Utilisateurs inscrits</div>
+      <div class="kpi-value">{{ stats.users ?? 0 }}</div>
+      <div class="kpi-sub">Actifs cette semaine</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-title">Parcours publiés</div>
+      <div class="kpi-value">{{ stats.contents ?? 0 }}</div>
+      <div class="kpi-sub">Nouveaux ce mois</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-title">Badges délivrés</div>
+      <div class="kpi-value">{{ stats.badges ?? 0 }}</div>
+      <div class="kpi-sub">Total</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-title">Taux de complétion</div>
+      <div class="kpi-value">— %</div>
+      <div class="kpi-sub">Objectif: 60%</div>
+    </div>
+  </div>
+
+  <div class="grid-two">
+    <div class="card">
+      <h3>Utilisateurs — activité</h3>
+      <canvas id="chart-users" width="400" height="200" aria-label="Graphique utilisateurs"></canvas>
+      <small class="muted">Graphique d'exemple (Chart.js à connecter).</small>
+    </div>
+
+    <div class="card">
+      <h3>Top parcours</h3>
+      <ul class="list-compact">
+        <li *ngFor="let p of (stats.topContents || [])">
+          <div class="title">{{ p.title }}</div>
+          <div class="meta">{{ p.views }} vues · {{ p.lang }}</div>
+        </li>
+        <li *ngIf="!(stats.topContents?.length)">Pas de données</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Activités récentes</h3>
+    <table class="table">
+      <thead><tr><th>Utilisateur</th><th>Action</th><th>Parcours</th><th>Quand</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let r of (stats.recent || [])">
+          <td>{{ r.user }}</td>
+          <td>{{ r.action }}</td>
+          <td>{{ r.content || '—' }}</td>
+          <td>{{ r.at | date:'short' }}</td>
+        </tr>
+        <tr *ngIf="!(stats.recent?.length)"><td colspan="4">Aucune activité récente</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

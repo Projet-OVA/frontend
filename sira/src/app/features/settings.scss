@@ -1,0 +1,28 @@
+$muted:#6b7280;
+$primary:#1f6feb;
+$danger:#ef4444;
+
+.settings-page { display:flex; flex-direction:column; gap:12px;
+
+  .grid-two { display:grid; grid-template-columns: 1fr 420px; gap:12px; }
+
+  label { display:flex; flex-direction:column; gap:8px; margin-bottom:10px;
+    input, select { padding:10px; border-radius:8px; border:1px solid #e6edf3; }
+  }
+
+  .actions { margin-top:8px; }
+
+  .admin-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f1f5f9;
+    .meta { color:$muted; font-size:13px; }
+  }
+
+  .logs { margin-top:8px; .log-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f8fafc; .muted{color:$muted;} } }
+
+  .btn-ghost { background:transparent; border:none; color:$primary; cursor:pointer; margin-right:8px; }
+  .btn-danger { background:$danger; color:white; padding:6px 8px; border-radius:8px; border:none; cursor:pointer; }
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .settings-page .grid-two { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,143 @@
+$muted: #6b7280;
+$primary: #1f6feb;
+$danger: #ef4444;
+
+.users-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    .left {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      input[type='text'] {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #e6edf3;
+        min-width: 240px;
+      }
+      select {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #e6edf3;
+      }
+      .btn {
+        padding: 8px 10px;
+        border-radius: 8px;
+      }
+    }
+    .right {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      background: #fbfcfe;
+      th {
+        text-align: left;
+        padding: 10px;
+        color: $muted;
+      }
+    }
+    tbody td {
+      padding: 10px;
+      border-top: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+    .progress {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      width: 100%;
+      margin-bottom: 6px;
+      .bar {
+        height: 100%;
+        background: $primary;
+        border-radius: 6px;
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      margin-right: 6px;
+      font-size: 12px;
+      color: $muted;
+    }
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: $primary;
+      cursor: pointer;
+    }
+    .btn-danger {
+      background: $danger;
+      color: white;
+      border: none;
+      padding: 6px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn {
+      background: #111827;
+      color: white;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .little {
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pagination {
+      display: flex;
+      gap: 6px;
+      .pbtn {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #eef2f6;
+        background: white;
+      }
+      .active {
+        background: $primary;
+        color: white;
+        border: none;
+      }
+    }
+  }
+
+  /* responsive */
+  @media (max-width: 820px) {
+    .users-page .table thead {
+      display: none;
+    }
+    .users-page .table tbody td {
+      display: block;
+      width: 100%;
+    }
+    .users-page .table tbody tr {
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 1px 2px rgba(13, 23, 33, 0.04);
+    }
+  }
+}

@@ -1,0 +1,71 @@
+<div class="users-page">
+  <div class="toolbar card">
+    <div class="left">
+      <input type="text" placeholder="Rechercher utilisateur..." (input)="q = $any($event.target).value" />
+      <select [(ngModel)]="filterStatus">
+        <option value="">Tous</option>
+        <option value="active">Actifs</option>
+        <option value="suspended">Suspendus</option>
+      </select>
+      <button class="btn" (click)="load()">Actualiser</button>
+    </div>
+
+    <div class="right">
+      <button class="btn btn-primary" (click)="router.navigate(['/users', 'create'])">+ Nouvel utilisateur</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Âge</th>
+          <th>Progression</th>
+          <th>Badges</th>
+          <th>Statut</th>
+          <th style="width:130px">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>{{ u.firstName || u.name }} {{ u.lastName || '' }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.age || '-' }}</td>
+          <td>
+            <div class="progress">
+              <div class="bar" [style.width.%]="(u.progress?.overall ?? 0)"></div>
+            </div>
+            <small class="muted">{{ (u.progress?.overall ?? 0) }}%</small>
+          </td>
+          <td>
+            <span class="badge small" *ngFor="let b of (u.badges || [])">{{ b }}</span>
+          </td>
+          <td>{{ u.status }}</td>
+          <td>
+            <button class="btn-ghost" (click)="router.navigate(['/users', u.id])">Voir</button>
+            <button class="btn-danger" *ngIf="u.status !== 'suspended'" (click)="deleteUser(u.id)">Suspendre</button>
+            <button class="btn" *ngIf="u.status === 'suspended'" (click)="reactivateUser(u.id)">Réactiver</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="!users?.length">
+          <td colspan="7" class="muted">Aucun utilisateur trouvé.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card little">
+    <div class="meta">
+      <small class="muted">Affichage 1–20 sur 120 utilisateurs</small>
+      <div class="pagination">
+        <button class="pbtn">‹</button>
+        <button class="pbtn active">1</button>
+        <button class="pbtn">2</button>
+        <button class="pbtn">›</button>
+      </div>
+    </div>
+  </div>
+</div>
