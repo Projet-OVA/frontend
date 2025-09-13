@@ -1,45 +1,89 @@
-<section class="publications">
-  <header class="publications-header">
-    <h1>📝 Publications</h1>
-
-    <div class="actions">
-      <select [(ngModel)]="selectedType" (change)="filterByType(selectedType)">
-        <option value="all">Tous types</option>
-        <option value="article">Articles</option>
-        <option value="video">Vidéos</option>
-        <option value="podcast">Podcasts</option>
-      </select>
-
-      <button class="btn-primary" (click)="createPublication()">+ Nouvelle publication</button>
+<div class="publications-page">
+  <div class="toolbar card">
+    <div class="left">
+      <button class="btn btn-primary" (click)="openDialog()">+ Nouvelle publication</button>
     </div>
-  </header>
 
-  <table class="publications-table" *ngIf="filteredPublications.length; else empty">
-    <thead>
-      <tr>
-        <th>Titre</th>
-        <th>Type</th>
-        <th>Auteur</th>
-        <th>Créée le</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let pub of filteredPublications">
-        <td>{{ pub.title }}</td>
-        <td>{{ pub.type }}</td>
-        <td>{{ pub.author }}</td>
-        <td>{{ pub.createdAt | date:'short' }}</td>
-        <td>
-          <button class="btn-ghost small" (click)="deletePublication(pub.id)">🗑️</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <ng-template #empty>
-    <div class="empty-state">
-      Aucune publication disponible pour ce type.
+    <div class="right">
+      <div *ngIf="loading">Chargement…</div>
+      <div *ngIf="error" class="error">{{ error }}</div>
     </div>
-  </ng-template>
-</section>
+  </div>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Type</th>
+          <th>Statut</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of publications">
+          <td>{{ p.name }}</td>
+          <td>{{ p.publicationType }}</td>
+          <td>{{ p.status }}</td>
+          <td>{{ p.publicationDate ? (p.publicationDate | date:'short') : '-' }}</td>
+          <td>
+            <button class="btn-ghost" (click)="edit(p)">✏️ Éditer</button>
+            <button class="btn-danger" (click)="delete(p)">🗑 Supprimer</button>
+            <button class="btn" (click)="publish(p)" [disabled]="p.status === 'PUBLISHED'">📢 Publier</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="!publications?.length">
+          <td colspan="5" class="muted">Aucune publication trouvée</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- dialog -->
+  <div class="dialog" *ngIf="showDialog">
+    <div class="dialog-content" role="dialog" aria-modal="true">
+      <h3>{{ newPub.id ? 'Modifier' : 'Créer' }} une publication</h3>
+
+      <input type="text" placeholder="Nom" [(ngModel)]="newPub.name" />
+
+      <textarea placeholder="Contenu" [(ngModel)]="newPub.publicationContent"></textarea>
+
+      <label>Type
+        <select [(ngModel)]="newPub.publicationType">
+          <option value="TEXT">Texte</option>
+          <option value="MEDIA">Média</option>
+          <option value="PODCAST">Podcast</option>
+        </select>
+      </label>
+
+      <label>MediaType
+        <select [(ngModel)]="newPub.mediaType">
+          <option value="IMAGE">Image</option>
+          <option value="VIDEO">Vidéo</option>
+          <option value="AUDIO">Audio</option>
+        </select>
+      </label>
+
+      <label>Statut
+        <select [(ngModel)]="newPub.status">
+          <option value="DRAFT">Brouillon</option>
+          <option value="PUBLISHED">Publié</option>
+          <option value="SUSPENDED">Suspendu</option>
+        </select>
+      </label>
+
+      <div *ngIf="newPub.publicationType !== 'TEXT'">
+        <input type="file" (change)="onFileChange($event)" />
+      </div>
+
+      <div class="actions">
+        <button class="btn" (click)="showDialog=false" type="button">Annuler</button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Enregistrement…' : (newPub.id ? 'Mettre à jour' : 'Enregistrer') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

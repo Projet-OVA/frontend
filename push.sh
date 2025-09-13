@@ -4,7 +4,7 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-        Contenus complets --> Enregistrement
+        publications connectées avec api.service.ts avec succés
                     "
 fi
 
