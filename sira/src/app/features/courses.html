@@ -15,18 +15,16 @@
         <tr>
           <th>Nom</th>
           <th>Catégorie</th>
-          <th>Langue</th>
-          <th>Durée</th>
+          <th>Description</th>
           <th>Statut</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let c of courses">
-          <td>{{ c.name }}</td>
+          <td>{{ c.nom }}</td>
           <td>{{ c.category }}</td>
-          <td>{{ c.language }}</td>
-          <td>{{ c.duration }}</td>
+          <td>{{ c.description }}</td>
           <td>{{ c.status }}</td>
           <td>
             <button class="btn-ghost" (click)="openDialog(c)">✏️</button>
@@ -44,17 +42,16 @@
     <div class="dialog-content">
       <h3>{{ newCourse.id ? 'Modifier' : 'Créer' }} cours</h3>
       
-      <input type="text" placeholder="Nom*" [(ngModel)]="newCourse.name" required />
-      <input type="text" placeholder="Catégorie*" [(ngModel)]="newCourse.category" required />
-      <input type="text" placeholder="Titre" [(ngModel)]="newCourse.title" />
-      <textarea placeholder="Description" [(ngModel)]="newCourse.description"></textarea>
+      <input type="text" placeholder="Nom*" [(ngModel)]="newCourse.nom" required />
       
-      <select [(ngModel)]="newCourse.language">
-        <option value="FR">Français</option>
-        <option value="EN">English</option>
+      <select [(ngModel)]="newCourse.category" required>
+        <option value="">Choisir une catégorie</option>
+        <option value="ENVIRONNEMENT">Environnement</option>
+        <option value="DROIT_DU_CITOYEN">Droit du citoyen</option>
+        <option value="DEVOIR_DU_CITOYEN">Devoir du citoyen</option>
       </select>
       
-      <input type="text" placeholder="Durée" [(ngModel)]="newCourse.duration" />
+      <textarea placeholder="Description" [(ngModel)]="newCourse.description"></textarea>
       
       <select [(ngModel)]="newCourse.status">
         <option value="DRAFT">Brouillon</option>

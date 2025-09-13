@@ -17,12 +17,9 @@ export class CoursesComponent implements OnInit {
   filterStatus = '';
 
   newCourse: any = {
-    name: '',
+    nom: '',
     category: '',
-    title: '',
     description: '',
-    language: 'FR',
-    duration: '',
     status: 'DRAFT'
   };
 
@@ -43,40 +40,42 @@ export class CoursesComponent implements OnInit {
         console.error(err);
         this.error = 'Erreur chargement';
         this.loading = false;
-      }
+      },
     });
   }
 
   openDialog(course?: any) {
-    this.newCourse = course ? { ...course } : {
-      name: '',
-      category: '',
-      title: '',
-      description: '',
-      language: 'FR',
-      duration: '',
-      status: 'DRAFT'
-    };
+    this.newCourse = course
+      ? { ...course }
+      : {
+          nom: '',
+          category: '',
+          description: '',
+          status: 'DRAFT'
+        };
     this.showDialog = true;
   }
 
   save() {
-    if (!this.newCourse.name || !this.newCourse.category) {
+    if (!this.newCourse.nom || !this.newCourse.category) {
       alert('Nom et catégorie sont obligatoires');
       return;
     }
 
     this.saving = true;
     const form = new FormData();
-    form.append('name', this.newCourse.name);
+
+    form.append('nom', this.newCourse.nom);
     form.append('category', this.newCourse.category);
-    form.append('title', this.newCourse.title || '');
     form.append('description', this.newCourse.description || '');
-    form.append('language', this.newCourse.language);
-    form.append('duration', this.newCourse.duration || '');
     form.append('status', this.newCourse.status);
 
-    const obs = this.newCourse.id 
+    console.log('Données envoyées:');
+    for (let [key, value] of form.entries()) {
+      console.log(key, value);
+    }
+
+    const obs = this.newCourse.id
       ? this.api.updateCourse(this.newCourse.id, form)
       : this.api.createCourse(form);
 
@@ -87,10 +86,10 @@ export class CoursesComponent implements OnInit {
         this.loadCourses();
       },
       error: (err) => {
-        console.error(err);
+        console.error('Erreur détaillée:', err.error);
         this.saving = false;
         alert('Erreur: ' + (err.error?.message || 'Erreur sauvegarde'));
-      }
+      },
     });
   }
 
@@ -98,7 +97,7 @@ export class CoursesComponent implements OnInit {
     if (!confirm('Supprimer ce cours ?')) return;
     this.api.deleteCourse(course.id).subscribe({
       next: () => this.loadCourses(),
-      error: () => alert('Erreur suppression')
+      error: () => alert('Erreur suppression'),
     });
   }
 
@@ -107,7 +106,7 @@ export class CoursesComponent implements OnInit {
     form.append('status', 'PUBLISHED');
     this.api.updateCourse(course.id, form).subscribe({
       next: () => this.loadCourses(),
-      error: () => alert('Erreur publication')
+      error: () => alert('Erreur publication'),
     });
   }
 }
