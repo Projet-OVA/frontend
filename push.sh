@@ -10,6 +10,16 @@ if ! git diff-index --quiet HEAD --; then
             - Éditer: ça marche pas !
             - Supprimer: ça marche pas !
             - Publier: ça marche pas !
+        Parcours éducatifs:
+            - Lister: ça marche !
+            - Ajouter: ça marche pas !
+            - Éditer: ça marche  pas !
+            - Supprimer: ça marche pas !
+        Défis communautaires:
+            - Lister: ça marche !
+            - Ajouter: ça marche pas !
+            - Éditer: ça marche pas !
+            - Supprimer: ça marche  pas !
                     "
 fi
 

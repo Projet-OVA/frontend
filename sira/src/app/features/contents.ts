@@ -1,106 +1,136 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../core/api.service';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contents',
-  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './contents.html',
   styleUrls: ['./contents.scss'],
 })
 export class ContentsComponent implements OnInit {
-  tab = 'parcours';
-  q = '';
   contents: any[] = [];
-  filteredContents: any[] = [];
+  loading = false;
+  error = '';
 
   showDialog = false;
-  editContent: any = null;
+  saving = false;
+
+  filterType: string = '';
+
+  newContent: any = this.initContent();
+  selectedFile: File | null = null;
+
+  constructor(private api: ApiService) {}
 
   ngOnInit(): void {
-    this.load();
+    this.loadContents();
   }
 
-  load() {
-    this.contents = [
-      { id: 1, title: 'Set Settal', type: 'parcours', language: 'fr', duration: 45, status: 'Publié' },
-      { id: 2, title: 'Match mariés vs célibataires', type: 'defis', language: 'fr', duration: 15, status: 'En attente' },
-    ];
-    this.applyFilters();
+  initContent() {
+    // Dans initContent()
+    return {
+      title: '',
+      description: '',
+      contentType: 'COURSE',
+      language: 'FR',
+      duration: '0', // ← Essayez string au lieu de number
+      status: 'DRAFT',
+      creator: 'admin', // ← Valeur par défaut
+      communityId: 'default', // ← Valeur par défaut
+      attachment: null,
+      // Ajoutez d'autres champs requis
+    };
   }
 
-  applyFilters() {
-    this.filteredContents = this.contents.filter(c =>
-      (this.tab ? c.type === this.tab : true) &&
-      (this.q ? c.title.toLowerCase().includes(this.q.toLowerCase()) : true)
-    );
+  loadContents() {
+    this.loading = true;
+
+    Promise.all([this.api.getCourses().toPromise(), this.api.getEvents().toPromise()])
+      .then(([courses, events]) => {
+        const safeCourses = (courses ?? []) as any[];
+        const safeEvents = (events ?? []) as any[];
+
+        this.contents = [
+          ...safeCourses.map((c) => ({ ...c, contentType: 'COURSE' })),
+          ...safeEvents.map((e) => ({ ...e, contentType: 'EVENT' })),
+        ];
+
+        this.loading = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        this.error = 'Erreur chargement';
+        this.loading = false;
+      });
   }
 
-  openDialog(content?: any) {
-    this.editContent = content
-      ? { ...content }
-      : { title: '', type: 'parcours', language: 'fr', duration: 0, status: 'En attente' };
+  openDialog(content: any = null) {
+    this.newContent = content ? { ...content } : this.initContent();
+    this.selectedFile = null;
     this.showDialog = true;
   }
 
-  saveDialog() {
-    if (this.editContent.id) {
-      const idx = this.contents.findIndex(c => c.id === this.editContent.id);
-      this.contents[idx] = this.editContent;
-    } else {
-      this.editContent.id = Date.now();
-      this.contents.push(this.editContent);
-    }
-    this.showDialog = false;
-    this.applyFilters();
+  onFileChange(evt: any) {
+    const f = evt.target.files?.[0];
+    if (f) this.selectedFile = f;
   }
 
-  delete(id: number) {
-    if (confirm('Supprimer ce contenu ?')) {
-      this.contents = this.contents.filter(c => c.id !== id);
-      this.applyFilters();
-    }
+  save() {
+    this.saving = true;
+    const form = new FormData();
+    Object.keys(this.newContent).forEach((k) => {
+      if (k !== 'attachment') form.append(k, this.newContent[k]);
+    });
+    if (this.selectedFile) form.append('attachment', this.selectedFile);
+
+    const contentType = this.newContent.contentType;
+    const obs = this.newContent.id
+      ? contentType === 'COURSE'
+        ? this.api.updateCourse(this.newContent.id, form)
+        : this.api.updateEvent(this.newContent.id, form)
+      : contentType === 'COURSE'
+      ? this.api.createCourse(form)
+      : this.api.createEvent(form);
+
+    obs.subscribe({
+      next: () => {
+        this.saving = false;
+        this.showDialog = false;
+        this.loadContents();
+      },
+      error: (err) => {
+        console.error('Erreur détaillée:', err.error); // ← Ajoutez cette ligne
+        this.saving = false;
+        alert('Erreur enregistrement: ' + (err.error?.message || 'Données invalides'));
+      },
+    });
   }
 
-  changeStatus(id: number, newStatus: string) {
-    const content = this.contents.find(c => c.id === id);
-    if (content) {
-      content.status = newStatus;
-      this.applyFilters();
-    }
+  delete(c: any) {
+    if (!confirm('Supprimer ?')) return;
+    const deleteObs =
+      c.contentType === 'COURSE' ? this.api.deleteCourse(c.id) : this.api.deleteEvent(c.id);
+
+    deleteObs.subscribe({
+      next: () => this.loadContents(),
+      error: () => alert('Erreur suppression'),
+    });
+  }
+
+  publish(c: any) {
+    const form = new FormData();
+    form.append('status', 'PUBLISHED');
+
+    const publishObs =
+      c.contentType === 'COURSE'
+        ? this.api.updateCourse(c.id, form)
+        : this.api.updateEvent(c.id, form);
+
+    publishObs.subscribe({
+      next: () => this.loadContents(),
+      error: () => alert('Erreur publication'),
+    });
   }
 }
-
-
-
-
-
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-// import { ApiService } from '../core/api.service';
-
-// @Component({
-//   selector: 'app-contents',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './contents.html',
-//   styleUrls: ['./contents.scss']
-// })
-// export class ContentsComponent implements OnInit {
-//   contents: any[] = [];
-
-//   constructor(private api: ApiService) {}
-
-//   ngOnInit() {
-//     this.loadContents();
-//   }
-
-//   loadContents() {
-//     // TODO: Remplacer 'contents' par ton endpoint Nest
-//     this.api.get<any[]>('contents').subscribe(data => {
-//       this.contents = data;
-//     });
-//   }
-// }

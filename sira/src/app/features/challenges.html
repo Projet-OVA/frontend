@@ -1,0 +1,68 @@
+<div class="challenges-page">
+  <div class="toolbar card">
+    <button class="btn btn-primary" (click)="openDialog()">+ Nouveau défi</button>
+
+    <select [(ngModel)]="filterStatus">
+      <option value="">Tous</option>
+      <option value="DRAFT">Brouillons</option>
+      <option value="PUBLISHED">Publiés</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Communauté</th>
+          <th>Début</th>
+          <th>Fin</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of challenges">
+          <td>{{ c.title }}</td>
+          <td>{{ c.communityId }}</td>
+          <td>{{ c.startDate | date : 'short' }}</td>
+          <td>{{ c.endDate | date : 'short' }}</td>
+          <td>{{ c.status }}</td>
+          <td>
+            <button class="btn-ghost" (click)="openDialog(c)">✏️</button>
+            <button class="btn-danger" (click)="delete(c)">🗑️</button>
+            <button class="btn" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">📢</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="dialog" *ngIf="showDialog">
+    <div class="dialog-content">
+      <h3>{{ newChallenge.id ? 'Modifier' : 'Créer' }} défi</h3>
+
+      <input type="text" placeholder="Titre*" [(ngModel)]="newChallenge.title" required />
+      <textarea placeholder="Description" [(ngModel)]="newChallenge.description"></textarea>
+      <input type="text" placeholder="ID Communauté" [(ngModel)]="newChallenge.communityId" />
+
+      <label>Date début</label>
+      <input type="datetime-local" [(ngModel)]="newChallenge.startDate" />
+
+      <label>Date fin</label>
+      <input type="datetime-local" [(ngModel)]="newChallenge.endDate" />
+
+      <select [(ngModel)]="newChallenge.status">
+        <option value="DRAFT">Brouillon</option>
+        <option value="PUBLISHED">Publié</option>
+      </select>
+
+      <div class="actions">
+        <button class="btn" (click)="showDialog = false">Annuler</button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

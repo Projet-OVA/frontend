@@ -52,10 +52,11 @@ export class ApiService {
     );
   }
 
+  // Dans api.service.ts
   updatePublication(id: string | number, payload: any): Observable<any> {
     const headers = this.authHeaders();
-    // Si payload est FormData, on l'envoie tel quel, sinon JSON
-    return this.http.put<any>(`${this.baseUrl}/publication/${id}`, payload, { headers }).pipe(
+    // Essayez PATCH au lieu de PUT
+    return this.http.patch<any>(`${this.baseUrl}/publication/${id}`, payload, { headers }).pipe(
       catchError((err) => {
         console.error('API updatePublication error', err);
         return throwError(() => err);
@@ -77,4 +78,101 @@ export class ApiService {
   publishPublication(id: string | number): Observable<any> {
     return this.updatePublication(id, { status: 'PUBLISHED' });
   }
+
+  // --- COURSES ---
+  getCourses(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/course`, { headers: this.authHeaders() }).pipe(
+      map((res) => (Array.isArray(res?.data) ? res.data : res?.data?.items ?? [])),
+      catchError((err) => {
+        console.error('API getCourses error', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  getCourse(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/course/${id}`, { headers: this.authHeaders() });
+  }
+
+  createCourse(form: FormData): Observable<any> {
+    return this.http
+      .post<any>(`${this.baseUrl}/course`, form, { headers: this.authHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('API createCourse error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
+  updateCourse(id: string, payload: any): Observable<any> {
+    return this.http
+      .patch<any>(`${this.baseUrl}/course/${id}`, payload, { headers: this.authHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('API updateCourse error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
+  deleteCourse(id: string): Observable<any> {
+    return this.http
+      .delete<any>(`${this.baseUrl}/course/${id}`, { headers: this.authHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('API deleteCourse error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
+  // --- EVENTS ---
+  getEvents(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/events`, { headers: this.authHeaders() }).pipe(
+      map((res) => (Array.isArray(res?.data) ? res.data : res?.data?.items ?? [])),
+      catchError((err) => {
+        console.error('API getEvents error', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  getEvent(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/events/${id}`, { headers: this.authHeaders() });
+  }
+
+  createEvent(form: FormData): Observable<any> {
+    return this.http
+      .post<any>(`${this.baseUrl}/events`, form, { headers: this.authHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('API createEvent error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
+  updateEvent(id: string, payload: any): Observable<any> {
+    return this.http
+      .patch<any>(`${this.baseUrl}/events/${id}`, payload, { headers: this.authHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('API updateEvent error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
+  deleteEvent(id: string): Observable<any> {
+    return this.http
+      .delete<any>(`${this.baseUrl}/events/${id}`, { headers: this.authHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('API deleteEvent error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
 }

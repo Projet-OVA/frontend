@@ -1,23 +1,18 @@
 <div class="contents-page">
   <div class="toolbar card">
     <div class="left">
-      <select [(ngModel)]="tab" (change)="applyFilters()">
-        <option value="">Tous</option>
-        <option value="parcours">Parcours éducatifs</option>
-        <option value="defis">Défis communautaires</option>
-      </select>
-
-      <input
-        type="text"
-        placeholder="Recherche titre..."
-        (input)="q = $any($event.target).value; applyFilters()"
-      />
-
-      <button class="btn" (click)="applyFilters()">Filtrer</button>
+      <button class="btn btn-primary" (click)="openDialog()">+ Nouveau contenu</button>
     </div>
 
     <div class="right">
-      <button class="btn btn-primary" (click)="openDialog()">+ Ajouter</button>
+      <label
+        >Filtrer:
+        <select [(ngModel)]="filterType">
+          <option value="">Tous</option>
+          <option value="COURSE">Cours</option>
+          <option value="EVENT">Événements</option>
+        </select>
+      </label>
     </div>
   </div>
 
@@ -33,64 +28,69 @@
           <th>Actions</th>
         </tr>
       </thead>
-
       <tbody>
-        <tr *ngFor="let c of filteredContents">
+        <tr *ngFor="let c of contents" [hidden]="filterType && c.contentType !== filterType">
           <td>{{ c.title }}</td>
-          <td>{{ c.type }}</td>
+          <td>{{ c.contentType }}</td>
           <td>{{ c.language }}</td>
-          <td>{{ c.duration }} min</td>
+          <td>{{ c.duration }}</td>
           <td>{{ c.status }}</td>
           <td>
-            <button class="btn-ghost" (click)="openDialog(c)">Éditer</button>
-            <button class="btn-danger" (click)="delete(c.id)">Supprimer</button>
-            <button class="btn" (click)="changeStatus(c.id, 'Publié')">Publier</button>
-            <button class="btn" (click)="changeStatus(c.id, 'Suspendu')">Suspendre</button>
+            <button class="btn-ghost" (click)="openDialog(c)">✏️ Éditer</button>
+            <button class="btn-danger" (click)="delete(c)">🗑 Supprimer</button>
+            <button class="btn" (click)="publish(c)" [disabled]="c.status === 'PUBLISHED'">
+              📢 Publier
+            </button>
           </td>
         </tr>
-        <tr *ngIf="!filteredContents?.length">
+
+        <tr *ngIf="!contents?.length">
           <td colspan="6" class="muted">Aucun contenu trouvé</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- MODAL -->
-  <div class="modal-backdrop" *ngIf="showDialog">
-    <div class="modal">
-      <h3>{{ editContent?.id ? 'Modifier' : 'Nouveau' }} contenu</h3>
+  <div class="dialog" *ngIf="showDialog">
+    <div class="dialog-content">
+      <h3>{{ newContent.id ? 'Modifier' : 'Créer' }} un contenu</h3>
 
-      <form (ngSubmit)="saveDialog()" #f="ngForm">
-        <label>Titre</label>
-        <input type="text" [(ngModel)]="editContent.title" name="title" required />
+      <input type="text" placeholder="Titre" [(ngModel)]="newContent.title" />
+      <textarea placeholder="Description" [(ngModel)]="newContent.description"></textarea>
 
-        <label>Type</label>
-        <select [(ngModel)]="editContent.type" name="type">
-          <option value="parcours">Parcours</option>
-          <option value="defis">Défis</option>
+      <label
+        >Type
+        <select [(ngModel)]="newContent.contentType">
+          <option value="COURSE">Cours</option>
+          <option value="EVENT">Événement</option>
         </select>
+      </label>
 
-        <label>Langue</label>
-        <select [(ngModel)]="editContent.language" name="language">
-          <option value="fr">Français</option>
-          <option value="en">Anglais</option>
+      <input type="text" placeholder="Langue" [(ngModel)]="newContent.language" />
+      <input type="text" placeholder="Durée" [(ngModel)]="newContent.duration" />
+
+      <input type="text" placeholder="Créateur" [(ngModel)]="newContent.creator" />
+      <input type="text" placeholder="Community ID" [(ngModel)]="newContent.communityId" />
+
+      <label
+        >Statut
+        <select [(ngModel)]="newContent.status">
+          <option value="DRAFT">Brouillon</option>
+          <option value="PUBLISHED">Publié</option>
+          <option value="SUSPENDED">Suspendu</option>
         </select>
+      </label>
 
-        <label>Durée (minutes)</label>
-        <input type="number" [(ngModel)]="editContent.duration" name="duration" />
+      <div>
+        <input type="file" (change)="onFileChange($event)" />
+      </div>
 
-        <label>Statut</label>
-        <select [(ngModel)]="editContent.status" name="status">
-          <option>Publié</option>
-          <option>En attente</option>
-          <option>Suspendu</option>
-        </select>
-
-        <div class="actions">
-          <button type="button" class="btn" (click)="showDialog=false">Annuler</button>
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </div>
-      </form>
+      <div class="actions">
+        <button class="btn" (click)="showDialog = false">Annuler</button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Enregistrement…' : newContent.id ? 'Mettre à jour' : 'Enregistrer' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

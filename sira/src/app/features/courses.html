@@ -1,0 +1,72 @@
+<div class="courses-page">
+  <div class="toolbar card">
+    <button class="btn btn-primary" (click)="openDialog()">+ Nouveau cours</button>
+    
+    <select [(ngModel)]="filterStatus">
+      <option value="">Tous</option>
+      <option value="DRAFT">Brouillons</option>
+      <option value="PUBLISHED">Publiés</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Catégorie</th>
+          <th>Langue</th>
+          <th>Durée</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of courses">
+          <td>{{ c.name }}</td>
+          <td>{{ c.category }}</td>
+          <td>{{ c.language }}</td>
+          <td>{{ c.duration }}</td>
+          <td>{{ c.status }}</td>
+          <td>
+            <button class="btn-ghost" (click)="openDialog(c)">✏️</button>
+            <button class="btn-danger" (click)="delete(c)">🗑️</button>
+            <button class="btn" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">
+              📢
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="dialog" *ngIf="showDialog">
+    <div class="dialog-content">
+      <h3>{{ newCourse.id ? 'Modifier' : 'Créer' }} cours</h3>
+      
+      <input type="text" placeholder="Nom*" [(ngModel)]="newCourse.name" required />
+      <input type="text" placeholder="Catégorie*" [(ngModel)]="newCourse.category" required />
+      <input type="text" placeholder="Titre" [(ngModel)]="newCourse.title" />
+      <textarea placeholder="Description" [(ngModel)]="newCourse.description"></textarea>
+      
+      <select [(ngModel)]="newCourse.language">
+        <option value="FR">Français</option>
+        <option value="EN">English</option>
+      </select>
+      
+      <input type="text" placeholder="Durée" [(ngModel)]="newCourse.duration" />
+      
+      <select [(ngModel)]="newCourse.status">
+        <option value="DRAFT">Brouillon</option>
+        <option value="PUBLISHED">Publié</option>
+      </select>
+
+      <div class="actions">
+        <button class="btn" (click)="showDialog = false">Annuler</button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

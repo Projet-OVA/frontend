@@ -34,3 +34,13 @@
     - les défis avec plus de participants
 - Rapports:
     - le fait de pouvoir imprimer les rapports
+
+
+- Auth              --> Complet
+- Utilisateurs      -->
+- Contenus          -->
+- Badges            -->
+- Rapports          -->
+- Paramètres        -->
+- Dashboard         -->
+- Publications      --> reste (Modifier, Supprimer, Publier)

@@ -15,7 +15,8 @@
       <ul>
         <li><a routerLink="/dashboard" routerLinkActive="active">🏠 Dashboard</a></li>
         <li><a routerLink="/users" routerLinkActive="active">👥 Utilisateurs</a></li>
-        <li><a routerLink="/contents" routerLinkActive="active">📚 Contenus</a></li>
+        <li><a routerLink="/courses" routerLinkActive="active">📚 Parcours éducatifs</a></li>
+        <li><a routerLink="/challenges" routerLinkActive="active">🎯 Défis Communautaires</a></li>
         <li><a routerLink="/badges" routerLinkActive="active">🎖 Badges</a></li>
         <li><a routerLink="/reports" routerLinkActive="active">📈 Rapports</a></li>
         <li><a routerLink="/publications" routerLinkActive="active">📝 Publications</a></li>
@@ -36,7 +37,11 @@
 
       <div class="topbar-left">
         <form class="search" role="search" (submit)="$event.preventDefault()">
-          <input type="search" placeholder="Rechercher utilisateurs, parcours..." aria-label="Recherche" />
+          <input
+            type="search"
+            placeholder="Rechercher utilisateurs, parcours..."
+            aria-label="Recherche"
+          />
           <button class="btn-ghost" type="submit">🔍</button>
         </form>
       </div>
@@ -64,9 +69,7 @@
         <router-outlet></router-outlet>
       </section>
 
-      <footer class="tiny-footer" aria-hidden="true">
-        © {{ currentYear }} OVA — SIRA · Admin
-      </footer>
+      <footer class="tiny-footer" aria-hidden="true">© {{ currentYear }} OVA — SIRA · Admin</footer>
     </main>
   </div>
 </div>

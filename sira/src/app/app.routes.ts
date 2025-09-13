@@ -9,6 +9,14 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: 'courses',
+        loadComponent: () => import('./features/courses').then((m) => m.CoursesComponent),
+      },
+      {
+        path: 'challenges',
+        loadComponent: () => import('./features/challenges').then((m) => m.ChallengesComponent),
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./features/dashboard').then((m) => m.DashboardComponent),
       },
