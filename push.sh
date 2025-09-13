@@ -4,7 +4,12 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-        publications connectées avec api.service.ts avec succés avec les images
+        Login réussi
+        publications:
+            - Nouvelle publication: ça marche !
+            - Éditer: ça marche pas !
+            - Supprimer: ça marche pas !
+            - Publier: ça marche pas !
                     "
 fi
 

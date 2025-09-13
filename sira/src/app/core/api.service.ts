@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, map, catchError } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   // base API (utilise /api comme dans ta doc)
   private baseUrl = 'https://sira-backendv1.onrender.com/api';
 
-  constructor(private http: HttpClient) {}
+  // constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
+  // Gardez seulement cette version qui utilise AuthService
   private authHeaders() {
-    const token = localStorage.getItem('token'); // si tu utilises JWT côté front
+    const token = this.authService.getToken();
     return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
   }
 
@@ -52,7 +55,7 @@ export class ApiService {
   updatePublication(id: string | number, payload: any): Observable<any> {
     const headers = this.authHeaders();
     // Si payload est FormData, on l'envoie tel quel, sinon JSON
-    return this.http.patch<any>(`${this.baseUrl}/publication/${id}`, payload, { headers }).pipe(
+    return this.http.put<any>(`${this.baseUrl}/publication/${id}`, payload, { headers }).pipe(
       catchError((err) => {
         console.error('API updatePublication error', err);
         return throwError(() => err);
