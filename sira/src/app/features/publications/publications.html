@@ -2,40 +2,78 @@
   <div class="toolbar card">
     <div class="left">
       <button class="btn btn-primary" (click)="openDialog()">+ Nouvelle publication</button>
+      <input
+        type="text"
+        placeholder="Rechercher contenu, auteur, fichier..."
+        (input)="onSearchChange($any($event.target).value)"
+        class="search-input"
+        aria-label="Recherche publications"
+      />
     </div>
 
     <div class="right">
-      <div *ngIf="loading">Chargement…</div>
+      <label class="small-label">
+        Type
+        <select [(ngModel)]="selectedType" (change)="onFilterChange()">
+          <option value="">Tous</option>
+          <option value="TEXT">Texte</option>
+          <option value="MEDIA">Média</option>
+          <option value="PODCAST">Podcast</option>
+        </select>
+      </label>
+
+      <label class="small-label">
+        Trier
+        <select [(ngModel)]="sortOrder" (change)="onSortChange(sortOrder)">
+          <option value="desc">Plus récent d'abord</option>
+          <option value="asc">Plus ancien d'abord</option>
+        </select>
+      </label>
+
+      <div *ngIf="loading" class="muted">Chargement…</div>
       <div *ngIf="error" class="error">{{ error }}</div>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card table-card">
     <table class="table">
       <thead>
         <tr>
-          <th>Nom</th>
           <th>Type</th>
           <th>Statut</th>
+          <th>Fichier</th>
+          <th>Auteur</th>
           <th>Date</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of publications">
-          <td>{{ p.name }}</td>
+        <tr *ngFor="let p of filteredPublications">
           <td>{{ p.publicationType }}</td>
           <td>{{ p.status }}</td>
-          <td>{{ p.publicationDate ? (p.publicationDate | date:'short') : '-' }}</td>
           <td>
+            <a *ngIf="p.attachment?.url" [href]="p.attachment?.url" target="_blank" rel="noopener">
+              <img class="publication-image" [src]="p.attachment?.url" alt="Pièce jointe" />
+            </a>
+
+            <span *ngIf="!p.attachment?.url">—</span>
+          </td>
+          <td>
+            <span *ngIf="p.author">{{ p.author.nom }} {{ p.author.prenom }}</span>
+            <span *ngIf="!p.author">—</span>
+          </td>
+          <td>{{ p.publicationDate ? (p.publicationDate | date : 'short') : '-' }}</td>
+          <td class="actions-col">
             <button class="btn-ghost" (click)="edit(p)">✏️ Éditer</button>
             <button class="btn-danger" (click)="delete(p)">🗑 Supprimer</button>
-            <button class="btn" (click)="publish(p)" [disabled]="p.status === 'PUBLISHED'">📢 Publier</button>
+            <button class="btn" (click)="publish(p)" [disabled]="p.status === 'PUBLISHED'">
+              📢 Publier
+            </button>
           </td>
         </tr>
 
-        <tr *ngIf="!publications?.length">
-          <td colspan="5" class="muted">Aucune publication trouvée</td>
+        <tr *ngIf="!filteredPublications?.length">
+          <td colspan="6" class="muted">Aucune publication trouvée</td>
         </tr>
       </tbody>
     </table>
@@ -46,42 +84,43 @@
     <div class="dialog-content" role="dialog" aria-modal="true">
       <h3>{{ newPub.id ? 'Modifier' : 'Créer' }} une publication</h3>
 
-      <input type="text" placeholder="Nom" [(ngModel)]="newPub.name" />
+      <label>Contenu</label>
+      <textarea
+        rows="4"
+        [(ngModel)]="newPub.publicationContent"
+        placeholder="Texte de la publication"
+      ></textarea>
 
-      <textarea placeholder="Contenu" [(ngModel)]="newPub.publicationContent"></textarea>
+      <label>Type</label>
+      <select [(ngModel)]="newPub.publicationType">
+        <option value="TEXT">Texte</option>
+        <option value="MEDIA">Média</option>
+        <option value="PODCAST">Podcast</option>
+      </select>
 
-      <label>Type
-        <select [(ngModel)]="newPub.publicationType">
-          <option value="TEXT">Texte</option>
-          <option value="MEDIA">Média</option>
-          <option value="PODCAST">Podcast</option>
-        </select>
-      </label>
+      <label>MediaType</label>
+      <select [(ngModel)]="newPub.mediaType">
+        <option value="IMAGE">Image</option>
+        <option value="VIDEO">Vidéo</option>
+        <option value="AUDIO">Audio</option>
+      </select>
 
-      <label>MediaType
-        <select [(ngModel)]="newPub.mediaType">
-          <option value="IMAGE">Image</option>
-          <option value="VIDEO">Vidéo</option>
-          <option value="AUDIO">Audio</option>
-        </select>
-      </label>
-
-      <label>Statut
-        <select [(ngModel)]="newPub.status">
-          <option value="DRAFT">Brouillon</option>
-          <option value="PUBLISHED">Publié</option>
-          <option value="SUSPENDED">Suspendu</option>
-        </select>
-      </label>
+      <label>Statut</label>
+      <select [(ngModel)]="newPub.status">
+        <option value="DRAFT">Brouillon</option>
+        <option value="PUBLISHED">Publié</option>
+        <option value="SUSPENDED">Suspendu</option>
+      </select>
 
       <div *ngIf="newPub.publicationType !== 'TEXT'">
+        <label>Fichier (png/webp/mp4/mp3/pdf/pptx)</label>
         <input type="file" (change)="onFileChange($event)" />
       </div>
 
       <div class="actions">
-        <button class="btn" (click)="showDialog=false" type="button">Annuler</button>
+        <button class="btn" (click)="showDialog = false" type="button">Annuler</button>
         <button class="btn btn-primary" (click)="save()" [disabled]="saving">
-          {{ saving ? 'Enregistrement…' : (newPub.id ? 'Mettre à jour' : 'Enregistrer') }}
+          {{ saving ? 'Enregistrement…' : newPub.id ? 'Mettre à jour' : 'Enregistrer' }}
         </button>
       </div>
     </div>

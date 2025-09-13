@@ -4,7 +4,7 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-        publications connectées avec api.service.ts avec succés
+        publications connectées avec api.service.ts avec succés avec les images
                     "
 fi
 
