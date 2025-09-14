@@ -38,18 +38,16 @@
 
 - Auth              --> Complet
 
-- Utilisateurs      -->
+- Utilisateurs      --> 
 
-- Cours             --> reste (Ajouter, Supprimer, Modifier)
+- Cours             --> Complet
 
-- Events            --> reste (Ajouter, Supprimer, Modifier)
+- Events            --> Supprimer et Modifier
 
-- Badges            -->
-
-- Rapports          -->
+- Badges            --> Get les badges
 
 - Paramètres        -->
 
 - Dashboard         -->
 
-- Publications      --> reste (Modifier, Supprimer, Publier)
+- Publications      --> Complet

@@ -59,10 +59,10 @@ export class ChallengesComponent implements OnInit {
 
   /** Ouvrir la fenêtre de création/édition */
   openDialog(challenge?: any) {
-    if (!this.authService.isAdmin()) {
-      alert('Seuls les administrateurs peuvent créer/modifier des défis');
-      return;
-    }
+    // if (!this.authService.isAdmin()) {
+    //   alert('Seuls les administrateurs peuvent créer/modifier des défis');
+    //   return;
+    // }
     this.newChallenge = challenge ? { ...challenge } : this.emptyChallenge();
     this.showDialog = true;
   }
@@ -117,10 +117,10 @@ export class ChallengesComponent implements OnInit {
 
   /** Supprimer un défi */
   delete(challenge: any) {
-    if (!this.authService.isAdmin()) {
-      alert('Seuls les administrateurs peuvent supprimer des défis');
-      return;
-    }
+    // if (!this.authService.isAdmin()) {
+    //   alert('Seuls les administrateurs peuvent supprimer des défis');
+    //   return;
+    // }
 
     if (!confirm('Supprimer ce défi ?')) return;
 

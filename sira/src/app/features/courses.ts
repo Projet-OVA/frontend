@@ -15,12 +15,21 @@ export class CoursesComponent implements OnInit {
   showDialog = false;
   saving = false;
   filterStatus = '';
+  selectedFile: File | null = null;
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      console.log('Fichier sélectionné :', file.name);
+    }
+  }
 
   newCourse: any = {
     nom: '',
     category: '',
     description: '',
-    status: 'DRAFT'
+    status: 'DRAFT',
   };
 
   constructor(private api: ApiService) {}
@@ -51,7 +60,7 @@ export class CoursesComponent implements OnInit {
           nom: '',
           category: '',
           description: '',
-          status: 'DRAFT'
+          status: 'DRAFT',
         };
     this.showDialog = true;
   }
