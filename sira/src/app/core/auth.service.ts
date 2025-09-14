@@ -16,7 +16,6 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/auth/login`, { email, password }).pipe(
       tap((response: any) => {
         console.log('Login response:', response);
-        // Le token est dans response.data.accessToken, pas response.accessToken
         if (response.data?.accessToken) {
           localStorage.setItem('token', response.data.accessToken);
           localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -35,12 +34,35 @@ export class AuthService {
 
   getToken(): string | null {
     const token = localStorage.getItem('token');
-    console.log('Retrieved token:', token); // ← Debug
+    console.log('Retrieved token:', token);
     return token;
   }
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  getUserRole(): string {
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        return userData.role || '';
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+        return '';
+      }
+    }
+    return '';
+  }
+
+  getCurrentUser(): any {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'ADMIN';
   }
 
   private loadStoredUser(): void {

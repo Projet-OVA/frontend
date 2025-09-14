@@ -37,10 +37,19 @@
 
 
 - Auth              --> Complet
+
 - Utilisateurs      -->
-- Contenus          -->
+
+- Cours             --> reste (Ajouter, Supprimer, Modifier)
+
+- Events            --> reste (Ajouter, Supprimer, Modifier)
+
 - Badges            -->
+
 - Rapports          -->
+
 - Paramètres        -->
+
 - Dashboard         -->
+
 - Publications      --> reste (Modifier, Supprimer, Publier)

@@ -1,61 +1,55 @@
 <div class="challenges-page">
   <div class="toolbar card">
-    <button class="btn btn-primary" (click)="openDialog()">+ Nouveau défi</button>
-
-    <select [(ngModel)]="filterStatus">
-      <option value="">Tous</option>
-      <option value="DRAFT">Brouillons</option>
-      <option value="PUBLISHED">Publiés</option>
-    </select>
+    <button class="btn btn-primary" (click)="openDialog()">
+      + Nouveau défi
+    </button>
   </div>
 
   <div class="card">
     <table class="table">
       <thead>
         <tr>
-          <th>Titre</th>
-          <th>Communauté</th>
-          <th>Début</th>
-          <th>Fin</th>
-          <th>Statut</th>
+          <th>Nom du défi</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Lieu</th>
+          <th>Participants</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let c of challenges">
-          <td>{{ c.title }}</td>
-          <td>{{ c.communityId }}</td>
-          <td>{{ c.startDate | date : 'short' }}</td>
-          <td>{{ c.endDate | date : 'short' }}</td>
-          <td>{{ c.status }}</td>
+          <td>{{ c.eventName }}</td>
+          <td>{{ c.description }}</td>
+          <td>{{ c.eventDate | date:'short' }}</td>
+          <td>{{ c.location || '-' }}</td>
+          <td>{{ c.participantsCount || 0 }}</td>
           <td>
             <button class="btn-ghost" (click)="openDialog(c)">✏️</button>
             <button class="btn-danger" (click)="delete(c)">🗑️</button>
-            <button class="btn" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">📢</button>
           </td>
+        </tr>
+        <tr *ngIf="challenges.length === 0 && !loading">
+          <td colspan="6" class="muted">Aucun défi communautaire</td>
         </tr>
       </tbody>
     </table>
   </div>
 
+  <!-- MODAL DIALOG -->
   <div class="dialog" *ngIf="showDialog">
     <div class="dialog-content">
-      <h3>{{ newChallenge.id ? 'Modifier' : 'Créer' }} défi</h3>
-
-      <input type="text" placeholder="Titre*" [(ngModel)]="newChallenge.title" required />
+      <h3>{{ newChallenge.id ? 'Modifier' : 'Créer' }} un défi</h3>
+      
+      <input type="text" placeholder="Nom du défi*" [(ngModel)]="newChallenge.eventName" required />
       <textarea placeholder="Description" [(ngModel)]="newChallenge.description"></textarea>
+      
+      <label>Date et heure</label>
+      <input type="datetime-local" [(ngModel)]="newChallenge.eventDate" />
+      
+      <input type="text" placeholder="Lieu" [(ngModel)]="newChallenge.location" />
+      <input type="text" placeholder="ID Organisateur" [(ngModel)]="newChallenge.organizerId" />
       <input type="text" placeholder="ID Communauté" [(ngModel)]="newChallenge.communityId" />
-
-      <label>Date début</label>
-      <input type="datetime-local" [(ngModel)]="newChallenge.startDate" />
-
-      <label>Date fin</label>
-      <input type="datetime-local" [(ngModel)]="newChallenge.endDate" />
-
-      <select [(ngModel)]="newChallenge.status">
-        <option value="DRAFT">Brouillon</option>
-        <option value="PUBLISHED">Publié</option>
-      </select>
 
       <div class="actions">
         <button class="btn" (click)="showDialog = false">Annuler</button>
