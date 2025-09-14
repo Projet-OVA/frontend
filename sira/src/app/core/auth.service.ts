@@ -85,4 +85,20 @@ export class AuthService {
 
     return user;
   }
+
+  getUserId(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64);
+      const payload = JSON.parse(payloadJson);
+
+      return payload.sub || null; // selon ton JWT, 'sub' contient l'ID
+    } catch (error) {
+      console.error('Erreur lors du décodage du token', error);
+      return null;
+    }
+  }
 }

@@ -18,7 +18,8 @@ export class CommunitiesComponent implements OnInit {
   saving = false;
   selectedCommunity: any = { communityName: '', communityCategory: '' };
 
-  categories = ['ENVIRONNEMENT', 'EDUCATION', 'SANTE', 'TECHNOLOGIE', 'ARTS', 'SPORT'];
+  categories = ['ENVIRONNEMENT', 'EDUCATION', 'sANTE', 'CULTURE', 'SPORT', 'AUTRE'];
+
 
   constructor(private api: ApiService, private authService: AuthService) {}
 
@@ -26,17 +27,22 @@ export class CommunitiesComponent implements OnInit {
     this.loadCommunities();
   }
 
+  // Charger toutes les communautés
   loadCommunities() {
     this.loading = true;
     this.api.getCommunities().subscribe({
       next: (res: any) => {
-        this.communities = res.data;
+        this.communities = res.data; // s'assurer de prendre res.data
         this.loading = false;
       },
-      error: () => (this.loading = false),
+      error: (err) => {
+        console.error('Erreur lors du chargement des communautés', err);
+        this.loading = false;
+      },
     });
   }
 
+  // Ouvrir la fenêtre de création ou édition
   openDialog(community?: any) {
     this.selectedCommunity = community
       ? { ...community }
@@ -44,6 +50,7 @@ export class CommunitiesComponent implements OnInit {
     this.showDialog = true;
   }
 
+  // Sauvegarder une nouvelle communauté ou modifier existante
   saveCommunity() {
     if (!this.selectedCommunity.communityName || !this.selectedCommunity.communityCategory) {
       alert('Nom et catégorie obligatoires');
@@ -53,12 +60,15 @@ export class CommunitiesComponent implements OnInit {
     const payload = {
       communityName: this.selectedCommunity.communityName,
       communityCategory: this.selectedCommunity.communityCategory,
-      creatorId: this.authService.getUser(), // si AuthService fournit la méthode
+      creatorId: this.authService.getUserId(),
     };
+
+    console.log('Payload envoyé au serveur:', payload);
 
     this.saving = true;
     this.api.createCommunity(payload).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('Réponse serveur:', res);
         alert('Communauté créée avec succès !');
         this.showDialog = false;
         this.saving = false;
@@ -66,17 +76,19 @@ export class CommunitiesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors de la sauvegarde', err);
-        alert('Erreur lors de la sauvegarde');
+        alert('Erreur lors de la sauvegarde : ' + JSON.stringify(err.error));
         this.saving = false;
       },
     });
   }
 
+  // Supprimer une communauté
   deleteCommunity(community: any) {
     if (!confirm('Supprimer cette communauté ?')) return;
+
     this.api.deleteCommunity(community.id).subscribe({
       next: () => this.loadCommunities(),
-      error: (err) => console.error(err),
+      error: (err) => console.error('Erreur lors de la suppression', err),
     });
   }
 }
