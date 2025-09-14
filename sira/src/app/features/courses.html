@@ -21,7 +21,7 @@
           <th>Catégorie</th>
           <th>Description</th>
           <th>Statut</th>
-          <th style="width:160px">Actions</th>
+          <th style="width: 160px">Actions</th>
         </tr>
       </thead>
 
@@ -34,7 +34,14 @@
           <td>
             <button class="btn-ghost" title="Éditer" (click)="openDialog(c)">✏️</button>
             <button class="btn-danger" title="Supprimer" (click)="delete(c)">🗑️</button>
-            <button class="btn" title="Publier" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">📢</button>
+            <button
+              class="btn"
+              title="Publier"
+              (click)="publish(c)"
+              *ngIf="c.status !== 'PUBLISHED'"
+            >
+              📢
+            </button>
           </td>
         </tr>
 
@@ -68,6 +75,8 @@
           <option value="PUBLISHED">Publié</option>
         </select>
       </label>
+
+      <input type="text" placeholder="ID créateur" [(ngModel)]="newCourse.creatorId" />
 
       <div class="file-row">
         <label class="file-label">Fichier (optionnel)</label>

@@ -71,4 +71,18 @@ export class AuthService {
       this.currentUserSubject.next(JSON.parse(user));
     }
   }
+
+  getUser(): any {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return null;
+
+    const user = JSON.parse(userStr);
+
+    // Harmoniser l'ID : prendre sub si id n'existe pas
+    if (!user.id && user.sub) {
+      user.id = user.sub;
+    }
+
+    return user;
+  }
 }

@@ -79,12 +79,21 @@ export class ApiService {
     return this.updatePublication(id, { status: 'PUBLISHED' });
   }
 
-  // --- COURSES ---
   getCourses(): Observable<any[]> {
     return this.http.get<any>(`${this.baseUrl}/course`, { headers: this.authHeaders() }).pipe(
-      map((res) => (Array.isArray(res?.data) ? res.data : res?.data?.items ?? [])),
+      map((res) => {
+        console.log('📦 Réponse brute GET /course :', res);
+
+        if (Array.isArray(res?.courses)) {
+          console.log('✅ Tableau trouvé dans res.courses');
+          return res.courses;
+        }
+
+        console.warn('⚠️ Format inattendu pour GET /course');
+        return [];
+      }),
       catchError((err) => {
-        console.error('API getCourses error', err);
+        console.error('❌ API getCourses error', err);
         return throwError(() => err);
       })
     );
@@ -107,7 +116,7 @@ export class ApiService {
 
   updateCourse(id: string, payload: any): Observable<any> {
     return this.http
-      .patch<any>(`${this.baseUrl}/course/${id}`, payload, { headers: this.authHeaders() })
+      .put<any>(`${this.baseUrl}/course/${id}`, payload, { headers: this.authHeaders() })
       .pipe(
         catchError((err) => {
           console.error('API updateCourse error', err);
@@ -174,5 +183,4 @@ export class ApiService {
         })
       );
   }
-
 }

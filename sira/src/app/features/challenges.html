@@ -1,9 +1,4 @@
 <div class="challenges-page">
-  <div class="toolbar card">
-    <button class="btn btn-primary" (click)="openDialog()">
-      + Nouveau défi
-    </button>
-  </div>
 
   <div class="card">
     <table class="table">
@@ -25,7 +20,6 @@
           <td>{{ c.location || '-' }}</td>
           <td>{{ c.participantsCount || 0 }}</td>
           <td>
-            <button class="btn-ghost" (click)="openDialog(c)">✏️</button>
             <button class="btn-danger" (click)="delete(c)">🗑️</button>
           </td>
         </tr>

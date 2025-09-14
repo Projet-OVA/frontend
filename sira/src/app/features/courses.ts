@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../core/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-courses',
   imports: [CommonModule, FormsModule],
   templateUrl: './courses.html',
+  styleUrls: ['./courses.scss'],
 })
 export class CoursesComponent implements OnInit {
   courses: any[] = [];
@@ -32,7 +34,7 @@ export class CoursesComponent implements OnInit {
     status: 'DRAFT',
   };
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private authService: AuthService) {}
 
   ngOnInit() {
     this.loadCourses();
@@ -61,7 +63,9 @@ export class CoursesComponent implements OnInit {
           category: '',
           description: '',
           status: 'DRAFT',
+          creatorId: this.authService.getUser()?.id,
         };
+    this.selectedFile = null;
     this.showDialog = true;
   }
 
@@ -72,16 +76,18 @@ export class CoursesComponent implements OnInit {
     }
 
     this.saving = true;
-    const form = new FormData();
 
+    const form = new FormData();
     form.append('nom', this.newCourse.nom);
     form.append('category', this.newCourse.category);
     form.append('description', this.newCourse.description || '');
-    form.append('status', this.newCourse.status);
+    form.append('status', this.newCourse.status || 'DRAFT');
 
-    console.log('Données envoyées:');
-    for (let [key, value] of form.entries()) {
-      console.log(key, value);
+    const creatorId = this.authService.getUser()?.id;
+    if (creatorId) form.append('creatorId', creatorId);
+
+    if (this.selectedFile) {
+      form.append('attachment', this.selectedFile);
     }
 
     const obs = this.newCourse.id
@@ -92,6 +98,7 @@ export class CoursesComponent implements OnInit {
       next: () => {
         this.saving = false;
         this.showDialog = false;
+        this.selectedFile = null;
         this.loadCourses();
       },
       error: (err) => {

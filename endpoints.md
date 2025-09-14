@@ -39,16 +39,16 @@
 
 - Auth              --> Complet
 
-- Utilisateurs      --> 
+- Publications      --> Complet
 
-- Cours             --> Complet
+- Cours             --> CRUD
 
 - Events            --> Supprimer et Modifier
 
 - Badges            --> Get les badges
 
+- Utilisateurs      --> 
+
 - Paramètres        -->
 
 - Dashboard         -->
-
-- Publications      --> Complet
