@@ -1,188 +1,90 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../core/api.service';
+import { AuthService } from '../core/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../core/auth.service';
 
 @Component({
   selector: 'app-courses',
   imports: [CommonModule, FormsModule],
   templateUrl: './courses.html',
-  styleUrls: ['./courses.scss'],
+  styleUrls: ['./courses.scss']
 })
 export class CoursesComponent implements OnInit {
   courses: any[] = [];
-  loading = false;
-  error = '';
-  showDialog = false;
-  saving = false;
-  filterStatus = '';
-  selectedFile: File | null = null;
+  filterStatus: string = '';
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      console.log('Fichier sélectionné :', file.name);
-    }
-  }
+  // Modals et états
+  showCourseDialog = false;
+  showQuizDialog = false;
+  savingCourse = false;
+  savingQuiz = false;
 
-  // newCourse: any = {
-  //   nom: '',
-  //   category: '',
-  //   description: '',
-  //   status: 'DRAFT',
-  // };
-
-  newCourse: any = {
+  newCourse: any = {};
+  selectedCourse: any = null;
+  newQuiz: any = {
     nom: '',
-    category: '',
     description: '',
-    status: 'DRAFT',
-    quiz: {
-      nom: '',
-      description: '',
-      score: 100,
-      questions: [
-        // Chaque question aura: content + options [{content, isCorrect}]
-      ],
-    },
+    score: 100,
+    questions: []
   };
 
-  addQuestion() {
-    this.newCourse.quiz.questions.push({
-      content: '',
-      options: [],
-    });
-  }
+  constructor(private api: ApiService, private auth: AuthService) {}
 
-  addOption(question: any) {
-    question.options.push({ content: '', isCorrect: false });
-  }
-
-  removeQuestion(index: number) {
-    this.newCourse.quiz.questions.splice(index, 1);
-  }
-
-  removeOption(question: any, index: number) {
-    question.options.splice(index, 1);
-  }
-
-  constructor(private api: ApiService, private authService: AuthService) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCourses();
   }
 
+  // ====================
+  // Gestion des cours
+  // ====================
   loadCourses() {
-    this.loading = true;
     this.api.getCourses().subscribe({
-      next: (data) => {
-        this.courses = data;
-        this.loading = false;
+      next: (res: any) => {
+        this.courses = res.courses;
       },
       error: (err) => {
-        console.error(err);
-        this.error = 'Erreur chargement';
-        this.loading = false;
-      },
+        console.error('Erreur chargement cours:', err);
+      }
     });
   }
 
-  openDialog(course?: any) {
-    this.newCourse = course
-      ? { ...course }
-      : {
-          nom: '',
-          category: '',
-          description: '',
-          status: 'DRAFT',
-          creatorId: this.authService.getUser()?.id,
-        };
-    this.selectedFile = null;
-    this.showDialog = true;
+  openCourseDialog(course?: any) {
+    this.newCourse = course ? { ...course } : { nom: '', category: '', description: '', status: 'DRAFT' };
+    this.showCourseDialog = true;
   }
 
-  save() {
+  saveCourse() {
     if (!this.newCourse.nom || !this.newCourse.category) {
       alert('Nom et catégorie sont obligatoires');
       return;
     }
 
-    this.saving = true;
+    this.savingCourse = true;
 
-    // --- Création du FormData pour le cours ---
-    const form = new FormData();
-    form.append('nom', this.newCourse.nom);
-    form.append('category', this.newCourse.category);
-    form.append('description', this.newCourse.description || '');
-    form.append('status', this.newCourse.status || 'DRAFT');
+    const form: any = {
+      nom: this.newCourse.nom,
+      category: this.newCourse.category,
+      description: this.newCourse.description || '',
+      status: this.newCourse.status || 'DRAFT'
+    };
 
-    const creatorId = this.authService.getUser()?.id;
-    if (creatorId) form.append('creatorId', creatorId);
-
-    if (this.selectedFile) {
-      form.append('attachment', this.selectedFile);
-    }
-
-    // --- Création / mise à jour du cours ---
     const obs = this.newCourse.id
       ? this.api.updateCourse(this.newCourse.id, form)
       : this.api.createCourse(form);
 
     obs.subscribe({
-      next: (courseResponse: any) => {
-        // ID du cours créé ou mis à jour
-        const courseId = courseResponse?.id || this.newCourse.id;
-
-        // --- Gestion du quiz ---
-        if (this.newCourse.quiz && this.newCourse.quiz.nom) {
-          const quizPayload = {
-            nom: this.newCourse.quiz.nom,
-            description: this.newCourse.quiz.description || '',
-            score: this.newCourse.quiz.score || 100,
-            courseId: courseId,
-            questions:
-              this.newCourse.quiz.questions?.map((q: any) => ({
-                content: q.content,
-                options:
-                  q.options?.map((o: any) => ({
-                    content: o.content,
-                    isCorrect: o.isCorrect || false,
-                  })) || [],
-              })) || [],
-          };
-
-          // Création du quiz via l'API
-          this.api.createQuiz(quizPayload).subscribe({
-            next: () => {
-              console.log('Quiz créé avec succès');
-            },
-            error: (err) => {
-              console.error('Erreur création quiz:', err.error);
-              alert('Erreur création quiz: ' + (err.error?.message || 'Erreur'));
-            },
-          });
-        }
-
-        // --- Finalisation ---
-        this.saving = false;
-        this.showDialog = false;
-        this.selectedFile = null;
-        this.newCourse = {
-          nom: '',
-          category: '',
-          description: '',
-          status: 'DRAFT',
-          quiz: { questions: [] },
-        };
+      next: () => {
+        this.savingCourse = false;
+        this.showCourseDialog = false;
+        this.newCourse = {};
         this.loadCourses();
       },
       error: (err) => {
-        console.error('Erreur détaillée:', err.error);
-        this.saving = false;
-        alert('Erreur: ' + (err.error?.message || 'Erreur sauvegarde'));
-      },
+        console.error('Erreur sauvegarde cours:', err);
+        this.savingCourse = false;
+        alert('Erreur sauvegarde cours');
+      }
     });
   }
 
@@ -190,16 +92,67 @@ export class CoursesComponent implements OnInit {
     if (!confirm('Supprimer ce cours ?')) return;
     this.api.deleteCourse(course.id).subscribe({
       next: () => this.loadCourses(),
-      error: () => alert('Erreur suppression'),
+      error: (err) => console.error(err)
     });
   }
 
   publish(course: any) {
-    const form = new FormData();
-    form.append('status', 'PUBLISHED');
-    this.api.updateCourse(course.id, form).subscribe({
+    const updated = { ...course, status: 'PUBLISHED' };
+    this.api.updateCourse(course.id, updated).subscribe({
       next: () => this.loadCourses(),
-      error: () => alert('Erreur publication'),
+      error: (err) => console.error(err)
+    });
+  }
+
+  // ====================
+  // Gestion des quiz
+  // ====================
+  openQuizDialog(course: any) {
+    this.selectedCourse = course;
+    this.newQuiz = {
+      nom: '',
+      description: '',
+      score: 100,
+      questions: []
+    };
+    this.showQuizDialog = true;
+  }
+
+  addQuestion() {
+    this.newQuiz.questions.push({ content: '', options: [] });
+  }
+
+  addOption(questionIndex: number) {
+    this.newQuiz.questions[questionIndex].options.push({ content: '', isCorrect: false });
+  }
+
+  saveQuiz() {
+    if (!this.newQuiz.nom) {
+      alert('Le nom du quiz est obligatoire');
+      return;
+    }
+
+    const payload = {
+      nom: this.newQuiz.nom,
+      description: this.newQuiz.description,
+      score: this.newQuiz.score || 100,
+      courseId: this.selectedCourse.id,
+      questions: this.newQuiz.questions
+    };
+
+    this.savingQuiz = true;
+
+    this.api.createQuiz(payload).subscribe({
+      next: (res) => {
+        this.savingQuiz = false;
+        this.showQuizDialog = false;
+        this.loadCourses(); // recharge les cours avec quiz
+      },
+      error: (err) => {
+        this.savingQuiz = false;
+        console.error('Erreur création quiz:', err);
+        alert('Erreur création quiz');
+      }
     });
   }
 }

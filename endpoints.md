@@ -41,10 +41,9 @@
 
 - Publications      --> Complet
 
-- Cours             --> Reste Quiz
-    - Quiz          --> 
+- Cours             --> Complet
 
-- Events            --> Supprimer
+- Events            --> Complet (Supprimer à définir)
 
 - Utilisateurs      --> 
 

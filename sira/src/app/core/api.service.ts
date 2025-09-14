@@ -52,7 +52,6 @@ export class ApiService {
     );
   }
 
-  // Dans api.service.ts
   updatePublication(id: string | number, payload: any): Observable<any> {
     const headers = this.authHeaders();
     // Essayez PATCH au lieu de PUT
@@ -77,63 +76,6 @@ export class ApiService {
 
   publishPublication(id: string | number): Observable<any> {
     return this.updatePublication(id, { status: 'PUBLISHED' });
-  }
-
-  getCourses(): Observable<any[]> {
-    return this.http.get<any>(`${this.baseUrl}/course`, { headers: this.authHeaders() }).pipe(
-      map((res) => {
-        console.log('📦 Réponse brute GET /course :', res);
-
-        if (Array.isArray(res?.courses)) {
-          console.log('✅ Tableau trouvé dans res.courses');
-          return res.courses;
-        }
-
-        console.warn('⚠️ Format inattendu pour GET /course');
-        return [];
-      }),
-      catchError((err) => {
-        console.error('❌ API getCourses error', err);
-        return throwError(() => err);
-      })
-    );
-  }
-
-  getCourse(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/course/${id}`, { headers: this.authHeaders() });
-  }
-
-  createCourse(form: FormData): Observable<any> {
-    return this.http
-      .post<any>(`${this.baseUrl}/course`, form, { headers: this.authHeaders() })
-      .pipe(
-        catchError((err) => {
-          console.error('API createCourse error', err);
-          return throwError(() => err);
-        })
-      );
-  }
-
-  updateCourse(id: string, payload: any): Observable<any> {
-    return this.http
-      .put<any>(`${this.baseUrl}/course/${id}`, payload, { headers: this.authHeaders() })
-      .pipe(
-        catchError((err) => {
-          console.error('API updateCourse error', err);
-          return throwError(() => err);
-        })
-      );
-  }
-
-  deleteCourse(id: string): Observable<any> {
-    return this.http
-      .delete<any>(`${this.baseUrl}/course/${id}`, { headers: this.authHeaders() })
-      .pipe(
-        catchError((err) => {
-          console.error('API deleteCourse error', err);
-          return throwError(() => err);
-        })
-      );
   }
 
   // --- EVENTS ---
@@ -184,7 +126,66 @@ export class ApiService {
       );
   }
 
-  createQuiz(payload: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/quiz`, payload, { headers: this.authHeaders() });
+  // -------------------- Courses --------------------
+  getCourses(page: number = 1, limit: number = 10): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/course?page=${page}&limit=${limit}`,
+      this.getAuthHeaders()
+    );
+  }
+
+  getCourseById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/course/${id}`, this.getAuthHeaders());
+  }
+
+  createCourse(course: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/course`, course, this.getAuthHeaders());
+  }
+
+  updateCourse(id: string, course: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/course/${id}`, course, this.getAuthHeaders());
+  }
+
+  deleteCourse(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/course/${id}`, this.getAuthHeaders());
+  }
+
+  getCoursesByCategory(category: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/course/category/${category}`, this.getAuthHeaders());
+  }
+
+  // -------------------- Quizzes --------------------
+  createQuiz(quiz: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/quiz`, quiz, this.getAuthHeaders());
+  }
+
+  getQuizById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/quiz/${id}`, this.getAuthHeaders());
+  }
+
+  updateQuiz(id: string, quiz: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/quiz/${id}`, quiz, this.getAuthHeaders());
+  }
+
+  deleteQuiz(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/quiz/${id}`, this.getAuthHeaders());
+  }
+
+  getQuizByCourse(courseId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/quiz/course/${courseId}`, this.getAuthHeaders());
+  }
+
+  submitQuiz(answers: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/quiz/submit`, answers, this.getAuthHeaders());
+  }
+
+  // -------------------- Helper --------------------
+  private getAuthHeaders() {
+    const token = localStorage.getItem('token'); // ou via ton AuthService
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token || ''}`,
+      }),
+    };
   }
 }

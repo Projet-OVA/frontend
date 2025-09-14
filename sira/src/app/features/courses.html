@@ -2,9 +2,8 @@
   <!-- Toolbar -->
   <div class="toolbar card">
     <div class="left">
-      <button class="btn btn-primary" (click)="openDialog()">+ Nouveau cours</button>
+      <button class="btn btn-primary" (click)="openCourseDialog()">+ Nouveau cours</button>
     </div>
-
     <div class="right">
       <select [(ngModel)]="filterStatus">
         <option value="">Tous</option>
@@ -14,7 +13,7 @@
     </div>
   </div>
 
-  <!-- Table des cours -->
+  <!-- Courses table -->
   <div class="card">
     <table class="table" role="table" aria-label="Liste des cours">
       <thead>
@@ -23,10 +22,9 @@
           <th>Catégorie</th>
           <th>Description</th>
           <th>Quiz</th>
-          <th style="width: 160px">Actions</th>
+          <th style="width: 200px">Actions</th>
         </tr>
       </thead>
-
       <tbody>
         <tr *ngFor="let c of courses" [hidden]="filterStatus && c.status !== filterStatus">
           <td>{{ c.nom }}</td>
@@ -41,19 +39,12 @@
             </ng-template>
           </td>
           <td>
-            <button class="btn-ghost" title="Éditer" (click)="openDialog(c)">✏️</button>
+            <button class="btn-ghost" title="Éditer" (click)="openCourseDialog(c)">✏️</button>
             <button class="btn-danger" title="Supprimer" (click)="delete(c)">🗑️</button>
-            <button
-              class="btn"
-              title="Publier"
-              (click)="publish(c)"
-              *ngIf="c.status !== 'PUBLISHED'"
-            >
-              📢
-            </button>
+            <button class="btn" title="Publier" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">📢</button>
+            <button class="btn btn-secondary" title="Ajouter quiz" (click)="openQuizDialog(c)">➕ Quiz</button>
           </td>
         </tr>
-
         <tr *ngIf="!courses?.length">
           <td colspan="5" class="muted">Aucun cours trouvé</td>
         </tr>
@@ -61,12 +52,10 @@
     </table>
   </div>
 
-  <!-- Modal / Dialog -->
-  <div class="dialog" *ngIf="showDialog" role="dialog" aria-modal="true">
+  <!-- Modal cours -->
+  <div class="dialog" *ngIf="showCourseDialog">
     <div class="dialog-content">
       <h3>{{ newCourse?.id ? 'Modifier' : 'Créer' }} cours</h3>
-
-      <!-- Informations du cours -->
       <input type="text" placeholder="Nom*" [(ngModel)]="newCourse.nom" />
       <select [(ngModel)]="newCourse.category">
         <option value="">Choisir une catégorie</option>
@@ -75,7 +64,6 @@
         <option value="DEVOIR_DU_CITOYEN">Devoir du citoyen</option>
       </select>
       <textarea placeholder="Description" [(ngModel)]="newCourse.description"></textarea>
-
       <label>
         Statut
         <select [(ngModel)]="newCourse.status">
@@ -83,44 +71,42 @@
           <option value="PUBLISHED">Publié</option>
         </select>
       </label>
-
-      <input type="text" placeholder="ID créateur" [(ngModel)]="newCourse.creatorId" />
-
-      <div class="file-row">
-        <label class="file-label">Fichier (optionnel)</label>
-        <input type="file" (change)="onFileChange($event)" />
+      <div class="actions">
+        <button class="btn" (click)="showCourseDialog=false" type="button">Annuler</button>
+        <button class="btn btn-primary" (click)="saveCourse()" [disabled]="savingCourse">
+          {{ savingCourse ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
       </div>
+    </div>
+  </div>
 
-      <!-- Quiz associé -->
-      <div class="quiz-section" *ngIf="newCourse">
-        <h4>Quiz associé (optionnel)</h4>
-        <input type="text" placeholder="Nom du quiz" [(ngModel)]="newCourse.quiz.nom" />
-        <textarea placeholder="Description du quiz" [(ngModel)]="newCourse.quiz.description"></textarea>
-        <input type="number" placeholder="Score max" [(ngModel)]="newCourse.quiz.score" />
+  <!-- Modal quiz -->
+  <div class="dialog" *ngIf="showQuizDialog">
+    <div class="dialog-content">
+      <h3>Créer un quiz pour : {{ selectedCourse?.nom }}</h3>
+      <input type="text" placeholder="Nom*" [(ngModel)]="newQuiz.nom" />
+      <textarea placeholder="Description" [(ngModel)]="newQuiz.description"></textarea>
+      <input type="number" placeholder="Score max" [(ngModel)]="newQuiz.score" />
 
-        <div *ngFor="let q of newCourse.quiz.questions; let i = index" class="question-block">
+      <div class="questions">
+        <div *ngFor="let q of newQuiz.questions; let i=index" class="question-block">
           <input type="text" placeholder="Question" [(ngModel)]="q.content" />
-
-          <div *ngFor="let o of q.options; let j = index" class="option-block">
-            <input type="text" placeholder="Option" [(ngModel)]="o.content" />
+          <div *ngFor="let opt of q.options; let j=index" class="option-block">
+            <input type="text" placeholder="Option" [(ngModel)]="opt.content" />
             <label>
               Correct
-              <input type="checkbox" [(ngModel)]="o.isCorrect" />
+              <input type="checkbox" [(ngModel)]="opt.isCorrect" />
             </label>
-            <button type="button" (click)="removeOption(q, j)">❌ Supprimer option</button>
           </div>
-          <button type="button" (click)="addOption(q)">+ Ajouter option</button>
-          <button type="button" (click)="removeQuestion(i)">❌ Supprimer question</button>
+          <button class="btn btn-sm" (click)="addOption(i)">Ajouter option</button>
         </div>
-
-        <button type="button" (click)="addQuestion()">+ Ajouter question</button>
       </div>
+      <button class="btn btn-sm" (click)="addQuestion()">Ajouter question</button>
 
-      <!-- Actions -->
       <div class="actions">
-        <button class="btn" (click)="showDialog = false" type="button">Annuler</button>
-        <button class="btn btn-primary" (click)="save()" [disabled]="saving">
-          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+        <button class="btn" (click)="showQuizDialog=false" type="button">Annuler</button>
+        <button class="btn btn-primary" (click)="saveQuiz()" [disabled]="savingQuiz">
+          {{ savingQuiz ? 'Enregistrement...' : 'Enregistrer quiz' }}
         </button>
       </div>
     </div>
