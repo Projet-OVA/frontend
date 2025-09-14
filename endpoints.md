@@ -47,8 +47,8 @@
 
 - Utilisateurs      --> Complet
 
-- Communauté        --> 
+- Communauté        --> Complet
 
-- Paramètres        -->
+- Paramètres        --> Pas encore dispo
 
-- Dashboard         -->
+- Dashboard         --> Pas encore dispo

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout';
 import { AuthGuard } from './core/auth.guard';
+import { CommunitiesComponent } from './features/communities';
 
 export const routes: Routes = [
   {
@@ -46,6 +47,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/settings').then((m) => m.SettingsComponent),
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'communities', component: CommunitiesComponent }, // <--- ajout
     ],
   },
   {

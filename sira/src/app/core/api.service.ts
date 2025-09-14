@@ -205,4 +205,29 @@ export class ApiService {
   deleteUser(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/auth/users/${id}`, this.getAuthHeaders());
   }
+
+  // Communities
+
+  getCommunityById(id: string) {
+    return this.http.get(`${this.baseUrl}/communities/${id}`, { headers: this.authHeaders() });
+  }
+
+  // Communities
+  getCommunities() {
+    return this.http.get<any[]>(`${this.baseUrl}/communities`, { headers: this.authHeaders() });
+  }
+
+  createCommunity(data: any) {
+    return this.http.post(`${this.baseUrl}/communities`, data, { headers: this.authHeaders() });
+  }
+
+  updateCommunity(id: string, data: any) {
+    return this.http.put(`${this.baseUrl}/communities/${id}`, data, {
+      headers: this.authHeaders(),
+    });
+  }
+
+  deleteCommunity(id: string) {
+    return this.http.delete(`${this.baseUrl}/communities/${id}`, { headers: this.authHeaders() });
+  }
 }

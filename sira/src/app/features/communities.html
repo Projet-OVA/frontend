@@ -1,0 +1,53 @@
+<div class="communities-page">
+  <div class="toolbar card">
+    <div class="left">
+      <button class="btn btn-primary" (click)="openDialog()">+ Nouvelle communauté</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="table" *ngIf="!loading && communities.length">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Catégorie</th>
+          <th>Membres</th>
+          <th>Créée le</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of communities">
+          <td>{{ c.communityName }}</td>
+          <td>{{ c.communityCategory }}</td>
+          <td>{{ c.memberCount || 0 }}</td>
+          <td>{{ c.creationDate | date:'short' }}</td>
+          <td>
+            <button class="btn-ghost" (click)="openDialog(c)">✏️</button>
+            <button class="btn-danger" (click)="deleteCommunity(c)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!loading && !communities.length" class="muted">Aucune communauté trouvée</div>
+    <div *ngIf="loading" class="loading">Chargement...</div>
+  </div>
+
+  <!-- Dialog -->
+  <div class="dialog" *ngIf="showDialog">
+    <div class="dialog-content">
+      <h3>{{ selectedCommunity.id ? 'Modifier' : 'Créer' }} communauté</h3>
+      <input type="text" placeholder="Nom" [(ngModel)]="selectedCommunity.communityName" />
+      <select [(ngModel)]="selectedCommunity.communityCategory">
+        <option value="">Choisir une catégorie</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+      <div class="actions">
+        <button class="btn" (click)="showDialog=false">Annuler</button>
+        <button class="btn btn-primary" (click)="saveCommunity()" [disabled]="saving">
+          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
