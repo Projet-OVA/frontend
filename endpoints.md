@@ -45,10 +45,10 @@
 
 - Events            --> Complet (Supprimer à définir)
 
-- Utilisateurs      --> 
+- Utilisateurs      --> Complet
+
+- Communauté        --> 
 
 - Paramètres        -->
 
 - Dashboard         -->
-
-- Communauté        -->

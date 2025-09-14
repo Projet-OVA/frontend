@@ -1,98 +1,54 @@
 <div class="users-page">
-  <!-- Toolbar -->
-  <div class="toolbar card">
-    <div class="left">
-      <input
-        type="text"
-        placeholder="Rechercher utilisateur..."
-        (input)="q = $any($event.target).value; applyFilters()"
-      />
-      <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-        <option value="">Tous</option>
-        <option value="Actif">Actifs</option>
-        <option value="Suspendu">Suspendus</option>
-      </select>
-      <button class="btn" (click)="load()">Actualiser</button>
-    </div>
+  <h2>Liste des citoyens</h2>
 
-    <div class="right">
-      <button class="btn btn-primary" (click)="openCreateDialog()">+ Nouvel utilisateur</button>
-    </div>
-  </div>
+  <div *ngIf="loading" class="loading">Chargement...</div>
 
-  <!-- Table -->
-  <div class="card">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Âge</th>
-          <th>Progression</th>
-          <th>Badges</th>
-          <th>Statut</th>
-          <th style="width:130px">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let u of filteredUsers">
-          <td>{{ u.firstName || u.name }} {{ u.lastName || '' }}</td>
-          <td>{{ u.email }}</td>
-          <td>{{ u.age || '-' }}</td>
-          <td>
-            <div class="progress">
-              <div class="bar" [style.width.%]="(u.progress?.overall ?? 0)"></div>
-            </div>
-            <small class="muted">{{ (u.progress?.overall ?? 0) }}%</small>
-          </td>
-          <td>
-            <span class="badge small" *ngFor="let b of (u.badges || [])">{{ b }}</span>
-          </td>
-          <td>{{ u.status }}</td>
-          <td>
-            <button class="btn-ghost" (click)="openViewDialog(u)">Voir</button>
-            <button class="btn-danger" *ngIf="u.status === 'Actif'" (click)="suspendUser(u)">Suspendre</button>
-            <button class="btn" *ngIf="u.status === 'Suspendu'" (click)="reactivateUser(u)">Réactiver</button>
-          </td>
-        </tr>
+  <table class="table" *ngIf="!loading && users.length">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Téléphone</th>
+        <th>Créé le</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of users">
+        <td>{{ u.nom }}</td>
+        <td>{{ u.prenom }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.phoneNumber || '-' }}</td>
+        <td>{{ u.createdAt | date : 'short' }}</td>
+        <td>
+          <button class="btn-ghost" (click)="openEditDialog(u)">✏️</button>
+          <button class="btn-danger" (click)="deleteUser(u)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-        <tr *ngIf="!filteredUsers?.length">
-          <td colspan="7" class="muted">Aucun utilisateur trouvé.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <div *ngIf="!loading && !users.length" class="muted">Aucun citoyen trouvé</div>
 
-  <!-- Pagination -->
-  <div class="card little">
-    <div class="meta">
-      <small class="muted">Affichage {{ filteredUsers.length }} utilisateurs</small>
+  <!-- Edit Dialog -->
+  <div class="dialog" *ngIf="showEditDialog && selectedUser">
+    <div class="dialog-content">
+      <h3>Modifier citoyen</h3>
+      <input type="text" placeholder="Nom" [(ngModel)]="selectedUser.nom" />
+      <input type="text" placeholder="Prénom" [(ngModel)]="selectedUser.prenom" />
+      <input type="email" placeholder="Email" [(ngModel)]="selectedUser.email" />
+      <input type="text" placeholder="Username" [(ngModel)]="selectedUser.username" />
+      <input type="text" placeholder="Téléphone" [(ngModel)]="selectedUser.phoneNumber" />
+
+      <div class="actions">
+        <button class="btn" (click)="showEditDialog = false">Annuler</button>
+        <button class="btn btn-primary" (click)="saveUser()" [disabled]="saving">
+          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>
-
-<!-- Dialog Création -->
-<dialog #createDialog>
-  <form (submit)="createUser($event)">
-    <h3>Créer un utilisateur</h3>
-    <input type="text" placeholder="Nom" [(ngModel)]="newUser.name" name="name" required />
-    <input type="email" placeholder="Email" [(ngModel)]="newUser.email" name="email" required />
-    <input type="number" placeholder="Âge" [(ngModel)]="newUser.age" name="age" />
-    <div class="actions">
-      <button type="submit" class="btn btn-primary">Créer</button>
-      <button type="button" class="btn" (click)="createDialog.close()">Annuler</button>
-    </div>
-  </form>
-</dialog>
-
-<!-- Dialog Vue -->
-<dialog #viewDialog>
-  <h3>Détails utilisateur</h3>
-  <p><strong>Nom : </strong>{{ selectedUser?.name }}</p>
-  <p><strong>Email : </strong>{{ selectedUser?.email }}</p>
-  <p><strong>Âge : </strong>{{ selectedUser?.age }}</p>
-  <p><strong>Statut : </strong>{{ selectedUser?.status }}</p>
-  <div class="actions">
-    <button class="btn" (click)="viewDialog.close()">Fermer</button>
-  </div>
-</dialog>

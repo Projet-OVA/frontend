@@ -188,4 +188,21 @@ export class ApiService {
       }),
     };
   }
+
+  // Users
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/users`, this.getAuthHeaders());
+  }
+
+  getUserById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/users/${id}`, this.getAuthHeaders());
+  }
+
+  updateUser(id: string, user: any): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/auth/users/${id}`, user, this.getAuthHeaders());
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/auth/users/${id}`, this.getAuthHeaders());
+  }
 }

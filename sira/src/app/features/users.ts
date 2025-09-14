@@ -1,110 +1,79 @@
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../core/api.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+
+interface User {
+  id: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  username: string;
+  phoneNumber?: string;
+  role: string;
+  createdAt: string;
+}
 
 @Component({
   selector: 'app-users',
+  imports: [CommonModule, FormsModule],
   templateUrl: './users.html',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
   styleUrls: ['./users.scss'],
 })
 export class UsersComponent implements OnInit {
-  q = '';
-  filterStatus = '';
-  users: any[] = [];
-  filteredUsers: any[] = [];
+  users: User[] = [];
+  loading = false;
+  selectedUser: User | null = null;
+  showEditDialog = false;
+  saving = false;
 
-  newUser = { name: '', email: '', age: null };
+  constructor(private api: ApiService) {}
 
-  selectedUser: any = null;
-
-  @ViewChild('createDialog') createDialog!: ElementRef<HTMLDialogElement>;
-  @ViewChild('viewDialog') viewDialog!: ElementRef<HTMLDialogElement>;
-
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {
-    this.load();
+  ngOnInit() {
+    this.loadUsers();
   }
 
-  load() {
-    this.users = [
-      { id: 1, name: 'Alice', email: 'alice@test.com', age: 30, status: 'Actif', progress: { overall: 50 }, badges: ['⭐'] },
-      { id: 2, name: 'Bob', email: 'bob@test.com', age: 23, status: 'Suspendu', progress: { overall: 10 }, badges: [] },
-    ];
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    const query = this.q.toLowerCase();
-    this.filteredUsers = this.users.filter(u => {
-      const matchesQuery =
-        !query || u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query);
-      const matchesStatus = !this.filterStatus || u.status === this.filterStatus;
-      return matchesQuery && matchesStatus;
+  loadUsers() {
+    this.loading = true;
+    this.api.getUsers().subscribe({
+      next: (res: any) => {
+        // filtrer uniquement les CITIZEN
+        this.users = res.filter((u: User) => u.role === 'CITIZEN');
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur chargement utilisateurs', err);
+        this.loading = false;
+      },
     });
   }
 
-  openCreateDialog() {
-    this.newUser = { name: '', email: '', age: null };
-    this.createDialog.nativeElement.showModal();
+  openEditDialog(user: User) {
+    this.selectedUser = { ...user };
+    this.showEditDialog = true;
   }
 
-  createUser(e: Event) {
-    e.preventDefault();
-    const newU = { ...this.newUser, id: Date.now(), status: 'Actif', progress: { overall: 0 }, badges: [] };
-    this.users.push(newU);
-    this.applyFilters();
-    this.createDialog.nativeElement.close();
+  saveUser() {
+    if (!this.selectedUser) return;
+    this.saving = true;
+    this.api.updateUser(this.selectedUser.id, this.selectedUser).subscribe({
+      next: () => {
+        this.saving = false;
+        this.showEditDialog = false;
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Erreur sauvegarde utilisateur', err);
+        this.saving = false;
+      },
+    });
   }
 
-  openViewDialog(u: any) {
-    this.selectedUser = u;
-    this.viewDialog.nativeElement.showModal();
-  }
-
-  suspendUser(u: any) {
-    u.status = 'Suspendu';
-    this.applyFilters();
-  }
-
-  reactivateUser(u: any) {
-    u.status = 'Actif';
-    this.applyFilters();
+  deleteUser(user: User) {
+    if (!confirm(`Supprimer l'utilisateur ${user.nom} ?`)) return;
+    this.api.deleteUser(user.id).subscribe({
+      next: () => this.loadUsers(),
+      error: (err) => console.error('Erreur suppression utilisateur', err),
+    });
   }
 }
-
-
-
-
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-// import { ApiService } from '../core/api.service';
-
-// @Component({
-//   selector: 'app-users',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './users.html',
-//   styleUrls: ['./users.scss']
-// })
-// export class UsersComponent implements OnInit {
-//   users: any[] = [];
-//   search = '';
-
-//   constructor(private api: ApiService) {}
-
-//   ngOnInit() {
-//     this.loadUsers();
-//   }
-
-//   loadUsers() {
-//     // TODO: Remplacer 'users' par ton endpoint Nest
-//     this.api.get<any[]>('users').subscribe(data => {
-//       this.users = data;
-//     });
-//   }
-// }
