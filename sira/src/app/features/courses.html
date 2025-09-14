@@ -20,7 +20,8 @@
           <th>Nom</th>
           <th>Catégorie</th>
           <th>Description</th>
-          <th>Statut</th>
+          <!-- <th>Statut</th> -->
+          <th>Quiz</th>
           <th style="width: 160px">Actions</th>
         </tr>
       </thead>
@@ -30,7 +31,15 @@
           <td>{{ c.nom }}</td>
           <td>{{ c.category }}</td>
           <td class="desc">{{ c.description }}</td>
-          <td>{{ c.status }}</td>
+          <!-- <td>{{ c.status }}</td> -->
+          <td>
+            <ul class="quiz-list" *ngIf="c.quizzes?.length; else noQuiz">
+              <li *ngFor="let q of c.quizzes">{{ q.nom }} ({{ q.score }}%)</li>
+            </ul>
+            <ng-template #noQuiz>
+              <span class="muted">Aucun</span>
+            </ng-template>
+          </td>
           <td>
             <button class="btn-ghost" title="Éditer" (click)="openDialog(c)">✏️</button>
             <button class="btn-danger" title="Supprimer" (click)="delete(c)">🗑️</button>

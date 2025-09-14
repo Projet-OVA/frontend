@@ -41,11 +41,9 @@
 
 - Publications      --> Complet
 
-- Cours             --> CRUD
+- Cours             --> Reste Quiz
 
 - Events            --> Supprimer et Modifier
-
-- Badges            --> Get les badges
 
 - Utilisateurs      --> 
 
