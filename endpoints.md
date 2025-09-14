@@ -23,6 +23,7 @@
 |                  | GET     | `/dashboard/recent-activity` | Récupère les activités récentes des utilisateurs            |                |
 |                  | GET     | `/dashboard/top-contents`    | Récupère les contenus les plus consultés                    |                |
 
+
 - Paramétres:
     - liste des admins,
     - derniére connexion (date et heures)
