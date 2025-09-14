@@ -1,4 +1,5 @@
 <div class="courses-page">
+  <!-- Toolbar -->
   <div class="toolbar card">
     <div class="left">
       <button class="btn btn-primary" (click)="openDialog()">+ Nouveau cours</button>
@@ -13,6 +14,7 @@
     </div>
   </div>
 
+  <!-- Table des cours -->
   <div class="card">
     <table class="table" role="table" aria-label="Liste des cours">
       <thead>
@@ -20,7 +22,6 @@
           <th>Nom</th>
           <th>Catégorie</th>
           <th>Description</th>
-          <!-- <th>Statut</th> -->
           <th>Quiz</th>
           <th style="width: 160px">Actions</th>
         </tr>
@@ -31,7 +32,6 @@
           <td>{{ c.nom }}</td>
           <td>{{ c.category }}</td>
           <td class="desc">{{ c.description }}</td>
-          <!-- <td>{{ c.status }}</td> -->
           <td>
             <ul class="quiz-list" *ngIf="c.quizzes?.length; else noQuiz">
               <li *ngFor="let q of c.quizzes">{{ q.nom }} ({{ q.score }}%)</li>
@@ -61,20 +61,19 @@
     </table>
   </div>
 
-  <!-- modal / dialog -->
+  <!-- Modal / Dialog -->
   <div class="dialog" *ngIf="showDialog" role="dialog" aria-modal="true">
     <div class="dialog-content">
       <h3>{{ newCourse?.id ? 'Modifier' : 'Créer' }} cours</h3>
 
+      <!-- Informations du cours -->
       <input type="text" placeholder="Nom*" [(ngModel)]="newCourse.nom" />
-
       <select [(ngModel)]="newCourse.category">
         <option value="">Choisir une catégorie</option>
         <option value="ENVIRONNEMENT">Environnement</option>
         <option value="DROIT_DU_CITOYEN">Droit du citoyen</option>
         <option value="DEVOIR_DU_CITOYEN">Devoir du citoyen</option>
       </select>
-
       <textarea placeholder="Description" [(ngModel)]="newCourse.description"></textarea>
 
       <label>
@@ -92,6 +91,32 @@
         <input type="file" (change)="onFileChange($event)" />
       </div>
 
+      <!-- Quiz associé -->
+      <div class="quiz-section" *ngIf="newCourse">
+        <h4>Quiz associé (optionnel)</h4>
+        <input type="text" placeholder="Nom du quiz" [(ngModel)]="newCourse.quiz.nom" />
+        <textarea placeholder="Description du quiz" [(ngModel)]="newCourse.quiz.description"></textarea>
+        <input type="number" placeholder="Score max" [(ngModel)]="newCourse.quiz.score" />
+
+        <div *ngFor="let q of newCourse.quiz.questions; let i = index" class="question-block">
+          <input type="text" placeholder="Question" [(ngModel)]="q.content" />
+
+          <div *ngFor="let o of q.options; let j = index" class="option-block">
+            <input type="text" placeholder="Option" [(ngModel)]="o.content" />
+            <label>
+              Correct
+              <input type="checkbox" [(ngModel)]="o.isCorrect" />
+            </label>
+            <button type="button" (click)="removeOption(q, j)">❌ Supprimer option</button>
+          </div>
+          <button type="button" (click)="addOption(q)">+ Ajouter option</button>
+          <button type="button" (click)="removeQuestion(i)">❌ Supprimer question</button>
+        </div>
+
+        <button type="button" (click)="addQuestion()">+ Ajouter question</button>
+      </div>
+
+      <!-- Actions -->
       <div class="actions">
         <button class="btn" (click)="showDialog = false" type="button">Annuler</button>
         <button class="btn btn-primary" (click)="save()" [disabled]="saving">

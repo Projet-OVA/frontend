@@ -183,4 +183,8 @@ export class ApiService {
         })
       );
   }
+
+  createQuiz(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/quiz`, payload, { headers: this.authHeaders() });
+  }
 }
