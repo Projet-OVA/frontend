@@ -66,9 +66,9 @@
           <td class="actions-col">
             <button class="btn-ghost" (click)="edit(p)">✏️ Éditer</button>
             <button class="btn-danger" (click)="delete(p)">🗑 Supprimer</button>
-            <button class="btn" (click)="publish(p)" [disabled]="p.status === 'PUBLISHED'">
-              📢 Publier
-            </button>
+            @if (p.status !== 'PUBLISHED') {
+            <button class="btn" (click)="publish(p)">📢 Publier</button>
+            }
           </td>
         </tr>
 

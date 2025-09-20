@@ -1,25 +1,84 @@
 <div class="badges-page">
-  <div class="card">
-    <h3>Badges disponibles</h3>
-    <div class="badges-grid">
-      <div class="badge-card card" *ngFor="let b of badges">
-        <div class="badge-key">  <span class="badge-icon">{{ b.icon }}</span> {{ b.key }}</div>
-        <div class="badge-title">{{ b.title }}</div>
-        <div class="badge-desc">{{ b.description }}</div>
-        <div class="actions">
-          <button class="btn" (click)="assign('user-id', b.id)">Assigner</button>
-        </div>
-      </div>
-
-      <div class="badge-card card empty">
-        <button class="btn btn-primary" (click)="create()">+ Nouveau badge</button>
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>🎖️ Badges SIRA</h1>
+      <p>Découvrez tous les badges disponibles et progressez dans votre parcours citoyen</p>
+    </div>
+    <div class="header-stats" *ngIf="!loading">
+      <div class="stat">
+        <span class="stat-number">{{ badges.length }}</span>
+        <span class="stat-label">Badges disponibles</span>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <h4>Statistiques</h4>
-    <p class="muted">Nombre attribués par type (placeholder).</p>
-    <canvas id="chart-badges" width="400" height="140"></canvas>
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des badges...</p>
   </div>
+
+  <!-- Badges Grid -->
+  <div *ngIf="!loading && badges.length > 0" class="badges-container">
+    <div class="badges-grid">
+      <div
+        *ngFor="let badge of badges"
+        class="badge-card"
+        [class]="'rarity-' + badge.rarity.toLowerCase()"
+      >
+        <!-- Badge Header -->
+        <div class="badge-header">
+          <div class="badge-icon">{{ badge.icon }}</div>
+          <div class="badge-rarity">{{ badge.rarity }}</div>
+        </div>
+
+        <!-- Badge Content -->
+        <div class="badge-content">
+          <h3 class="badge-title">{{ badge.title }}</h3>
+          <p class="badge-description">{{ badge.description }}</p>
+
+          <div class="badge-meta">
+            <span class="badge-key">{{ badge.key }}</span>
+            <span class="badge-xp">+{{ badge.xpReward }} XP</span>
+          </div>
+        </div>
+
+        <!-- Badge Footer -->
+        <div class="badge-footer">
+          <div class="badge-criteria">
+            <span class="criteria-label">📋 Critères</span>
+            <p>{{ badge.criteria }}</p>
+          </div>
+
+          <div class="badge-category">
+            <span class="category-label">🏷️ Catégorie</span>
+            <span class="category-value">{{ badge.category }}</span>
+          </div>
+        </div>
+
+        <!-- Shine Effect -->
+        <div class="badge-shine"></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="dashboardData?.badgeStats?.badgeDistribution" class="card">
+    <h2>🎖️ Distribution des Badges</h2>
+    <div class="badges-distribution">
+      <!-- UTILISEZ getBadgeDistribution() méthode -->
+      <div *ngFor="let badge of getBadgeDistribution()" class="badge-item">
+        <span class="badge-key">{{ badge.key }}</span>
+        <span class="badge-count">{{ badge.count }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Empty State -->
+<div *ngIf="!loading && badges.length === 0" class="empty-state">
+  <div class="empty-icon">🏆</div>
+  <h3>Aucun badge disponible</h3>
+  <p>Les badges n'ont pas encore été configurés sur la plateforme.</p>
+
+  <button class="btn btn-primary" (click)="loadAllBadges()">Actualiser</button>
 </div>

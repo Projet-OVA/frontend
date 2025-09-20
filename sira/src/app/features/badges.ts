@@ -1,84 +1,93 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../core/api.service';
+import { ApiService, Badge, DashboardData, UserProgress } from '../core/api.service';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-badges',
-  standalone: true,
   imports: [CommonModule, FormsModule],
+  standalone: true,
   templateUrl: './badges.html',
   styleUrls: ['./badges.scss'],
 })
 export class BadgesComponent implements OnInit {
-  badges: any[] = [];
+  dashboardData: DashboardData | null = null;
+  badges: Badge[] = [];
+  userProgress: UserProgress | null = null;
+  loading = true;
+  stats: { [key: string]: number } = {};
+
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // TODO: appeler API Nest pour récupérer les badges
-    this.badges = [
-      {
-        id: 1,
-        key: 'Ndorte',
-        title: 'Premier pas',
-        description: 'Profil complété',
-        icon: '🚀', // ou classe CSS
+    this.loadDashboardData();
+    this.loadUserProgress();
+    this.loadAllBadges();
+    this.loadBadgeStats();
+  }
+  loadDashboardData(): void {
+    this.apiService.getDashboardData().subscribe({
+      next: (data) => {
+        this.dashboardData = data;
+        this.loading = false;
       },
-      {
-        id: 2,
-        key: 'Djed',
-        title: 'Stabilité',
-        description: 'Progression ≥ 50%',
-        icon: '🏛️',
+      error: (error) => {
+        console.error('Error loading dashboard:', error);
+        this.dashboardData = this.apiService.getMockDashboardData();
+        this.loading = false;
       },
-      {
-        id: 3,
-        key: 'Ankh',
-        title: 'Accomplissement',
-        description: 'Parcours terminé à 100%',
-        icon: '☥',
-      },
-      {
-        id: 4,
-        key: 'Lamaan',
-        title: 'Communauté',
-        description: "Lancement d'un défi",
-        icon: '👥',
-      },
-    ];
+    });
   }
 
-  assign(userId: string, badgeId: number) {}
-  create() {}
+  loadUserProgress(): void {
+    this.apiService.getUserProgress().subscribe({
+      next: (progress) => {
+        this.userProgress = progress;
+      },
+      error: (error) => {
+        console.error('Error loading progress:', error);
+        this.userProgress = this.apiService.getMockUserProgress();
+      },
+    });
+  }
+
+  loadBadgeStats(): void {
+    this.apiService.getDashboardData().subscribe({
+      next: (data) => {
+        this.stats = data?.badgeStats?.badgeDistribution || {};
+      },
+      error: (err) => console.error('Erreur chargement stats', err),
+    });
+  }
+
+  loadAllBadges(): void {
+    this.apiService.getAllBadges().subscribe({
+      next: (badges) => {
+        this.badges = badges;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading badges:', error);
+        // Fallback sur les données mockées
+        this.badges = this.apiService.getMockBadges();
+        this.loading = false;
+      },
+    });
+  }
+
+  //   getBadgeDistribution(): { key: string; count: number }[] {
+  //   return Object.entries(this.stats).map(([key, count]) => ({ key, count as number }));
+  // }
+
+  // Méthode pour obtenir la distribution des badges
+  getBadgeDistribution(): { key: string; count: number }[] {
+    if (!this.dashboardData?.badgeStats?.badgeDistribution) {
+      return [];
+    }
+
+    return Object.entries(this.dashboardData.badgeStats.badgeDistribution).map(([key, count]) => ({
+      key,
+      count,
+    }));
+  }
 }
-
-
-
-
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-// import { ApiService } from '../core/api.service';
-
-// @Component({
-//   selector: 'app-badges',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './badges.html',
-//   styleUrls: ['./badges.scss']
-// })
-// export class BadgesComponent implements OnInit {
-//   badges: any[] = [];
-
-//   constructor(private api: ApiService) {}
-
-//   ngOnInit() {
-//     this.loadBadges();
-//   }
-
-//   loadBadges() {
-//     // TODO: Remplacer 'badges' par ton endpoint Nest
-//     this.api.get<any[]>('badges').subscribe(data => {
-//       this.badges = data;
-//     });
-//   }
-// }

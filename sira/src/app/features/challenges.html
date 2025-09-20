@@ -13,44 +13,59 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let c of challenges">
-          <td>{{ c.eventName }}</td>
-          <td>{{ c.description }}</td>
-          <td>{{ c.eventDate | date:'short' }}</td>
-          <td>{{ c.location || '-' }}</td>
-          <td>{{ c.participantsCount || 0 }}</td>
-          <td>
-            <button class="btn-danger" (click)="delete(c)">🗑️</button>
-          </td>
-        </tr>
-        <tr *ngIf="challenges.length === 0 && !loading">
-          <td colspan="6" class="muted">Aucun défi communautaire</td>
-        </tr>
+        @for (c of challenges; track c.id) {
+          <tr>
+            <td>{{ c.eventName }}</td>
+            <td>{{ c.description }}</td>
+            <td>{{ c.eventDate | date:'short' }}</td>
+            <td>{{ c.location || '-' }}</td>
+            <td>{{ c.participantsCount || 0 }}</td>
+            <td>
+              <button class="btn-danger" (click)="delete(c)">🗑️</button>
+            </td>
+          </tr>
+        }
+
+        @if (challenges.length === 0 && !loading) {
+          <tr>
+            <td colspan="6" class="muted">Aucun défi communautaire</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
 
   <!-- MODAL DIALOG -->
-  <div class="dialog" *ngIf="showDialog">
-    <div class="dialog-content">
-      <h3>{{ newChallenge.id ? 'Modifier' : 'Créer' }} un défi</h3>
-      
-      <input type="text" placeholder="Nom du défi*" [(ngModel)]="newChallenge.eventName" required />
-      <textarea placeholder="Description" [(ngModel)]="newChallenge.description"></textarea>
-      
-      <label>Date et heure</label>
-      <input type="datetime-local" [(ngModel)]="newChallenge.eventDate" />
-      
-      <input type="text" placeholder="Lieu" [(ngModel)]="newChallenge.location" />
-      <input type="text" placeholder="ID Organisateur" [(ngModel)]="newChallenge.organizerId" />
-      <input type="text" placeholder="ID Communauté" [(ngModel)]="newChallenge.communityId" />
+  @if (showDialog) {
+    <div class="dialog">
+      <div class="dialog-content">
+        <h3>{{ newChallenge.id ? 'Modifier' : 'Créer' }} un défi</h3>
 
-      <div class="actions">
-        <button class="btn" (click)="showDialog = false">Annuler</button>
-        <button class="btn btn-primary" (click)="save()" [disabled]="saving">
-          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
-        </button>
+        <input
+          type="text"
+          placeholder="Nom du défi*"
+          [(ngModel)]="newChallenge.eventName"
+          required
+        />
+        <textarea
+          placeholder="Description"
+          [(ngModel)]="newChallenge.description"
+        ></textarea>
+
+        <label>Date et heure</label>
+        <input type="datetime-local" [(ngModel)]="newChallenge.eventDate" />
+
+        <input type="text" placeholder="Lieu" [(ngModel)]="newChallenge.location" />
+        <input type="text" placeholder="ID Organisateur" [(ngModel)]="newChallenge.organizerId" />
+        <input type="text" placeholder="ID Communauté" [(ngModel)]="newChallenge.communityId" />
+
+        <div class="actions">
+          <button class="btn" (click)="showDialog = false">Annuler</button>
+          <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+            {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>

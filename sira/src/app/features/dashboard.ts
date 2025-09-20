@@ -1,114 +1,77 @@
+import { Component, OnInit } from '@angular/core';
+import { ApiService, DashboardData, UserProgress } from '../core/api.service';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../core/api.service';
-import { Component, OnInit, AfterViewInit, inject } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.scss'],
+  styleUrls: ['./dashboard.scss']
 })
-
 export class DashboardComponent implements OnInit {
-  stats: any = {};
+  // Assurez-vous d'avoir ces propriétés :
+  dashboardData: DashboardData | null = null;
+  userProgress: UserProgress | null = null;
+  loading = true;
+  error: string | null = null;
+  parseFloat = parseFloat;
+
+  // Supprimez cette propriété si elle existe :
+  // stats: any;
+
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // TODO: appeler API Nest pour récupérer les statistiques globales
-    this.stats = {
-      users: 120,
-      contents: 45,
-      badges: 12,
-    };
+    this.loadDashboardData();
+    this.loadUserProgress();
   }
 
+  loadDashboardData(): void {
+    this.apiService.getDashboardData().subscribe({
+      next: (data) => {
+        this.dashboardData = data;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading dashboard:', error);
+        this.dashboardData = this.apiService.getMockDashboardData();
+        this.loading = false;
+      }
+    });
+  }
+
+  loadUserProgress(): void {
+    this.apiService.getUserProgress().subscribe({
+      next: (progress) => {
+        this.userProgress = progress;
+      },
+      error: (error) => {
+        console.error('Error loading progress:', error);
+        this.userProgress = this.apiService.getMockUserProgress();
+      }
+    });
+  }
+
+  // Méthodes utilitaires pour le template
+  getProgressColor(percentage: number): string {
+    if (percentage >= 80) return '#10b981';
+    if (percentage >= 50) return '#f59e0b';
+    return '#ef4444';
+  }
+
+  formatPercentage(value: string): string {
+    return `${parseFloat(value).toFixed(1)}%`;
+  }
+
+  // Méthode pour obtenir la distribution des badges
+  getBadgeDistribution(): { key: string; count: number }[] {
+    if (!this.dashboardData?.badgeStats?.badgeDistribution) {
+      return [];
+    }
+    
+    return Object.entries(this.dashboardData.badgeStats.badgeDistribution).map(
+      ([key, count]) => ({ key, count })
+    );
+  }
 }
-
-
-
-// import { Component, OnInit, AfterViewInit, inject } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { Chart, ChartConfiguration, registerables } from 'chart.js';
-// import { ApiService } from '../../core/api.service'; // ← À créer ensuite
-// import { Router } from '@angular/router';
-// import { FormsModule } from '@angular/forms';
-
-// Chart.register(...registerables);
-
-// @Component({
-//   selector: 'app-dashboard',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './dashboard.html',
-//   styleUrls: ['./dashboard.scss']
-// })
-// export class DashboardComponent implements OnInit, AfterViewInit {
-
-//   private api = inject(ApiService);
-//   private router = inject(Router);
-
-//   stats: any = {
-//     users: 0,
-//     contents: 0,
-//     badges: 0,
-//     topContents: [],
-//     recent: []
-//   };
-
-//   ngOnInit(): void {
-//     this.loadStats();
-//   }
-
-//   ngAfterViewInit(): void {
-//     this.initUserChart();
-//   }
-
-//   loadStats(): void {
-//     // 📝 Exemple de requête (à implémenter dans ton ApiService)
-//     /*
-//     this.api.get('/dashboard/stats').subscribe(data => {
-//       this.stats = data;
-//       this.updateUserChart(data.userActivity);
-//     });
-//     */
-//   }
-
-//   initUserChart(): void {
-//     const ctx = document.getElementById('chart-users') as HTMLCanvasElement;
-
-//     const config: ChartConfiguration = {
-//       type: 'line',
-//       data: {
-//         labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-//         datasets: [{
-//           label: 'Utilisateurs actifs',
-//           data: [12, 19, 3, 5, 2, 3, 9],
-//           fill: true,
-//           borderColor: '#3b82f6',
-//           backgroundColor: 'rgba(59, 130, 246, 0.2)',
-//           tension: 0.3
-//         }]
-//       },
-//       options: {
-//         responsive: true,
-//         plugins: {
-//           legend: {
-//             display: true
-//           }
-//         },
-//         scales: {
-//           y: {
-//             beginAtZero: true
-//           }
-//         }
-//       }
-//     };
-
-//     new Chart(ctx, config);
-//   }
-
-//   updateUserChart(data: number[]): void {
-//     // Si tu veux mettre à jour les données dynamiquement plus tard
-//   }
-
-// }

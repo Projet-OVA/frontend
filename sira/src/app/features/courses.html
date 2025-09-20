@@ -4,13 +4,13 @@
     <div class="left">
       <button class="btn btn-primary" (click)="openCourseDialog()">+ Nouveau cours</button>
     </div>
-    <div class="right">
+    <!-- <div class="right">
       <select [(ngModel)]="filterStatus">
         <option value="">Tous</option>
         <option value="DRAFT">Brouillons</option>
         <option value="PUBLISHED">Publiés</option>
       </select>
-    </div>
+    </div> -->
   </div>
 
   <!-- Courses table -->
@@ -41,7 +41,7 @@
           <td>
             <button class="btn-ghost" title="Éditer" (click)="openCourseDialog(c)">✏️</button>
             <button class="btn-danger" title="Supprimer" (click)="delete(c)">🗑️</button>
-            <button class="btn" title="Publier" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">📢</button>
+            <!-- <button class="btn" title="Publier" (click)="publish(c)" *ngIf="c.status !== 'PUBLISHED'">📢</button> -->
             <button class="btn btn-secondary" title="Ajouter quiz" (click)="openQuizDialog(c)">➕ Quiz</button>
           </td>
         </tr>
@@ -64,13 +64,13 @@
         <option value="DEVOIR_DU_CITOYEN">Devoir du citoyen</option>
       </select>
       <textarea placeholder="Description" [(ngModel)]="newCourse.description"></textarea>
-      <label>
+      <!-- <label>
         Statut
         <select [(ngModel)]="newCourse.status">
           <option value="DRAFT">Brouillon</option>
           <option value="PUBLISHED">Publié</option>
         </select>
-      </label>
+      </label> -->
       <div class="actions">
         <button class="btn" (click)="showCourseDialog=false" type="button">Annuler</button>
         <button class="btn btn-primary" (click)="saveCourse()" [disabled]="savingCourse">

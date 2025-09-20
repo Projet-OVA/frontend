@@ -1,62 +1,111 @@
-<div class="dashboard">
-  <div class="kpi-row">
-    <div class="card kpi">
-      <div class="kpi-title">Utilisateurs inscrits</div>
-      <div class="kpi-value">{{ stats.users ?? 0 }}</div>
-      <div class="kpi-sub">Actifs cette semaine</div>
+<div class="dashboard-page">
+  <div class="page-header">
+    <h1>Tableau de bord</h1>
+    <p>Vue d'ensemble de la plateforme SIRA</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">Chargement des données...</div>
+
+  <div *ngIf="error" class="error-card card">
+    <h3>❌ Erreur</h3>
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadDashboardData()">Réessayer</button>
+  </div>
+
+  <!-- UTILISEZ dashboardData AU LIEU DE stats -->
+  <div *ngIf="dashboardData && !loading" class="dashboard-grid">
+    
+    <!-- Statistiques utilisateurs -->
+    <div class="card stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <h3>{{ dashboardData.userStats.totalUsers }}</h3>
+        <p>Utilisateurs total</p>
+        <small>{{ dashboardData.userStats.activeUsers }} actifs</small>
+      </div>
     </div>
 
-    <div class="card kpi">
-      <div class="kpi-title">Parcours publiés</div>
-      <div class="kpi-value">{{ stats.contents ?? 0 }}</div>
-      <div class="kpi-sub">Nouveaux ce mois</div>
+    <!-- Événements -->
+    <div class="card stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-content">
+        <h3>{{ dashboardData.eventStats.totalEvents }}</h3>
+        <p>Événements</p>
+      </div>
     </div>
 
-    <div class="card kpi">
-      <div class="kpi-title">Badges délivrés</div>
-      <div class="kpi-value">{{ stats.badges ?? 0 }}</div>
-      <div class="kpi-sub">Total</div>
+    <!-- Badges -->
+    <div class="card stat-card">
+      <div class="stat-icon">🏆</div>
+      <div class="stat-content">
+        <h3>{{ dashboardData.badgeStats.totalBadges }}</h3>
+        <p>Badges attribués</p>
+      </div>
     </div>
 
-    <div class="card kpi">
-      <div class="kpi-title">Taux de complétion</div>
-      <div class="kpi-value">— %</div>
-      <div class="kpi-sub">Objectif: 60%</div>
+    <!-- Progression cours -->
+    <div class="card stat-card">
+      <div class="stat-icon">📚</div>
+      <div class="stat-content">
+        <h3 [style.color]="getProgressColor(parseFloat(dashboardData.courseProgress.completionRate))">
+          {{ formatPercentage(dashboardData.courseProgress.completionRate) }}
+        </h3>
+        <p>Complétion cours</p>
+        <small [class.positive]="dashboardData.courseProgress.completionRateChange.includes('+')"
+               [class.negative]="dashboardData.courseProgress.completionRateChange.includes('-')">
+          {{ dashboardData.courseProgress.completionRateChange }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Engagement communauté -->
+    <div class="card stat-card">
+      <div class="stat-icon">💬</div>
+      <div class="stat-content">
+        <h3>{{ formatPercentage(dashboardData.communityEngagement.engagementRate) }}</h3>
+        <p>Engagement</p>
+        <small [class.positive]="dashboardData.communityEngagement.engagementRateChange.includes('+')"
+               [class.negative]="dashboardData.communityEngagement.engagementRateChange.includes('-')">
+          {{ dashboardData.communityEngagement.engagementRateChange }}
+        </small>
+      </div>
     </div>
   </div>
 
-  <div class="grid-two">
-    <div class="card">
-      <h3>Utilisateurs — activité</h3>
-      <canvas id="chart-users" width="400" height="200" aria-label="Graphique utilisateurs"></canvas>
-      <small class="muted">Graphique d'exemple (Chart.js à connecter).</small>
+  <!-- Section progression utilisateur -->
+  <div *ngIf="userProgress" class="card progress-section">
+    <h2>📊 Progression Utilisateur</h2>
+    
+    <div class="overall-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width]="userProgress.data.overallProgress + '%'"></div>
+      </div>
+      <span class="progress-text">{{ userProgress.data.overallProgress }}% complété</span>
     </div>
 
-    <div class="card">
-      <h3>Top parcours</h3>
-      <ul class="list-compact">
-        <li *ngFor="let p of (stats.topContents || [])">
-          <div class="title">{{ p.title }}</div>
-          <div class="meta">{{ p.views }} vues · {{ p.lang }}</div>
-        </li>
-        <li *ngIf="!(stats.topContents?.length)">Pas de données</li>
-      </ul>
+    <div class="categories-grid">
+      <div *ngFor="let category of userProgress.data.categories" class="category-card">
+        <h4>{{ category.category }}</h4>
+        <div class="progress-bar small">
+          <div class="progress-fill" 
+               [style.width]="category.progressPercentage + '%'"
+               [style.background]="getProgressColor(category.progressPercentage)"></div>
+        </div>
+        <p>{{ category.completedQuizzes }}/{{ category.totalQuizzes }} quiz complétés</p>
+        <span class="percentage">{{ category.progressPercentage }}%</span>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h3>Activités récentes</h3>
-    <table class="table">
-      <thead><tr><th>Utilisateur</th><th>Action</th><th>Parcours</th><th>Quand</th></tr></thead>
-      <tbody>
-        <tr *ngFor="let r of (stats.recent || [])">
-          <td>{{ r.user }}</td>
-          <td>{{ r.action }}</td>
-          <td>{{ r.content || '—' }}</td>
-          <td>{{ r.at | date:'short' }}</td>
-        </tr>
-        <tr *ngIf="!(stats.recent?.length)"><td colspan="4">Aucune activité récente</td></tr>
-      </tbody>
-    </table>
+  <!-- Distribution des badges -->
+  <div *ngIf="dashboardData?.badgeStats?.badgeDistribution" class="card">
+    <h2>🎖️ Distribution des Badges</h2>
+    <div class="badges-distribution">
+      <!-- UTILISEZ getBadgeDistribution() méthode -->
+      <div *ngFor="let badge of getBadgeDistribution()" class="badge-item">
+        <span class="badge-key">{{ badge.key }}</span>
+        <span class="badge-count">{{ badge.count }}</span>
+      </div>
+    </div>
   </div>
 </div>

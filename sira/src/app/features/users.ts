@@ -14,6 +14,18 @@ interface User {
   createdAt: string;
 }
 
+interface Badge {
+  id: string;
+  key: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: string;
+  criteria: string;
+  rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
+  xpReward: number;
+}
+
 @Component({
   selector: 'app-users',
   imports: [CommonModule, FormsModule],
@@ -24,6 +36,8 @@ export class UsersComponent implements OnInit {
   users: User[] = [];
   loading = false;
   selectedUser: User | null = null;
+  showDetailsDialog = false;
+  userBadges: Badge[] = [];
   showEditDialog = false;
   saving = false;
 
@@ -48,9 +62,18 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  openEditDialog(user: User) {
-    this.selectedUser = { ...user };
-    this.showEditDialog = true;
+  /** Ouvrir détails d’un user et charger ses badges */
+  openDetails(user: User) {
+    this.selectedUser = user;
+    this.showDetailsDialog = true;
+
+    this.api.getUserBadges(user.id).subscribe({
+      next: (badges: Badge[]) => (this.userBadges = badges),
+      error: (err) => {
+        console.error('Erreur chargement badges', err);
+        this.userBadges = [];
+      },
+    });
   }
 
   saveUser() {
@@ -77,3 +100,4 @@ export class UsersComponent implements OnInit {
     });
   }
 }
+
