@@ -520,3 +520,39 @@ tbody tr:nth-child(2) { animation-delay: 0.2s; }
 tbody tr:nth-child(3) { animation-delay: 0.3s; }
 tbody tr:nth-child(4) { animation-delay: 0.4s; }
 tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #f8f8f8;
+  }
+}
+
+.dialog-content.details {
+  max-width: 600px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+
+  h3 {
+    margin-bottom: 15px;
+    color: #c62828; // rouge
+  }
+
+  h4 {
+    margin-top: 20px;
+    color: #444;
+  }
+
+  p, li {
+    margin: 5px 0;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

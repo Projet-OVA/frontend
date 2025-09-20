@@ -14,14 +14,14 @@
       </thead>
       <tbody>
         @for (c of challenges; track c.id) {
-          <tr>
+          <tr (click)="openDetailsDialog(c)" class="clickable-row">
             <td>{{ c.eventName }}</td>
             <td>{{ c.description }}</td>
             <td>{{ c.eventDate | date:'short' }}</td>
             <td>{{ c.location || '-' }}</td>
             <td>{{ c.participantsCount || 0 }}</td>
             <td>
-              <button class="btn-danger" (click)="delete(c)">🗑️</button>
+              <button class="btn-danger" (click)="delete(c); $event.stopPropagation()">🗑️</button>
             </td>
           </tr>
         }
@@ -35,7 +35,7 @@
     </table>
   </div>
 
-  <!-- MODAL DIALOG -->
+  <!-- MODAL CRÉATION/ÉDITION -->
   @if (showDialog) {
     <div class="dialog">
       <div class="dialog-content">
@@ -68,4 +68,26 @@
       </div>
     </div>
   }
+
+  <!-- MODAL DÉTAILS -->
+  @if (showDetailsDialog) {
+    <div class="dialog">
+      <div class="dialog-content details">
+        <h3>📌 Détails du défi</h3>
+
+        <p><strong>Nom :</strong> {{ selectedChallenge?.eventName }}</p>
+        <p><strong>Description :</strong> {{ selectedChallenge?.description }}</p>
+        <p><strong>Date :</strong> {{ selectedChallenge?.eventDate | date:'fullDate' }}</p>
+        <p><strong>Lieu :</strong> {{ selectedChallenge?.location || '-' }}</p>
+        <p><strong>Organisateur :</strong> {{ selectedChallenge?.organizerId }}</p>
+        <p><strong>Communauté :</strong> {{ selectedChallenge?.communityId }}</p>
+        <p><strong>Participants :</strong> {{ selectedChallenge?.participantsCount || 0 }}</p>
+
+        <div class="actions">
+          <button class="btn" (click)="closeDetailsDialog()">Fermer</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
+

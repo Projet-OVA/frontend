@@ -75,11 +75,6 @@ export class BadgesComponent implements OnInit {
     });
   }
 
-  //   getBadgeDistribution(): { key: string; count: number }[] {
-  //   return Object.entries(this.stats).map(([key, count]) => ({ key, count as number }));
-  // }
-
-  // Méthode pour obtenir la distribution des badges
   getBadgeDistribution(): { key: string; count: number }[] {
     if (!this.dashboardData?.badgeStats?.badgeDistribution) {
       return [];

@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-courses',
   imports: [CommonModule, FormsModule],
   templateUrl: './courses.html',
-  styleUrls: ['./courses.scss']
+  styleUrls: ['./courses.scss'],
 })
 export class CoursesComponent implements OnInit {
   courses: any[] = [];
@@ -26,7 +26,7 @@ export class CoursesComponent implements OnInit {
     nom: '',
     description: '',
     score: 100,
-    questions: []
+    questions: [],
   };
 
   constructor(private api: ApiService, private auth: AuthService) {}
@@ -45,7 +45,7 @@ export class CoursesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erreur chargement cours:', err);
-      }
+      },
     });
   }
 
@@ -66,7 +66,7 @@ export class CoursesComponent implements OnInit {
       nom: this.newCourse.nom,
       category: this.newCourse.category,
       description: this.newCourse.description || '',
-      status: this.newCourse.status || 'DRAFT'
+      status: this.newCourse.status || 'DRAFT',
     };
 
     const obs = this.newCourse.id
@@ -84,7 +84,7 @@ export class CoursesComponent implements OnInit {
         console.error('Erreur sauvegarde cours:', err);
         this.savingCourse = false;
         alert('Erreur sauvegarde cours');
-      }
+      },
     });
   }
 
@@ -92,7 +92,7 @@ export class CoursesComponent implements OnInit {
     if (!confirm('Supprimer ce cours ?')) return;
     this.api.deleteCourse(course.id).subscribe({
       next: () => this.loadCourses(),
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
 
@@ -100,7 +100,7 @@ export class CoursesComponent implements OnInit {
     const updated = { ...course, status: 'PUBLISHED' };
     this.api.updateCourse(course.id, updated).subscribe({
       next: () => this.loadCourses(),
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
 
@@ -113,7 +113,7 @@ export class CoursesComponent implements OnInit {
       nom: '',
       description: '',
       score: 100,
-      questions: []
+      questions: [],
     };
     this.showQuizDialog = true;
   }
@@ -137,7 +137,7 @@ export class CoursesComponent implements OnInit {
       description: this.newQuiz.description,
       score: this.newQuiz.score || 100,
       courseId: this.selectedCourse.id,
-      questions: this.newQuiz.questions
+      questions: this.newQuiz.questions,
     };
 
     this.savingQuiz = true;
@@ -152,7 +152,21 @@ export class CoursesComponent implements OnInit {
         this.savingQuiz = false;
         console.error('Erreur création quiz:', err);
         alert('Erreur création quiz');
-      }
+      },
     });
+  }
+
+  // courses.component.ts
+  selectedCourseDetails: any = null;
+  showDetailsDialog = false;
+
+  openDetailsDialog(course: any) {
+    this.selectedCourseDetails = course;
+    this.showDetailsDialog = true;
+  }
+
+  closeDetailsDialog() {
+    this.showDetailsDialog = false;
+    this.selectedCourseDetails = null;
   }
 }

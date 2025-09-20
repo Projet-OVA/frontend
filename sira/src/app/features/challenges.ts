@@ -18,6 +18,10 @@ export class ChallengesComponent implements OnInit {
   showDialog = false;
   saving = false;
 
+  // ✅ Nouveau : gestion détails
+  showDetailsDialog = false;
+  selectedChallenge: any = null;
+
   newChallenge: any = this.emptyChallenge();
 
   constructor(
@@ -61,6 +65,18 @@ export class ChallengesComponent implements OnInit {
   openDialog(challenge?: any) {
     this.newChallenge = challenge ? { ...challenge } : this.emptyChallenge();
     this.showDialog = true;
+  }
+
+  /** Ouvrir popup de détails */
+  openDetailsDialog(challenge: any) {
+    this.selectedChallenge = challenge;
+    this.showDetailsDialog = true;
+  }
+
+  /** Fermer popup détails */
+  closeDetailsDialog() {
+    this.showDetailsDialog = false;
+    this.selectedChallenge = null;
   }
 
   /** Créer ou mettre à jour un défi */
@@ -113,11 +129,6 @@ export class ChallengesComponent implements OnInit {
 
   /** Supprimer un défi */
   delete(challenge: any) {
-    // if (!this.authService.isAdmin()) {
-    //   alert('Seuls les administrateurs peuvent supprimer des défis');
-    //   return;
-    // }
-
     if (!confirm('Supprimer ce défi ?')) return;
 
     this.api.deleteEvent(challenge.id).subscribe({

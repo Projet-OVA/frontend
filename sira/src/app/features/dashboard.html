@@ -72,6 +72,56 @@
     </div>
   </div>
 
+  <!-- Diagramme circulaire des badges - VERSION SIMPLIFIÉE -->
+   
+  <div *ngIf="dashboardData?.badgeStats?.badgeDistribution && badgeChartData.length > 0" class="badge-chart-container">
+    <div class="badge-chart-header">
+      <h2>🏆 Distribution des Badges</h2>
+      <p>Répartition des badges par catégorie</p>
+    </div>
+    
+    <div class="chart-content">
+      <div class="pie-chart">
+        <svg width="300" height="300" viewBox="0 0 300 300">
+          <!-- Génération simplifiée des segments -->
+          <circle 
+            *ngFor="let badge of badgeChartData; let i = index; trackBy: trackByIndex"
+            cx="150" 
+            cy="150" 
+            r="80" 
+            fill="none" 
+            [attr.stroke]="badge.color"
+            stroke-width="40"
+            [attr.stroke-dasharray]="badge.strokeDasharray"
+            [attr.stroke-dashoffset]="badge.strokeDashoffset"
+            transform="rotate(-90 150 150)" 
+            class="pie-slice"
+            [style.--dash-array]="badge.strokeDasharray.split(' ')[0]">
+          </circle>
+        </svg>
+        
+        <div class="chart-center">
+          <div class="total-badges">{{ getTotalBadges() }}</div>
+          <div class="total-label">Total</div>
+        </div>
+      </div>
+      
+      <div class="badge-legend">
+        <div 
+          *ngFor="let badge of badgeChartData; trackBy: trackByIndex" 
+          class="legend-item"
+          [style.--badge-color]="badge.color">
+          <div class="legend-color"></div>
+          <div class="legend-info">
+            <div class="legend-label">{{ badge.key }}</div>
+            <div class="legend-count">{{ badge.count }}</div>
+            <div class="legend-percentage">{{ badge.percentage.toFixed(1) }}% du total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Section progression utilisateur -->
   <div *ngIf="userProgress" class="card progress-section">
     <h2>📊 Progression Utilisateur</h2>
@@ -97,15 +147,17 @@
     </div>
   </div>
 
-  <!-- Distribution des badges -->
-  <div *ngIf="dashboardData?.badgeStats?.badgeDistribution" class="card">
-    <h2>🎖️ Distribution des Badges</h2>
-    <div class="badges-distribution">
-      <!-- UTILISEZ getBadgeDistribution() méthode -->
-      <div *ngFor="let badge of getBadgeDistribution()" class="badge-item">
-        <span class="badge-key">{{ badge.key }}</span>
-        <span class="badge-count">{{ badge.count }}</span>
+  <!-- Fallback si pas de données de badges -->
+  <div *ngIf="!dashboardData?.badgeStats?.badgeDistribution || badgeChartData.length === 0" class="badge-chart-container">
+    <div class="badge-chart-header">
+      <h2>🏆 Distribution des Badges</h2>
+      <p>Aucune donnée disponible</p>
+    </div>
+    <div class="chart-content">
+      <div class="no-data">
+        <p>Aucune donnée de badges à afficher pour le moment.</p>
       </div>
     </div>
   </div>
+
 </div>
