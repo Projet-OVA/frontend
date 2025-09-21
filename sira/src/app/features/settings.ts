@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../core/api.service';
 import { AuthService } from '../core/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
 
 interface Admin {
   id: string | null;
@@ -15,9 +17,14 @@ interface Admin {
   createdAt: string;
 }
 
+interface AppSettings {
+  language: string;
+  appName: string;
+}
+
 @Component({
   selector: 'app-settings',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule, HttpClientModule],
   standalone: true,
   templateUrl: './settings.html',
   styleUrls: ['./settings.scss'],
@@ -35,29 +42,62 @@ export class SettingsComponent implements OnInit {
     createdAt: '',
   };
 
-  appName = 'Sira Admin';
+  userRole: string = '';
 
-  // 🌍 gestion multilingue
-  selected = 'fr';
-  languages = ['fr', 'en', 'pt', 'es'];
+  appSettings: AppSettings = {
+    language: 'fr',
+    appName: 'Sira Admin',
+  };
+
+  languages = [
+    { code: 'fr', name: 'LANGUAGES.FR', flag: '🇫🇷' },
+    { code: 'en', name: 'LANGUAGES.EN', flag: '🇺🇸' },
+    { code: 'pt', name: 'LANGUAGES.PT', flag: '🇵🇹' },
+    { code: 'es', name: 'LANGUAGES.ES', flag: '🇪🇸' },
+  ];
 
   admins: Admin[] = [];
   logs: any[] = [];
   loading = false;
   saving = false;
-
-  // pour CRUD admins
   showAdminDialog = false;
-  theme = 'light';
 
-  constructor(private http: HttpClient, private api: ApiService) {}
+  constructor(
+    private http: HttpClient,
+    private api: ApiService,
+    private auth: AuthService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
-    this.loadAdmins();
+    this.loadSettings();
+    this.userRole = (this.auth.getUserRole() || '').toUpperCase();
+    console.log('Role courant:', this.userRole);
+
+    // Seuls les SUPER_ADMIN peuvent gérer les autres admins
+    if (this.userRole === 'SUPER_ADMIN') {
+      this.loadAdmins();
+    }
   }
 
-  // 🔹 Charger uniquement les admins
+  loadSettings() {
+    const savedSettings = localStorage.getItem('appSettings');
+    if (savedSettings) {
+      this.appSettings = { ...this.appSettings, ...JSON.parse(savedSettings) };
+    }
+  }
+
+  saveSettings() {
+    localStorage.setItem('appSettings', JSON.stringify(this.appSettings));
+    alert('Paramètres sauvegardés avec succès!');
+  }
+
   loadAdmins() {
+    if (this.userRole !== 'SUPER_ADMIN') {
+      console.log('Accès refusé: seuls les SUPER_ADMIN peuvent voir les admins');
+      return;
+    }
+
     this.loading = true;
     this.api.getUsers().subscribe({
       next: (res: any) => {
@@ -71,26 +111,21 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  saveSettings() {
-    console.log('Sauvegarde paramètres', this.appName, this.theme, this.selected);
-    // TODO: appeler une API backend pour sauvegarder les paramètres globaux
-  }
-
-  // 🔹 CRUD Admins
   openAdminDialog(admin?: Admin) {
-    this.newAdmin = admin ? { ...admin } : {
-      id: null,
-      nom: '',
-      prenom: '',
-      email: '',
-      username: '',
-      role: '',
-      createdAt: '',
-    };
+    this.newAdmin = admin
+      ? { ...admin }
+      : {
+          id: null,
+          nom: '',
+          prenom: '',
+          email: '',
+          username: '',
+          role: '',
+          createdAt: '',
+        };
     this.showAdminDialog = true;
   }
 
-  // settings.ts
   saveAdmin() {
     if (
       !this.newAdmin.nom ||
@@ -103,58 +138,45 @@ export class SettingsComponent implements OnInit {
     }
 
     this.saving = true;
-
-    // Format des données probablement attendu par le backend
     const adminData = {
       nom: this.newAdmin.nom,
       prenom: this.newAdmin.prenom,
       email: this.newAdmin.email,
-      // username: this.newAdmin.username,
-      password: 'Password123!', // Ajout du mot de passe requis
-      confirmPassword: 'Password123!', // Confirmation si nécessaire
+      password: 'Password123!',
+      confirmPassword: 'Password123!',
     };
-
-    // Ajoutez des logs pour déboguer
-    console.log('Données envoyées:', adminData);
-    console.log('Endpoint:', `${this.baseUrl}/auth/admin`);
 
     this.http.post(`${this.baseUrl}/auth/admin`, adminData).subscribe({
       next: (response: any) => {
-        // Type explicit pour response
         console.log('Admin créé avec succès', response);
         this.saving = false;
         this.showAdminDialog = false;
-        this.loadAdmins(); // Recharger la liste
+        this.loadAdmins();
         alert('Admin créé avec succès!');
-
-        // Réinitialiser le formulaire
-        this.newAdmin = { 
-          id: null, 
-          nom: '', 
-          prenom: '', 
-          email: '', 
-          username: '',
-          role: '',
-          createdAt: ''
-        };
+        this.resetNewAdmin();
       },
       error: (error: any) => {
-        // Type explicit pour error
-        console.error('Erreur détaillée création admin', error);
+        console.error('Erreur création admin', error);
         this.saving = false;
-
-        // Afficher le message d'erreur du backend si disponible
         if (error.error?.message) {
-          if (Array.isArray(error.error.message)) {
-            alert('Erreurs: ' + error.error.message.join(', '));
-          } else {
-            alert('Erreur: ' + error.error.message);
-          }
+          alert('Erreur: ' + error.error.message);
         } else {
-          alert("Erreur lors de la création de l'admin. Vérifiez la console pour plus de détails.");
+          alert("Erreur lors de la création de l'admin.");
         }
       },
     });
+  }
+
+  private resetNewAdmin() {
+    this.newAdmin = {
+      id: null,
+      nom: '',
+      prenom: '',
+      email: '',
+      username: '',
+      role: '',
+      createdAt: '',
+    };
   }
 
   deleteAdmin(id: string | null) {
@@ -163,5 +185,10 @@ export class SettingsComponent implements OnInit {
       next: () => this.loadAdmins(),
       error: (err: any) => console.error('Erreur suppression admin', err),
     });
+  }
+
+  onLanguageChange() {
+    this.translate.use(this.appSettings.language);
+    localStorage.setItem('appSettings', JSON.stringify(this.appSettings));
   }
 }

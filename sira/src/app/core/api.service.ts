@@ -178,6 +178,10 @@ export class ApiService {
         })
       );
   }
+
+  getUserBadge(userId: string) {
+  return this.http.get<any[]>(`/api/badges/user/${userId}`);
+}
   // ==================== MÉTHODES EXISTANTES (conservées) ====================
 
   // --- PUBLICATIONS ---

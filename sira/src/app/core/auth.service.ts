@@ -7,6 +7,7 @@ export class AuthService {
   private baseUrl = 'https://sira-backendv1.onrender.com/api';
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+  
 
   constructor(private http: HttpClient) {
     this.loadStoredUser();

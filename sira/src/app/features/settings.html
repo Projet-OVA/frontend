@@ -1,41 +1,37 @@
 <div class="settings-page">
   <div class="grid-two">
-    <!-- PARAMÈTRES GÉNÉRAUX -->
+    
+    <!-- PARAMÈTRES GÉNÉRAUX (TOUJOURS visibles) -->
     <div class="card">
-      <h3>Paramètres généraux</h3>
+      <h3>{{ 'SETTINGS.GENERAL' | translate }}</h3>
 
-      <label>Nom de l'application
-        <input type="text" [(ngModel)]="appName" />
+      <label>
+        {{ 'SETTINGS.APP_NAME' | translate }}
+        <input type="text" [(ngModel)]="appSettings.appName" />
       </label>
 
-      <label>Langue par défaut
-        <select [(ngModel)]="selected">
-          <option *ngFor="let l of languages" [value]="l">{{ l }}</option>
-        </select>
-      </label>
-
-      <label>Thème
-        <select [(ngModel)]="theme">
-          <option value="light">Clair</option>
-          <option value="dark">Sombre</option>
+      <label>
+        {{ 'SETTINGS.LANGUAGE' | translate }}
+        <select [(ngModel)]="appSettings.language" (change)="onLanguageChange()">
+          <option *ngFor="let lang of languages" [value]="lang.code">
+            {{ lang.flag }} {{ lang.name | translate }}
+          </option>
         </select>
       </label>
 
       <div class="actions">
-        <button class="btn btn-primary" (click)="saveSettings()">Sauvegarder</button>
+        <button class="btn btn-primary" (click)="saveSettings()">
+          {{ 'SETTINGS.SAVE' | translate }}
+        </button>
       </div>
     </div>
 
-    <!-- GESTION DES ADMINS -->
-    <div class="card">
-      <h3>Comptes Admin</h3>
+    <!-- GESTION DES ADMINS : seulement si role ≠ ADMIN -->
+    <div class="card" *ngIf="userRole !== 'ADMIN'">
+      <h3>{{ 'SETTINGS.ADMIN_ACCOUNTS' | translate }}</h3>
       
-      <!-- *ngIf="auth.isSuperAdmin()" -->
-      <button
-        class="btn btn-primary"
-        (click)="openAdminDialog()"
-      >
-        + Nouvel Admin
+      <button class="btn btn-primary" (click)="openAdminDialog()">
+        + {{ 'SETTINGS.NEW_ADMIN' | translate }}
       </button>
 
       <div *ngFor="let a of admins" class="admin-row">
@@ -44,7 +40,6 @@
           <div class="meta">{{ a.email }}</div>
         </div>
         <div>
-        <!-- <div *ngIf="auth.isSuperAdmin()"> -->
           <button class="btn-ghost" (click)="openAdminDialog(a)">Éditer</button>
           <button class="btn-danger" (click)="deleteAdmin(a.id)">Supprimer</button>
         </div>
@@ -52,7 +47,7 @@
 
       <hr />
 
-      <h4>Logs de sécurité</h4>
+      <h4>{{ 'SETTINGS.SECURITY_LOGS' | translate }}</h4>
       <div class="logs">
         <div *ngFor="let l of logs" class="log-row">
           <div class="left">
@@ -61,13 +56,15 @@
           </div>
           <div class="right"><small class="muted">{{ l.ip }}</small></div>
         </div>
-        <div *ngIf="!logs?.length" class="muted">Aucun log</div>
+        <div *ngIf="!logs?.length" class="muted">
+          {{ 'SETTINGS.NO_LOGS' | translate }}
+        </div>
       </div>
     </div>
   </div>
 
   <!-- DIALOG CRUD ADMIN -->
-  <div class="dialog" *ngIf="showAdminDialog">
+  <div class="dialog" *ngIf="showAdminDialog && userRole !== 'ADMIN'">
     <div class="dialog-content">
       <h3>{{ newAdmin.id ? 'Modifier' : 'Créer' }} un Admin</h3>
 

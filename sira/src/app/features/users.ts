@@ -14,18 +14,6 @@ interface User {
   createdAt: string;
 }
 
-interface Badge {
-  id: string;
-  key: string;
-  title: string;
-  description: string;
-  icon: string;
-  category: string;
-  criteria: string;
-  rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
-  xpReward: number;
-}
-
 @Component({
   selector: 'app-users',
   imports: [CommonModule, FormsModule],
@@ -37,9 +25,10 @@ export class UsersComponent implements OnInit {
   loading = false;
   selectedUser: User | null = null;
   showDetailsDialog = false;
-  userBadges: Badge[] = [];
   showEditDialog = false;
   saving = false;
+  userBadges: any[] = [];
+  loadingBadges = false;
 
   constructor(private api: ApiService) {}
 
@@ -51,7 +40,6 @@ export class UsersComponent implements OnInit {
     this.loading = true;
     this.api.getUsers().subscribe({
       next: (res: any) => {
-        // filtrer uniquement les CITIZEN
         this.users = res.filter((u: User) => u.role === 'CITIZEN');
         this.loading = false;
       },
@@ -62,19 +50,27 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  /** Ouvrir détails d’un user et charger ses badges */
   openDetails(user: User) {
     this.selectedUser = user;
     this.showDetailsDialog = true;
-
-    this.api.getUserBadges(user.id).subscribe({
-      next: (badges: Badge[]) => (this.userBadges = badges),
-      error: (err) => {
-        console.error('Erreur chargement badges', err);
-        this.userBadges = [];
-      },
-    });
+    this.loadUserBadges(user.id);
   }
+
+loadUserBadges(userId: string) {
+  this.loadingBadges = true;
+  this.api.getUserBadges(userId).subscribe({
+    next: (res) => {
+      this.userBadges = res;
+      this.loadingBadges = false;
+    },
+    error: (err) => {
+      console.error('Erreur chargement badges', err);
+      this.userBadges = [];
+      this.loadingBadges = false;
+    },
+  });
+}
+
 
   saveUser() {
     if (!this.selectedUser) return;
@@ -100,4 +96,3 @@ export class UsersComponent implements OnInit {
     });
   }
 }
-

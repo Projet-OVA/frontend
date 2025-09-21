@@ -2,76 +2,68 @@
   <h2>Liste des citoyens</h2>
 
   @if (loading) {
-    <div class="loading">Chargement...</div>
-  }
-
-  @if (!loading && users.length) {
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Email</th>
-          <th>Username</th>
-          <th>Téléphone</th>
-          <th>Créé le</th>
-          <th>Suspendre</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (u of users; track u.id) {
-          <tr (click)="openDetails(u)" class="clickable-row">
-            <td>{{ u.nom }}</td>
-            <td>{{ u.prenom }}</td>
-            <td>{{ u.email }}</td>
-            <td>{{ u.username }}</td>
-            <td>{{ u.phoneNumber || '-' }}</td>
-            <td>{{ u.createdAt | date : 'short' }}</td>
-            <td>
-              <button class="btn-danger" (click)="deleteUser(u); $event.stopPropagation()">🗑️</button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
-
-  @if (!loading && !users.length) {
-    <div class="muted">Aucun citoyen trouvé</div>
+  <div class="loading">Chargement...</div>
+  } @if (!loading && users.length) {
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Téléphone</th>
+        <th>Créé le</th>
+        <th>Suspendre</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (u of users; track u.id) {
+      <tr (click)="openDetails(u)" class="clickable-row">
+        <td>{{ u.nom }}</td>
+        <td>{{ u.prenom }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.phoneNumber || '-' }}</td>
+        <td>{{ u.createdAt | date : 'short' }}</td>
+        <td>
+          <button class="btn-danger" (click)="deleteUser(u); $event.stopPropagation()">🗑️</button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  } @if (!loading && !users.length) {
+  <div class="muted">Aucun citoyen trouvé</div>
   }
 
   <!-- Dialog détails user -->
   @if (showDetailsDialog && selectedUser) {
-    <div class="dialog">
-      <div class="dialog-content">
-        <h3>Détails utilisateur</h3>
-        <p><strong>Nom:</strong> {{ selectedUser.nom }} {{ selectedUser.prenom }}</p>
-        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-        <p><strong>Username:</strong> {{ selectedUser.username }}</p>
-        <p><strong>Téléphone:</strong> {{ selectedUser.phoneNumber || '-' }}</p>
-        <p><strong>Créé le:</strong> {{ selectedUser.createdAt | date : 'short' }}</p>
+  <div class="dialog">
+    <div class="dialog-content">
+      <h3>Détails utilisateur</h3>
+      <p><strong>Nom:</strong> {{ selectedUser.nom }} {{ selectedUser.prenom }}</p>
+      <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+      <p><strong>Username:</strong> {{ selectedUser.username }}</p>
+      <p><strong>Téléphone:</strong> {{ selectedUser.phoneNumber || '-' }}</p>
+      <p><strong>Créé le:</strong> {{ selectedUser.createdAt | date : 'short' }}</p>
 
-        <h4>Badges</h4>
-        @if (userBadges.length) {
-          <div class="badges-list">
-            @for (b of userBadges; track b.id) {
-              <div class="badge-card">
-                <img [src]="b.icon" [alt]="b.title" class="badge-icon" />
-                <div>
-                  <strong>{{ b.title }}</strong>
-                  <p class="muted">{{ b.description }}</p>
-                </div>
-              </div>
-            }
-          </div>
-        } @else {
-          <p class="muted">Aucun badge</p>
+      <h4>Badges</h4>
+      @if (loadingBadges) {
+      <div>Chargement des badges...</div>
+      } @if (!loadingBadges && userBadges.length) {
+      <ul>
+        @for (b of userBadges; track b.id) {
+        <li>{{ b.name }}</li>
         }
+      </ul>
+      } @if (!loadingBadges && !userBadges.length) {
+      <div class="muted">Aucun badge</div>
+      }
 
-        <div class="actions">
-          <button class="btn" (click)="showDetailsDialog = false">Fermer</button>
-        </div>
+      <div class="actions">
+        <button class="btn" (click)="showDetailsDialog = false">Fermer</button>
       </div>
     </div>
+  </div>
   }
 </div>

@@ -259,4 +259,12 @@ export class PublicationsComponent implements OnInit {
     this.searchQ = q;
     this.applyAllFilters();
   }
+
+  selectedPublication: any = null;
+  showDetailsDialog = false;
+
+  openDetails(pub: any) {
+    this.selectedPublication = pub;
+    this.showDetailsDialog = true;
+  }
 }

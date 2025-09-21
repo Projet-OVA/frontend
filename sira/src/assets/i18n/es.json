@@ -1,0 +1,43 @@
+{
+  "NAV": {
+    "DASHBOARD": "Panel de Control",
+    "USERS": "Usuarios",
+    "COURSES": "Rutas Educativas",
+    "CHALLENGES": "Desafíos Comunitarios",
+    "BADGES": "Insignias",
+    "REPORTS": "Informes",
+    "PUBLICATIONS": "Publicaciones",
+    "SETTINGS": "Configuración",
+    "LOGOUT": "Cerrar Sesión",
+    "SEARCH_PLACEHOLDER": "Buscar usuarios, cursos...",
+    "NOTIFICATIONS": "Notificaciones",
+    "ADMIN": "Administrador",
+    "SUPER_ADMIN": "Super Administrador"
+  },
+  "SETTINGS": {
+    "TITLE": "Configuración",
+    "GENERAL": "Configuración General",
+    "APP_NAME": "Nombre de la aplicación",
+    "LANGUAGE": "Idioma",
+    "THEME": "Tema",
+    "SAVE": "Guardar",
+    "ADMIN_ACCOUNTS": "Cuentas de Administrador",
+    "NEW_ADMIN": "Nuevo Administrador",
+    "SECURITY_LOGS": "Registros de Seguridad",
+    "NO_LOGS": "Sin registros"
+  },
+  "LANGUAGES": {
+    "FR": "Francés",
+    "EN": "Inglés",
+    "PT": "Portugués",
+    "ES": "Español"
+  },
+  "THEMES": {
+    "LIGHT": "Claro",
+    "DARK": "Oscuro",
+    "AUTO": "Automático"
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© {{year}} OVA — SIRA · Admin"
+  }
+}

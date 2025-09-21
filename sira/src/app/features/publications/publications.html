@@ -48,14 +48,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of filteredPublications">
+        <tr *ngFor="let p of filteredPublications" (click)="openDetails(p)" class="clickable-row">
           <td>{{ p.publicationType }}</td>
           <td>{{ p.status }}</td>
           <td>
             <a *ngIf="p.attachment?.url" [href]="p.attachment?.url" target="_blank" rel="noopener">
               <img class="publication-image" [src]="p.attachment?.url" alt="Pièce jointe" />
             </a>
-
             <span *ngIf="!p.attachment?.url">—</span>
           </td>
           <td>
@@ -63,7 +62,7 @@
             <span *ngIf="!p.author">—</span>
           </td>
           <td>{{ p.publicationDate ? (p.publicationDate | date : 'short') : '-' }}</td>
-          <td class="actions-col">
+          <td class="actions-col" (click)="$event.stopPropagation()">
             <button class="btn-ghost" (click)="edit(p)">✏️ Éditer</button>
             <button class="btn-danger" (click)="delete(p)">🗑 Supprimer</button>
             @if (p.status !== 'PUBLISHED') {
@@ -122,6 +121,69 @@
         <button class="btn btn-primary" (click)="save()" [disabled]="saving">
           {{ saving ? 'Enregistrement…' : newPub.id ? 'Mettre à jour' : 'Enregistrer' }}
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Détails publication -->
+  <div class="dialog" *ngIf="showDetailsDialog && selectedPublication">
+    <div class="dialog-content" role="dialog" aria-modal="true">
+      <h3>Détails de la publication</h3>
+
+      <p><strong>ID :</strong> {{ selectedPublication.id }}</p>
+      <p><strong>Type :</strong> {{ selectedPublication.publicationType }}</p>
+      <p><strong>MediaType :</strong> {{ selectedPublication.mediaType || '-' }}</p>
+      <p><strong>Statut :</strong> {{ selectedPublication.status }}</p>
+      <p><strong>Contenu :</strong></p>
+      <pre class="preformatted">{{ selectedPublication.publicationContent }}</pre>
+
+      <p>
+        <strong>Date de publication :</strong>
+        {{
+          selectedPublication.publicationDate
+            ? (selectedPublication.publicationDate | date : 'full')
+            : '-'
+        }}
+      </p>
+
+      <p>
+        <strong>Auteur :</strong>
+        <span *ngIf="selectedPublication.author">
+          {{ selectedPublication.author.nom }} {{ selectedPublication.author.prenom }} ({{
+            selectedPublication.author.email
+          }})
+        </span>
+        <span *ngIf="!selectedPublication.author">—</span>
+      </p>
+
+      <div *ngIf="selectedPublication.attachment?.url">
+        <p><strong>Fichier :</strong></p>
+        <a [href]="selectedPublication.attachment.url" target="_blank" rel="noopener">
+          {{ selectedPublication.attachment.filename || 'Voir le fichier' }}
+        </a>
+        <div *ngIf="selectedPublication.publicationType === 'MEDIA'">
+          <img
+            *ngIf="selectedPublication.mediaType === 'IMAGE'"
+            [src]="selectedPublication.attachment.url"
+            alt="Aperçu média"
+            class="preview-img"
+          />
+          <video
+            *ngIf="selectedPublication.mediaType === 'VIDEO'"
+            controls
+            [src]="selectedPublication.attachment.url"
+            class="preview-video"
+          ></video>
+          <audio
+            *ngIf="selectedPublication.mediaType === 'AUDIO'"
+            controls
+            [src]="selectedPublication.attachment.url"
+          ></audio>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" (click)="showDetailsDialog = false">Fermer</button>
       </div>
     </div>
   </div>

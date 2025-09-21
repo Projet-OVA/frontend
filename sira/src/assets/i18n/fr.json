@@ -1,0 +1,32 @@
+{
+  "NAV": {
+    "DASHBOARD": "Tableau de bord",
+    "USERS": "Utilisateurs",
+    "COURSES": "Parcours éducatifs",
+    "CHALLENGES": "Défis Communautaires",
+    "BADGES": "Badges",
+    "REPORTS": "Rapports",
+    "PUBLICATIONS": "Publications",
+    "SETTINGS": "Paramètres",
+    "LOGOUT": "Déconnexion",
+    "SEARCH_PLACEHOLDER": "Rechercher utilisateurs, parcours...",
+    "NOTIFICATIONS": "Notifications",
+    "ADMIN": "Admin",
+    "SUPER_ADMIN": "Super Admin"
+  },
+  "SETTINGS": {
+    "TITLE": "Paramètres",
+    "GENERAL": "Paramètres généraux",
+    "APP_NAME": "Nom de l'application",
+    "LANGUAGE": "Langue",
+    "THEME": "Thème",
+    "SAVE": "Sauvegarder",
+    "ADMIN_ACCOUNTS": "Comptes Admin",
+    "NEW_ADMIN": "Nouvel Admin",
+    "SECURITY_LOGS": "Logs de sécurité",
+    "NO_LOGS": "Aucun log"
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© {{year}} OVA — SIRA · Admin"
+  }
+}
