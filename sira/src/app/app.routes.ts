@@ -4,6 +4,16 @@ import { AuthGuard } from './core/auth.guard';
 import { CommunitiesComponent } from './features/communities';
 
 export const routes: Routes = [
+  // Redirection de la racine vers le login
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  
+  // Route pour le login (sans protection)
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent),
+  },
+  
+  // Routes protégées avec le layout admin
   {
     path: '',
     component: AdminLayoutComponent,
@@ -46,13 +56,15 @@ export const routes: Routes = [
         path: 'settings',
         loadComponent: () => import('./features/settings').then((m) => m.SettingsComponent),
       },
+      { 
+        path: 'communities', 
+        component: CommunitiesComponent 
+      },
+      // Redirection par défaut vers le dashboard pour les routes enfants
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'communities', component: CommunitiesComponent }, // <--- ajout
     ],
   },
-  {
-    path: 'login',
-    loadComponent: () => import('./features/auth/login.component').then((m) => m.LoginComponent),
-  },
-  { path: '**', redirectTo: 'dashboard' },
+  
+  // Redirection des routes inconnues vers le login
+  { path: '**', redirectTo: 'login' },
 ];

@@ -1,163 +1,286 @@
 <div class="dashboard-page">
+  <!-- Header avec animations -->
   <div class="page-header">
-    <h1>Tableau de bord</h1>
-    <p>Vue d'ensemble de la plateforme SIRA</p>
+    <div class="header-content">
+      <h1 class="header-title">Tableau de bord SIRA</h1>
+      <p class="header-subtitle">Vue d'ensemble complète de votre plateforme</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="loadDashboardData()">
+        <span class="btn-icon">🔄</span>
+        Actualiser
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="loading" class="loading">Chargement des données...</div>
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des données en cours...</p>
+  </div>
 
+  <!-- Error state -->
   <div *ngIf="error" class="error-card card">
-    <h3>❌ Erreur</h3>
-    <p>{{ error }}</p>
+    <div class="error-icon">⚠️</div>
+    <div class="error-content">
+      <h3>Erreur de chargement</h3>
+      <p>{{ error }}</p>
+    </div>
     <button class="btn btn-primary" (click)="loadDashboardData()">Réessayer</button>
   </div>
 
-  <!-- UTILISEZ dashboardData AU LIEU DE stats -->
-  <div *ngIf="dashboardData && !loading" class="dashboard-grid">
-    
-    <!-- Statistiques utilisateurs -->
-    <div class="card stat-card">
-      <div class="stat-icon">👥</div>
-      <div class="stat-content">
-        <h3>{{ dashboardData.userStats.totalUsers }}</h3>
-        <p>Utilisateurs total</p>
-        <small>{{ dashboardData.userStats.activeUsers }} actifs</small>
-      </div>
-    </div>
-
-    <!-- Événements -->
-    <div class="card stat-card">
-      <div class="stat-icon">🎯</div>
-      <div class="stat-content">
-        <h3>{{ dashboardData.eventStats.totalEvents }}</h3>
-        <p>Événements</p>
-      </div>
-    </div>
-
-    <!-- Badges -->
-    <div class="card stat-card">
-      <div class="stat-icon">🏆</div>
-      <div class="stat-content">
-        <h3>{{ dashboardData.badgeStats.totalBadges }}</h3>
-        <p>Badges attribués</p>
-      </div>
-    </div>
-
-    <!-- Progression cours -->
-    <div class="card stat-card">
-      <div class="stat-icon">📚</div>
-      <div class="stat-content">
-        <h3 [style.color]="getProgressColor(parseFloat(dashboardData.courseProgress.completionRate))">
-          {{ formatPercentage(dashboardData.courseProgress.completionRate) }}
-        </h3>
-        <p>Complétion cours</p>
-        <small [class.positive]="dashboardData.courseProgress.completionRateChange.includes('+')"
-               [class.negative]="dashboardData.courseProgress.completionRateChange.includes('-')">
-          {{ dashboardData.courseProgress.completionRateChange }}
-        </small>
-      </div>
-    </div>
-
-    <!-- Engagement communauté -->
-    <div class="card stat-card">
-      <div class="stat-icon">💬</div>
-      <div class="stat-content">
-        <h3>{{ formatPercentage(dashboardData.communityEngagement.engagementRate) }}</h3>
-        <p>Engagement</p>
-        <small [class.positive]="dashboardData.communityEngagement.engagementRateChange.includes('+')"
-               [class.negative]="dashboardData.communityEngagement.engagementRateChange.includes('-')">
-          {{ dashboardData.communityEngagement.engagementRateChange }}
-        </small>
-      </div>
-    </div>
-  </div>
-
-  <!-- Diagramme circulaire des badges - VERSION SIMPLIFIÉE -->
-   
-  <div *ngIf="dashboardData?.badgeStats?.badgeDistribution && badgeChartData.length > 0" class="badge-chart-container">
-    <div class="badge-chart-header">
-      <h2>🏆 Distribution des Badges</h2>
-      <p>Répartition des badges par catégorie</p>
-    </div>
-    
-    <div class="chart-content">
-      <div class="pie-chart">
-        <svg width="300" height="300" viewBox="0 0 300 300">
-          <!-- Génération simplifiée des segments -->
-          <circle 
-            *ngFor="let badge of badgeChartData; let i = index; trackBy: trackByIndex"
-            cx="150" 
-            cy="150" 
-            r="80" 
-            fill="none" 
-            [attr.stroke]="badge.color"
-            stroke-width="40"
-            [attr.stroke-dasharray]="badge.strokeDasharray"
-            [attr.stroke-dashoffset]="badge.strokeDashoffset"
-            transform="rotate(-90 150 150)" 
-            class="pie-slice"
-            [style.--dash-array]="badge.strokeDasharray.split(' ')[0]">
-          </circle>
-        </svg>
-        
-        <div class="chart-center">
-          <div class="total-badges">{{ getTotalBadges() }}</div>
-          <div class="total-label">Total</div>
+  <!-- Main dashboard content -->
+  <div *ngIf="dashboardData && !loading" class="dashboard-content">
+    <!-- KPI Cards Grid -->
+    <div class="kpi-grid">
+      <!-- User Statistics Card -->
+      <div class="kpi-card card">
+        <div class="kpi-header">
+          <div class="kpi-icon">👥</div>
+          <h3>Utilisateurs</h3>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ animatedStats.totalUsers | number }}</div>
+          <div class="kpi-label">Total utilisateurs</div>
+          <div class="kpi-subvalue">
+            <span class="active-users">{{ animatedStats.activeUsers | number }}</span>
+            <span class="sub-label">actifs</span>
+          </div>
+        </div>
+        <div class="kpi-trend">
+          <span class="trend-icon">📈</span>
+          <span class="trend-text">+12% ce mois</span>
         </div>
       </div>
-      
-      <div class="badge-legend">
-        <div 
-          *ngFor="let badge of badgeChartData; trackBy: trackByIndex" 
-          class="legend-item"
-          [style.--badge-color]="badge.color">
-          <div class="legend-color"></div>
-          <div class="legend-info">
-            <div class="legend-label">{{ badge.key }}</div>
-            <div class="legend-count">{{ badge.count }}</div>
-            <div class="legend-percentage">{{ badge.percentage.toFixed(1) }}% du total</div>
+
+      <!-- Events Card -->
+      <div class="kpi-card card">
+        <div class="kpi-header">
+          <div class="kpi-icon">🎯</div>
+          <h3>Événements</h3>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ animatedStats.totalEvents | number }}</div>
+          <div class="kpi-label">Événements créés</div>
+        </div>
+        <div class="kpi-trend positive">
+          <span class="trend-icon">🔥</span>
+          <span class="trend-text">Activité élevée</span>
+        </div>
+      </div>
+
+      <!-- Badges Card -->
+      <div class="kpi-card card">
+        <div class="kpi-header">
+          <div class="kpi-icon">🏆</div>
+          <h3>Badges</h3>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ animatedStats.totalBadges | number }}</div>
+          <div class="kpi-label">Badges attribués</div>
+        </div>
+        <div class="kpi-trend">
+          <span class="trend-icon">⭐</span>
+          <span class="trend-text"
+            >{{
+              dashboardData.badgeStats.totalBadges / animatedStats.totalUsers | number : '1.1-1'
+            }}
+            par utilisateur</span
+          >
+        </div>
+      </div>
+
+      <!-- Course Progress Card -->
+      <div class="kpi-card card">
+        <div class="kpi-header">
+          <div class="kpi-icon">📚</div>
+          <h3>Progression</h3>
+        </div>
+        <div class="kpi-content">
+          <div
+            class="kpi-value"
+            [style.color]="
+              getProgressColor(parseFloat(dashboardData.courseProgress.completionRate))
+            "
+          >
+            {{ formatPercentage(dashboardData.courseProgress.completionRate) }}
+          </div>
+          <div class="kpi-label">Taux de complétion</div>
+          <div
+            class="kpi-change"
+            [style.color]="getChangeColor(dashboardData.courseProgress.completionRateChange)"
+          >
+            <span class="change-icon">{{
+              getChangeIcon(dashboardData.courseProgress.completionRateChange)
+            }}</span>
+            {{ dashboardData.courseProgress.completionRateChange }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Engagement Card -->
+      <div class="kpi-card card">
+        <div class="kpi-header">
+          <div class="kpi-icon">💬</div>
+          <h3>Engagement</h3>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">
+            {{ formatPercentage(dashboardData.communityEngagement.engagementRate) }}
+          </div>
+          <div class="kpi-label">Taux d'engagement</div>
+          <div
+            class="kpi-change"
+            [style.color]="getChangeColor(dashboardData.communityEngagement.engagementRateChange)"
+          >
+            <span class="change-icon">{{
+              getChangeIcon(dashboardData.communityEngagement.engagementRateChange)
+            }}</span>
+            {{ dashboardData.communityEngagement.engagementRateChange }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Average Time Card -->
+      <div class="kpi-card card">
+        <div class="kpi-header">
+          <div class="kpi-icon">⏱️</div>
+          <h3>Temps moyen</h3>
+        </div>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ dashboardData.courseProgress.averageTime }}</div>
+          <div class="kpi-label">Par parcours</div>
+          <div
+            class="kpi-change"
+            [style.color]="getChangeColor(dashboardData.courseProgress.averageTimeChange)"
+          >
+            <span class="change-icon">{{
+              getChangeIcon(dashboardData.courseProgress.averageTimeChange)
+            }}</span>
+            {{ dashboardData.courseProgress.averageTimeChange }}
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Section progression utilisateur -->
-  <div *ngIf="userProgress" class="card progress-section">
-    <h2>📊 Progression Utilisateur</h2>
-    
-    <div class="overall-progress">
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width]="userProgress.data.overallProgress + '%'"></div>
-      </div>
-      <span class="progress-text">{{ userProgress.data.overallProgress }}% complété</span>
-    </div>
-
-    <div class="categories-grid">
-      <div *ngFor="let category of userProgress.data.categories" class="category-card">
-        <h4>{{ category.category }}</h4>
-        <div class="progress-bar small">
-          <div class="progress-fill" 
-               [style.width]="category.progressPercentage + '%'"
-               [style.background]="getProgressColor(category.progressPercentage)"></div>
+    <!-- Charts Section -->
+    <div class="charts-grid">
+      <!-- Badge Distribution Chart -->
+      <div class="chart-card card">
+        <div class="chart-header">
+          <h3>📊 Distribution des Badges</h3>
+          <p>Répartition par type de badge</p>
         </div>
-        <p>{{ category.completedQuizzes }}/{{ category.totalQuizzes }} quiz complétés</p>
-        <span class="percentage">{{ category.progressPercentage }}%</span>
+        <div class="chart-container">
+          <canvas id="badgeChart" height="250"></canvas>
+        </div>
+      </div>
+
+      <!-- User Growth Chart -->
+      <div class="chart-card card">
+        <div class="chart-header">
+          <h3>📈 Croissance des Utilisateurs</h3>
+          <p>Évolution sur 12 mois</p>
+        </div>
+        <div class="chart-container">
+          <canvas id="userGrowthChart" height="250"></canvas>
+        </div>
+      </div>
+
+      <!-- Engagement Chart -->
+      <div class="chart-card card">
+        <div class="chart-header">
+          <h3>💪 Taux d'Engagement</h3>
+          <p>Évolution mensuelle</p>
+        </div>
+        <div class="chart-container">
+          <canvas id="engagementChart" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Progress Section -->
+    <div *ngIf="userProgress" class="progress-section">
+      <div class="section-header">
+        <h2>🎯 Progression des Utilisateurs</h2>
+        <p>Performance globale et par catégorie</p>
+      </div>
+
+      <div class="progress-grid">
+        <!-- Overall Progress -->
+        <div class="progress-card card">
+          <h4>Progression Globale</h4>
+          <div class="progress-circle">
+            <div
+              class="circle-progress"
+              [style.--progress]="userProgress.data.overallProgress + '%'"
+            >
+              <span class="progress-value">{{ userProgress.data.overallProgress }}%</span>
+            </div>
+          </div>
+          <div class="progress-stats">
+            <div class="stat">
+              <span class="stat-value">{{ getTotalQuizzes() }}</span>
+              <span class="stat-label">Quiz total</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">{{ getCompletedQuizzes() }}</span>
+              <span class="stat-label">Complétés</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Progress -->
+        <div *ngFor="let category of userProgress.data.categories" class="category-card card">
+          <div class="category-header">
+            <h5>{{ category.category }}</h5>
+            <span class="category-percentage">{{ category.progressPercentage }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width]="category.progressPercentage + '%'"
+              [style.background]="getProgressColor(category.progressPercentage)"
+            ></div>
+          </div>
+          <div class="category-stats">
+            <span>{{ category.completedQuizzes }}/{{ category.totalQuizzes }} quiz</span>
+            <span
+              class="score"
+              [class.high-score]="category.progressPercentage >= 80"
+              [class.medium-score]="
+                category.progressPercentage >= 50 && category.progressPercentage < 80
+              "
+              [class.low-score]="category.progressPercentage < 50"
+            >
+              {{ category.progressPercentage }}%
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Actions Rapides</h3>
+      <div class="actions-grid">
+        <button class="action-btn">
+          <span class="action-icon">➕</span>
+          <span>Nouvel Utilisateur</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">📊</span>
+          <span>Générer Rapport</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">⚙️</span>
+          <span>Paramètres</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">📋</span>
+          <span>Voir Statistiques</span>
+        </button>
       </div>
     </div>
   </div>
-
-  <!-- Fallback si pas de données de badges -->
-  <div *ngIf="!dashboardData?.badgeStats?.badgeDistribution || badgeChartData.length === 0" class="badge-chart-container">
-    <div class="badge-chart-header">
-      <h2>🏆 Distribution des Badges</h2>
-      <p>Aucune donnée disponible</p>
-    </div>
-    <div class="chart-content">
-      <div class="no-data">
-        <p>Aucune donnée de badges à afficher pour le moment.</p>
-      </div>
-    </div>
-  </div>
-
 </div>

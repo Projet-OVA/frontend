@@ -360,6 +360,15 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/auth/users/${id}`, { headers: this.authHeaders() });
   }
 
+  createUser(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/admin`, user, { headers: this.authHeaders() });
+  }
+
+  // api.service.ts
+  createAdmin(adminData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/admin`, adminData);
+  }
+
   // -------------------- Communities --------------------
   getCommunities(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/communities`, { headers: this.authHeaders() });

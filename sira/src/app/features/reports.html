@@ -1,49 +1,64 @@
 <div class="reports-page">
   <div class="toolbar card">
     <div class="left">
-      <select [(ngModel)]="reportType">
+      <select [(ngModel)]="reportType" (change)="load()">
         <option value="users">Utilisateurs</option>
-        <option value="contents">Contenus</option>
+        <option value="contents">Contenus & Activités</option>
       </select>
 
       <input type="date" [(ngModel)]="from" />
+      <span>au</span>
       <input type="date" [(ngModel)]="to" />
-      <button class="btn" (click)="load()">Afficher</button>
+      <button class="btn btn-primary" (click)="load()">Actualiser</button>
     </div>
 
     <div class="right">
       <button class="btn" (click)="export('csv')">Exporter CSV</button>
       <button class="btn" (click)="export('xlsx')">Exporter Excel</button>
+      <button class="btn btn-primary" (click)="print()">Imprimer</button>
     </div>
   </div>
 
-  <div class="grid-two">
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des données...</p>
+  </div>
+
+  <div *ngIf="!loading && dashboardData" class="grid-two">
     <div class="card">
-      <h3>Rapport: {{ reportType }}</h3>
+      <h3>Rapport: {{ reportType === 'users' ? 'Utilisateurs' : 'Contenus & Activités' }}</h3>
       <table class="table">
         <thead>
           <tr>
-            <th>Item</th>
+            <th>Indicateur</th>
             <th>Valeur</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let r of reports">
             <td>{{ r.title }}</td>
-            <td>{{ r.value }}</td>
-            <td><button class="btn-ghost">Détails</button></td>
-          </tr>
-          <tr *ngIf="!reports?.length">
-            <td colspan="3">Aucun résultat</td>
+            <td><strong>{{ r.value }}</strong></td>
+            <td>
+              <button class="btn-ghost" (click)="export('csv')">
+                Exporter
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="card">
-      <h3>Visualisation</h3>
-      <canvas id="chart-report" width="400" height="240"></canvas>
+      <h3>Visualisation des données</h3>
+      <div class="chart-container">
+        <canvas #chartCanvas id="chart-report" width="400" height="300"></canvas>
+      </div>
     </div>
+  </div>
+
+  <div *ngIf="!loading && !dashboardData" class="error-message">
+    <h3>❌ Erreur de chargement des données</h3>
+    <p>Impossible de charger les données du dashboard. Veuillez réessayer.</p>
   </div>
 </div>

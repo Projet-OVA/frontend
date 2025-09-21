@@ -13,8 +13,8 @@ import { AuthService } from '../../core/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  email = ''; // ← Ajouter
-  password = ''; // ← Ajouter
+  email = '';
+  password = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -22,6 +22,7 @@ export class LoginComponent {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         console.log('Login successful, redirecting...');
+        // Redirection vers le dashboard (qui est maintenant une route enfant)
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {

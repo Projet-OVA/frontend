@@ -19,6 +19,3 @@
 6. Défis:
 - Status: Autorisé / Refusé / En attente
 - Bouton Actions doit avoir: Autoriser / Refuser / Supprimer
-
-4. Rapports: à moi
-- Pouvoir imprimer les détails qui se trouvent dans le dashboard

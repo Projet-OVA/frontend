@@ -35,7 +35,8 @@ body {
 
 /* Sidebar - Noir */
 .sidenav {
-  background: $black;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // background: $black;
   color: $white;
   padding: 18px;
   display: flex;
@@ -356,7 +357,8 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 12px 24px;
-  background: $black; // Fond noir
+  // background: $black; // Fond noir
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: $white;
   border-bottom: 2px solid $primary; // Ligne rouge en bas
   
@@ -593,3 +595,4 @@ body {
     }
   }
 }
+
