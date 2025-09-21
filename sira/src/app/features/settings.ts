@@ -126,6 +126,7 @@ export class SettingsComponent implements OnInit {
     this.showAdminDialog = true;
   }
 
+  // Dans settings.ts
   saveAdmin() {
     if (
       !this.newAdmin.nom ||
@@ -142,11 +143,13 @@ export class SettingsComponent implements OnInit {
       nom: this.newAdmin.nom,
       prenom: this.newAdmin.prenom,
       email: this.newAdmin.email,
+      username: this.newAdmin.username,
       password: 'Password123!',
       confirmPassword: 'Password123!',
     };
 
-    this.http.post(`${this.baseUrl}/auth/admin`, adminData).subscribe({
+    // Utilisez votre ApiService qui gère déjà l'authentification
+    this.api.createAdmin(adminData).subscribe({
       next: (response: any) => {
         console.log('Admin créé avec succès', response);
         this.saving = false;
@@ -158,7 +161,11 @@ export class SettingsComponent implements OnInit {
       error: (error: any) => {
         console.error('Erreur création admin', error);
         this.saving = false;
-        if (error.error?.message) {
+
+        if (error.status === 401) {
+          alert("Erreur d'authentification. Veuillez vous reconnecter.");
+          this.auth.logout();
+        } else if (error.error?.message) {
           alert('Erreur: ' + error.error.message);
         } else {
           alert("Erreur lors de la création de l'admin.");

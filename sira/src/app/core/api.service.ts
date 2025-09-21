@@ -382,9 +382,17 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/auth/admin`, user, { headers: this.authHeaders() });
   }
 
-  // api.service.ts
   createAdmin(adminData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/admin`, adminData);
+    return this.http
+      .post(`${this.baseUrl}/auth/admin`, adminData, {
+        headers: this.authHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error creating admin:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   // -------------------- Communities --------------------
