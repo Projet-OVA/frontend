@@ -51,16 +51,30 @@ export interface CategoryProgress {
   updatedAt: string;
 }
 
+// export interface Badge {
+//   id: string;
+//   key: string;
+//   title: string;
+//   description: string;
+//   icon: string;
+//   category: string;
+//   criteria: string;
+//   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
+//   xpReward: number;
+// }
+
 export interface Badge {
   id: string;
   key: string;
   title: string;
   description: string;
   icon: string;
+  rarity: string;
   category: string;
-  criteria: string;
-  rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
   xpReward: number;
+  criteria: string;
+  createdAt?: string; // Rendez createdAt optionnel avec ?
+  updatedAt?: string; // Ajoutez updatedAt optionnel aussi
 }
 
 export interface BadgeProgress {
@@ -180,8 +194,8 @@ export class ApiService {
   }
 
   getUserBadge(userId: string) {
-  return this.http.get<any[]>(`/api/badges/user/${userId}`);
-}
+    return this.http.get<any[]>(`/api/badges/user/${userId}`);
+  }
   // ==================== MÉTHODES EXISTANTES (conservées) ====================
 
   // --- PUBLICATIONS ---

@@ -16,8 +16,7 @@
 - le nom des badges: "Défenseur des Droits", "Éco-Citoyen Exemplaire", etc. 
 
 5. Paramétres:
-- L'admin ne doit pas voir les autres admin
-- Le superadmdin n'arrive pas à créer un autre admin
+- logs
 
 6. Défis:
 - Status: Autorisé / Refusé / En attente

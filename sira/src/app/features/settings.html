@@ -1,15 +1,12 @@
 <div class="settings-page">
   <div class="grid-two">
-    
     <!-- PARAMÈTRES GÉNÉRAUX (TOUJOURS visibles) -->
     <div class="card">
       <h3>{{ 'SETTINGS.GENERAL' | translate }}</h3>
-
       <label>
         {{ 'SETTINGS.APP_NAME' | translate }}
         <input type="text" [(ngModel)]="appSettings.appName" />
       </label>
-
       <label>
         {{ 'SETTINGS.LANGUAGE' | translate }}
         <select [(ngModel)]="appSettings.language" (change)="onLanguageChange()">
@@ -18,7 +15,6 @@
           </option>
         </select>
       </label>
-
       <div class="actions">
         <button class="btn btn-primary" (click)="saveSettings()">
           {{ 'SETTINGS.SAVE' | translate }}
@@ -26,14 +22,12 @@
       </div>
     </div>
 
-    <!-- GESTION DES ADMINS : seulement si role ≠ ADMIN -->
-    <div class="card" *ngIf="userRole !== 'ADMIN'">
+    <!-- GESTION DES ADMINS : seulement si role = SUPERADMIN -->
+    <div class="card" *ngIf="userRole === 'SUPERADMIN'">
       <h3>{{ 'SETTINGS.ADMIN_ACCOUNTS' | translate }}</h3>
-      
       <button class="btn btn-primary" (click)="openAdminDialog()">
         + {{ 'SETTINGS.NEW_ADMIN' | translate }}
       </button>
-
       <div *ngFor="let a of admins" class="admin-row">
         <div>
           <div class="name">{{ a.nom }} {{ a.prenom }}</div>
@@ -44,17 +38,17 @@
           <button class="btn-danger" (click)="deleteAdmin(a.id)">Supprimer</button>
         </div>
       </div>
-
       <hr />
-
       <h4>{{ 'SETTINGS.SECURITY_LOGS' | translate }}</h4>
       <div class="logs">
         <div *ngFor="let l of logs" class="log-row">
           <div class="left">
             {{ l.action }} —
-            <small class="muted">{{ l.at | date: 'short' }}</small>
+            <small class="muted">{{ l.at | date : 'short' }}</small>
           </div>
-          <div class="right"><small class="muted">{{ l.ip }}</small></div>
+          <div class="right">
+            <small class="muted">{{ l.ip }}</small>
+          </div>
         </div>
         <div *ngIf="!logs?.length" class="muted">
           {{ 'SETTINGS.NO_LOGS' | translate }}
@@ -63,16 +57,14 @@
     </div>
   </div>
 
-  <!-- DIALOG CRUD ADMIN -->
-  <div class="dialog" *ngIf="showAdminDialog && userRole !== 'ADMIN'">
+  <!-- DIALOG CRUD ADMIN : seulement si role = SUPERADMIN -->
+  <div class="dialog" *ngIf="showAdminDialog && userRole === 'SUPERADMIN'">
     <div class="dialog-content">
       <h3>{{ newAdmin.id ? 'Modifier' : 'Créer' }} un Admin</h3>
-
       <input type="text" placeholder="Nom" [(ngModel)]="newAdmin.nom" />
       <input type="text" placeholder="Prénom" [(ngModel)]="newAdmin.prenom" />
       <input type="email" placeholder="Email" [(ngModel)]="newAdmin.email" />
       <input type="text" placeholder="Username" [(ngModel)]="newAdmin.username" />
-
       <div class="actions">
         <button class="btn" (click)="showAdminDialog = false">Annuler</button>
         <button class="btn btn-primary" (click)="saveAdmin()" [disabled]="saving">

@@ -75,7 +75,7 @@ export class SettingsComponent implements OnInit {
     console.log('Role courant:', this.userRole);
 
     // Seuls les SUPER_ADMIN peuvent gérer les autres admins
-    if (this.userRole === 'SUPER_ADMIN') {
+    if (this.userRole === 'SUPERADMIN') {
       this.loadAdmins();
     }
   }
@@ -93,7 +93,7 @@ export class SettingsComponent implements OnInit {
   }
 
   loadAdmins() {
-    if (this.userRole !== 'SUPER_ADMIN') {
+    if (this.userRole !== 'SUPERADMIN') {
       console.log('Accès refusé: seuls les SUPER_ADMIN peuvent voir les admins');
       return;
     }
