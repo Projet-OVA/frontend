@@ -1,93 +1,159 @@
 <div class="challenges-page">
+  <!-- Header -->
+  <div class="page-header">
+    <h1>🎯 Défis Communautaires</h1>
+    <p>Gérez les propositions d'événements de la communauté</p>
+  </div>
 
-  <div class="card">
+  <!-- Filtres -->
+  <div class="filters card">
+    <div class="filter-group">
+      <label>Statut :</label>
+      <select [(ngModel)]="currentFilter" (change)="loadEventProposals()">
+        <option value="all">Tous</option>
+        <option value="pending">En attente</option>
+        <option value="approved">Approuvés</option>
+        <option value="rejected">Rejetés</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" (click)="loadEventProposals()">
+      🔄 Actualiser
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des propositions...</p>
+  </div>
+
+  <!-- Tableau des propositions -->
+  <div *ngIf="!loading" class="card">
     <table class="table">
       <thead>
-        <tr>
-          <th>Nom du défi</th>
+        <tr class="moins">
+          <th>Titre</th>
           <th>Description</th>
-          <th>Date</th>
+          <th>Proposé par</th>
+          <th>Date prévue</th>
           <th>Lieu</th>
-          <th>Participants</th>
+          <th>Statut</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (c of challenges; track c.id) {
-          <tr (click)="openDetailsDialog(c)" class="clickable-row">
-            <td>{{ c.eventName }}</td>
-            <td>{{ c.description }}</td>
-            <td>{{ c.eventDate | date:'short' }}</td>
-            <td>{{ c.location || '-' }}</td>
-            <td>{{ c.participantsCount || 0 }}</td>
-            <td>
-              <button class="btn-danger" (click)="delete(c); $event.stopPropagation()">🗑️</button>
-            </td>
-          </tr>
-        }
+        <tr *ngFor="let proposal of eventProposals" class="clickable-row">
+          <td>{{ proposal.title || 'Sans titre' }}</td>
+          <td>{{ truncateText(proposal.description, 50) }}</td>
+          <td>{{ proposal.proposedBy?.username || 'Utilisateur' }}</td>
+          <td>{{ proposal.proposedDate | date:'shortDate' }}</td>
+          <td>{{ proposal.location || 'Non spécifié' }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + proposal.status">
+              {{ getStatusLabel(proposal.status) }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-ghost" (click)="openDetailsDialog(proposal); $event.stopPropagation()">
+                👁️ Voir
+              </button>
+              <button *ngIf="proposal.status === 'PENDING'" 
+                      class="btn-success" 
+                      (click)="reviewProposal(proposal.id, 'APPROVE'); $event.stopPropagation()">
+                ✓ Approuver
+              </button>
+              <button *ngIf="proposal.status === 'PENDING'" 
+                      class="btn-danger" 
+                      (click)="openRejectDialog(proposal); $event.stopPropagation()">
+                ✗ Rejeter
+              </button>
+            </div>
+          </td>
+        </tr>
 
-        @if (challenges.length === 0 && !loading) {
-          <tr>
-            <td colspan="6" class="muted">Aucun défi communautaire</td>
-          </tr>
-        }
+        <tr *ngIf="eventProposals.length === 0">
+          <td colspan="7" class="muted">
+            Aucune proposition d'événement
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- MODAL CRÉATION/ÉDITION -->
-  @if (showDialog) {
-    <div class="dialog">
-      <div class="dialog-content">
-        <h3>{{ newChallenge.id ? 'Modifier' : 'Créer' }} un défi</h3>
-
-        <input
-          type="text"
-          placeholder="Nom du défi*"
-          [(ngModel)]="newChallenge.eventName"
-          required
-        />
-        <textarea
-          placeholder="Description"
-          [(ngModel)]="newChallenge.description"
-        ></textarea>
-
-        <label>Date et heure</label>
-        <input type="datetime-local" [(ngModel)]="newChallenge.eventDate" />
-
-        <input type="text" placeholder="Lieu" [(ngModel)]="newChallenge.location" />
-        <input type="text" placeholder="ID Organisateur" [(ngModel)]="newChallenge.organizerId" />
-        <input type="text" placeholder="ID Communauté" [(ngModel)]="newChallenge.communityId" />
-
-        <div class="actions">
-          <button class="btn" (click)="showDialog = false">Annuler</button>
-          <button class="btn btn-primary" (click)="save()" [disabled]="saving">
-            {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
-          </button>
+  <!-- Dialog Détails -->
+  <div *ngIf="showDetailsDialog && selectedProposal" class="dialog">
+    <div class="dialog-content">
+      <h3>📋 Détails de la proposition</h3>
+      
+      <div class="proposal-details">
+        <div class="detail-row">
+          <label>Titre :</label>
+          <span>{{ selectedProposal.title }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Description :</label>
+          <span>{{ selectedProposal.description }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Proposé par :</label>
+          <span>{{ selectedProposal.proposedBy?.username || 'Utilisateur' }} ({{ selectedProposal.proposedBy?.email || 'Email non disponible' }})</span>
+        </div>
+        <div class="detail-row">
+          <label>Date prévue :</label>
+          <span>{{ selectedProposal.proposedDate | date:'fullDate' }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Lieu :</label>
+          <span>{{ selectedProposal.location || 'Non spécifié' }}</span>
+        </div>
+        <div class="detail-row">
+          <label>Statut :</label>
+          <span class="status-badge" [class]="'status-' + selectedProposal.status">
+            {{ getStatusLabel(selectedProposal.status) }}
+          </span>
+        </div>
+        <div class="detail-row" *ngIf="selectedProposal.comment">
+          <label>Commentaire :</label>
+          <span>{{ selectedProposal.comment }}</span>
         </div>
       </div>
-    </div>
-  }
 
-  <!-- MODAL DÉTAILS -->
-  @if (showDetailsDialog) {
-    <div class="dialog">
-      <div class="dialog-content details">
-        <h3>📌 Détails du défi</h3>
-
-        <p><strong>Nom :</strong> {{ selectedChallenge?.eventName }}</p>
-        <p><strong>Description :</strong> {{ selectedChallenge?.description }}</p>
-        <p><strong>Date :</strong> {{ selectedChallenge?.eventDate | date:'fullDate' }}</p>
-        <p><strong>Lieu :</strong> {{ selectedChallenge?.location || '-' }}</p>
-        <p><strong>Organisateur :</strong> {{ selectedChallenge?.organizerId }}</p>
-        <p><strong>Communauté :</strong> {{ selectedChallenge?.communityId }}</p>
-        <p><strong>Participants :</strong> {{ selectedChallenge?.participantsCount || 0 }}</p>
-
-        <div class="actions">
-          <button class="btn" (click)="closeDetailsDialog()">Fermer</button>
-        </div>
+      <div class="dialog-actions">
+        <button class="btn" (click)="closeDetailsDialog()">Fermer</button>
+        <button *ngIf="selectedProposal.status === 'PENDING'" 
+                class="btn-success" 
+                (click)="reviewProposal(selectedProposal.id, 'APPROVE')">
+          Approuver
+        </button>
+        <button *ngIf="selectedProposal.status === 'PENDING'" 
+                class="btn-danger" 
+                (click)="openRejectDialog(selectedProposal)">
+          Rejeter
+        </button>
       </div>
     </div>
-  }
+  </div>
+
+  <!-- Dialog Rejet -->
+  <div *ngIf="showRejectDialog" class="dialog">
+    <div class="dialog-content">
+      <h3>✗ Rejeter la proposition</h3>
+      
+      <p>Pourquoi rejetez-vous cette proposition ?</p>
+      
+      <textarea 
+        [(ngModel)]="rejectComment" 
+        placeholder="Raison du rejet..."
+        rows="4"
+      ></textarea>
+
+      <div class="dialog-actions">
+        <button class="btn" (click)="closeRejectDialog()">Annuler</button>
+        <button class="btn-danger" (click)="confirmReject()" [disabled]="!rejectComment">
+          Confirmer le rejet
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-

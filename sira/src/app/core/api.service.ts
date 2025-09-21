@@ -51,17 +51,29 @@ export interface CategoryProgress {
   updatedAt: string;
 }
 
-// export interface Badge {
-//   id: string;
-//   key: string;
-//   title: string;
-//   description: string;
-//   icon: string;
-//   category: string;
-//   criteria: string;
-//   rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
-//   xpReward: number;
-// }
+// Ajoutez cette interface
+export interface EventProposalResponse {
+  message: string;
+  data: EventProposal | EventProposal[];
+  statusCode: number;
+}
+
+export interface EventProposal {
+  id: string;
+  title: string;
+  description: string;
+  proposedDate: string;
+  location: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  proposedBy: {
+    id: string;
+    username: string;
+    email: string;
+  };
+  comment?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface Badge {
   id: string;
@@ -536,6 +548,66 @@ export class ApiService {
         xpReward: 300,
       },
     ];
+  }
+
+  // ==================== DÉFIS / PROPOSITIONS D'ÉVÉNEMENTS ====================
+
+  // Ajoutez ces méthodes dans la classe ApiService
+  getAllEventProposals(): Observable<EventProposalResponse> {
+    return this.http
+      .get<EventProposalResponse>(`${this.baseUrl}/event-proposals`, {
+        headers: this.authHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error getting event proposals:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getEventProposal(id: string): Observable<EventProposalResponse> {
+    return this.http
+      .get<EventProposalResponse>(`${this.baseUrl}/event-proposals/${id}`, {
+        headers: this.authHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error getting event proposal:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getPendingEventProposals(): Observable<EventProposalResponse> {
+    return this.http
+      .get<EventProposalResponse>(`${this.baseUrl}/event-proposals/pending`, {
+        headers: this.authHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error getting pending proposals:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  reviewEventProposal(id: string, action: 'APPROVE' | 'REJECT', comment?: string): Observable<any> {
+    const body = {
+      action: action,
+      comment: comment || '',
+    };
+
+    return this.http
+      .patch(`${this.baseUrl}/event-proposals/${id}/review`, body, {
+        headers: this.authHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error reviewing proposal:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }
 

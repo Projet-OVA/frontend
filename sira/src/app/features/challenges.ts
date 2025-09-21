@@ -1,8 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../core/api.service';
-import { AuthService } from '../core/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../core/api.service';
+
+interface EventProposal {
+  id: string;
+  title: string;
+  description: string;
+  proposedDate: string;
+  location: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  proposedBy?: {
+    id: string;
+    username: string;
+    email: string;
+  };
+  comment?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 @Component({
   selector: 'app-challenges',
@@ -12,131 +28,108 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./challenges.scss']
 })
 export class ChallengesComponent implements OnInit {
-  challenges: any[] = [];
+  eventProposals: EventProposal[] = [];
   loading = false;
-  error = '';
-  showDialog = false;
-  saving = false;
-
-  // ✅ Nouveau : gestion détails
+  currentFilter = 'all';
+  selectedProposal: EventProposal | null = null;
   showDetailsDialog = false;
-  selectedChallenge: any = null;
+  showRejectDialog = false;
+  rejectComment = '';
+  proposalToReject: EventProposal | null = null;
 
-  newChallenge: any = this.emptyChallenge();
+  constructor(private apiService: ApiService) {}
 
-  constructor(
-    private api: ApiService,
-    public authService: AuthService
-  ) {}
-
-  ngOnInit() {
-    this.loadChallenges();
+  ngOnInit(): void {
+    this.loadEventProposals();
   }
 
-  /** Retourne un objet vide */
-  emptyChallenge() {
-    return {
-      eventName: '',
-      description: '',
-      eventDate: '',
-      location: '',
-      organizerId: '',
-      communityId: ''
-    };
-  }
-
-  /** Charger les défis */
-  loadChallenges() {
+  loadEventProposals(): void {
     this.loading = true;
-    this.api.getEvents().subscribe({
-      next: (data) => {
-        this.challenges = data || [];
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = 'Erreur chargement';
-        this.loading = false;
-      }
-    });
-  }
-
-  /** Ouvrir la fenêtre de création/édition */
-  openDialog(challenge?: any) {
-    this.newChallenge = challenge ? { ...challenge } : this.emptyChallenge();
-    this.showDialog = true;
-  }
-
-  /** Ouvrir popup de détails */
-  openDetailsDialog(challenge: any) {
-    this.selectedChallenge = challenge;
-    this.showDetailsDialog = true;
-  }
-
-  /** Fermer popup détails */
-  closeDetailsDialog() {
-    this.showDetailsDialog = false;
-    this.selectedChallenge = null;
-  }
-
-  /** Créer ou mettre à jour un défi */
-  save() {
-    if (!this.newChallenge.eventName) {
-      alert('Nom du défi est obligatoire');
-      return;
-    }
-
-    this.saving = true;
-
-    // Si on édite
-    if (this.newChallenge.id) {
-      this.api.updateEvent(this.newChallenge.id, this.newChallenge).subscribe({
-        next: () => {
-          this.saving = false;
-          this.showDialog = false;
-          this.loadChallenges();
+    
+    if (this.currentFilter === 'pending') {
+      this.apiService.getPendingEventProposals().subscribe({
+        next: (response) => {
+          // Fix: S'assurer que response.data est un tableau
+          this.eventProposals = Array.isArray(response.data) ? response.data : [];
+          this.loading = false;
         },
-        error: (err) => {
-          console.error(err);
-          alert('Erreur mise à jour');
-          this.saving = false;
+        error: (error) => {
+          console.error('Error loading pending proposals:', error);
+          this.eventProposals = [];
+          this.loading = false;
         }
       });
     } else {
-      // Création
-      const form = new FormData();
-      form.append('eventName', this.newChallenge.eventName);
-      form.append('description', this.newChallenge.description || '');
-      form.append('eventDate', this.newChallenge.eventDate || '');
-      form.append('location', this.newChallenge.location || '');
-      form.append('organizerId', this.newChallenge.organizerId || '');
-      form.append('communityId', this.newChallenge.communityId || '');
-
-      this.api.createEvent(form).subscribe({
-        next: () => {
-          this.saving = false;
-          this.showDialog = false;
-          this.loadChallenges();
+      this.apiService.getAllEventProposals().subscribe({
+        next: (response) => {
+          // Fix: S'assurer que response.data est un tableau
+          this.eventProposals = Array.isArray(response.data) ? response.data : [];
+          this.loading = false;
         },
-        error: (err) => {
-          console.error(err);
-          alert('Erreur création');
-          this.saving = false;
+        error: (error) => {
+          console.error('Error loading proposals:', error);
+          this.eventProposals = [];
+          this.loading = false;
         }
       });
     }
   }
 
-  /** Supprimer un défi */
-  delete(challenge: any) {
-    if (!confirm('Supprimer ce défi ?')) return;
+  openDetailsDialog(proposal: EventProposal): void {
+    this.selectedProposal = proposal;
+    this.showDetailsDialog = true;
+  }
 
-    this.api.deleteEvent(challenge.id).subscribe({
-      next: () => this.loadChallenges(),
-      error: (err) => {
-        console.error(err);
-        alert('Erreur suppression');
+  closeDetailsDialog(): void {
+    this.showDetailsDialog = false;
+    this.selectedProposal = null;
+  }
+
+  openRejectDialog(proposal: EventProposal): void {
+    this.proposalToReject = proposal;
+    this.rejectComment = '';
+    this.showRejectDialog = true;
+  }
+
+  closeRejectDialog(): void {
+    this.showRejectDialog = false;
+    this.proposalToReject = null;
+    this.rejectComment = '';
+  }
+
+  confirmReject(): void {
+    if (this.proposalToReject && this.rejectComment) {
+      this.reviewProposal(this.proposalToReject.id, 'REJECT', this.rejectComment);
+      this.closeRejectDialog();
+    }
+  }
+
+  reviewProposal(proposalId: string, action: 'APPROVE' | 'REJECT', comment?: string): void {
+    this.apiService.reviewEventProposal(proposalId, action, comment).subscribe({
+      next: (response) => {
+        alert(`Proposition ${action === 'APPROVE' ? 'approuvée' : 'rejetée'} avec succès`);
+        this.loadEventProposals(); // Recharger la liste
+        this.closeDetailsDialog(); // Fermer le dialog si ouvert
+      },
+      error: (error) => {
+        console.error('Error reviewing proposal:', error);
+        alert('Erreur lors du traitement de la proposition');
       }
     });
+  }
+
+  getStatusLabel(status: string): string {
+    const statusLabels: { [key: string]: string } = {
+      'PENDING': 'En attente',
+      'APPROVED': 'Approuvé',
+      'REJECTED': 'Rejeté'
+    };
+    return statusLabels[status] || status;
+  }
+
+  // Pipe personnalisé pour tronquer le texte
+  truncateText(text: string, limit: number): string {
+    if (!text) return '';
+    return text.length > limit ? text.substring(0, limit) + '...' : text;
   }
 }

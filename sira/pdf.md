@@ -1,26 +1,12 @@
-1. users:
-- age
-- suspendre / activer au lieu de supprimer
-
-<!-- 2. Dashboard:
+<!-- ## Dashboard:
 - diagramme:
     - évolution des parcours en fonction des dates
     - nombre de badges fournnis 
     - etc. -->
 
-3. Cours:
-- le frontend n'a aucun moyen de connaitre la durée d'un cours
-
-4. Badges:
-- Structures à revoir si le compte est un super admin
-- le nom des badges: "Défenseur des Droits", "Éco-Citoyen Exemplaire", etc. 
-
-5. Paramétres:
-- logs
-
-6. Défis:
+## Défis:
 - Status: Autorisé / Refusé / En attente
 - Bouton Actions doit avoir: Autoriser / Refuser / Supprimer
 
-7. Progression:
+## Progression:
 - Erreur 500
