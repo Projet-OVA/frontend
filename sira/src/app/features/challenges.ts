@@ -25,7 +25,7 @@ interface EventProposal {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './challenges.html',
-  styleUrls: ['./challenges.scss']
+  styleUrls: ['./challenges.scss'],
 })
 export class ChallengesComponent implements OnInit {
   eventProposals: EventProposal[] = [];
@@ -45,34 +45,30 @@ export class ChallengesComponent implements OnInit {
 
   loadEventProposals(): void {
     this.loading = true;
-    
-    if (this.currentFilter === 'pending') {
-      this.apiService.getPendingEventProposals().subscribe({
-        next: (response) => {
-          // Fix: S'assurer que response.data est un tableau
-          this.eventProposals = Array.isArray(response.data) ? response.data : [];
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error loading pending proposals:', error);
-          this.eventProposals = [];
-          this.loading = false;
+
+    this.apiService.getAllEventProposals().subscribe({
+      next: (response) => {
+        const proposals = Array.isArray(response.data) ? response.data : [];
+
+        // Filtrer selon le statut sélectionné
+        if (this.currentFilter === 'pending') {
+          this.eventProposals = proposals.filter((p) => p.status === 'PENDING');
+        } else if (this.currentFilter === 'approved') {
+          this.eventProposals = proposals.filter((p) => p.status === 'APPROVED');
+        } else if (this.currentFilter === 'rejected') {
+          this.eventProposals = proposals.filter((p) => p.status === 'REJECTED');
+        } else {
+          this.eventProposals = proposals; // "all"
         }
-      });
-    } else {
-      this.apiService.getAllEventProposals().subscribe({
-        next: (response) => {
-          // Fix: S'assurer que response.data est un tableau
-          this.eventProposals = Array.isArray(response.data) ? response.data : [];
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error loading proposals:', error);
-          this.eventProposals = [];
-          this.loading = false;
-        }
-      });
-    }
+
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading proposals:', error);
+        this.eventProposals = [];
+        this.loading = false;
+      },
+    });
   }
 
   openDetailsDialog(proposal: EventProposal): void {
@@ -114,15 +110,15 @@ export class ChallengesComponent implements OnInit {
       error: (error) => {
         console.error('Error reviewing proposal:', error);
         alert('Erreur lors du traitement de la proposition');
-      }
+      },
     });
   }
 
   getStatusLabel(status: string): string {
     const statusLabels: { [key: string]: string } = {
-      'PENDING': 'En attente',
-      'APPROVED': 'Approuvé',
-      'REJECTED': 'Rejeté'
+      PENDING: 'En attente',
+      APPROVED: 'Approuvé',
+      REJECTED: 'Rejeté',
     };
     return statusLabels[status] || status;
   }
