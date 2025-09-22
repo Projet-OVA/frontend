@@ -1,420 +1,233 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+// src/app/features/dashboard.ts
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService, DashboardData, UserProgress } from '../core/api.service';
-import Chart from 'chart.js/auto';
-import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { Chart, registerables } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
-// Ajoutez cette interface pour les statistiques animées
-interface AnimatedStats {
-  totalUsers: number;
-  activeUsers: number;
-  totalEvents: number;
-  totalBadges: number;
-  [key: string]: number; // Index signature pour résoudre l'erreur TS7053
+import { ApiService } from '../core/api.service';
+import { catchError, of } from 'rxjs';
+
+Chart.register(...registerables);
+
+interface DashboardResponseDto {
+  userStats: { totalUsers: number; activeUsers: number };
+  eventStats: { totalEvents: number };
+  badgeStats: { totalBadges: number; badgeDistribution: { [key: string]: number } };
+  courseProgress: {
+    completionRate: string;
+    completionRateChange: string;
+    averageTime: string;
+    averageTimeChange: string;
+  };
+  communityEngagement: { engagementRate: string; engagementRateChange: string };
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, BaseChartDirective],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  dashboardData: DashboardData | null = null;
-  userProgress: UserProgress | null = null;
+export class DashboardComponent implements OnInit {
   loading = true;
   error: string | null = null;
+  dashboard: DashboardResponseDto | null = null;
 
-  // Charts
-  private badgeChart: any;
-  private userGrowthChart: any;
-  private engagementChart: any;
+  // Charts data structures
+  usersLineLabels: string[] = [];
+  usersLineData: { data: number[]; label: string }[] = [];
+  badgesPieLabels: string[] = [];
+  badgesPieData: number[] = [];
+  progressDoughnutData: number[] = [];
 
-  // Animations - utilisez l'interface AnimatedStats
-  animatedStats: AnimatedStats = {
-    totalUsers: 0,
-    activeUsers: 0,
-    totalEvents: 0,
-    totalBadges: 0,
+  // chart options (shared)
+  lineOptions: any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      tooltip: { mode: 'index', intersect: false },
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#fff' } },
+      y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#fff' } },
+    },
   };
 
-  private subscriptions: Subscription[] = [];
+  pieOptions: any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 1000 },
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#fff' } },
+      tooltip: { callbacks: {} },
+    },
+  };
+
+  doughnutOptions: any = {
+    cutout: '72%',
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 1200, easing: 'easeOutBack' },
+    plugins: { legend: { display: false } },
+  };
+
+  // colors (red / white / black)
+  chartColors = {
+    red: 'rgba(229,57,53,0.95)',
+    redSoft: 'rgba(229,57,53,0.45)',
+    white: 'rgba(255,255,255,0.95)',
+    bgCard: 'rgba(255,255,255,0.02)',
+  };
+
+  // small summary numbers (for cards)
+  totalUsers = 0;
+  activeUsers = 0;
+  totalEvents = 0;
+  totalBadges = 0;
+  engagementRate = '0%';
+  completionRate = '0%';
 
   constructor(private apiService: ApiService) {}
 
-  parseFloat = parseFloat;
   ngOnInit(): void {
-    this.loadDashboardData();
-    this.loadUserProgress();
+    this.loadDashboard();
   }
 
-  ngAfterViewInit(): void {
-    // Initialiser les charts après le rendu initial
-    setTimeout(() => {
-      if (this.dashboardData) {
-        this.createCharts();
-      }
-    }, 1000);
-  }
+  loadDashboard(): void {
+    this.loading = true;
+    this.error = null;
 
-  ngOnDestroy(): void {
-    // Nettoyer les subscriptions et charts
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-    if (this.badgeChart) this.badgeChart.destroy();
-    if (this.userGrowthChart) this.userGrowthChart.destroy();
-    if (this.engagementChart) this.engagementChart.destroy();
-  }
+    // Attempt to call ApiService.getDashboard() - fallback to mock if error
+    (typeof this.apiService.getDashboard === 'function'
+      ? this.apiService.getDashboard()
+      : // If ApiService lacks getDashboard, try generic http wrapper if exists
+      typeof (this.apiService as any).http === 'object'
+      ? (this.apiService as any).http.get('/dashboard') // best-effort
+      : of(null)
+    )
+      .pipe(
+        catchError((err) => {
+          console.error('Dashboard API error, using fallback mock:', err);
+          return of(null);
+        })
+      )
+      .subscribe((resp: any) => {
+        if (!resp || !resp.userStats) {
+          // fallback mock data (beautiful demo)
+          const now = new Date();
+          const labels = Array.from({ length: 7 }, (_, i) => {
+            const d = new Date(now.getTime() - (6 - i) * 24 * 3600 * 1000);
+            return d.toLocaleDateString();
+          });
+          const users = [120, 140, 155, 170, 210, 230, 280];
 
-  loadDashboardData(): void {
-    const sub = this.apiService.getDashboardData().subscribe({
-      next: (data) => {
-        this.dashboardData = data;
-        this.loading = false;
-        this.animateStatistics();
-        setTimeout(() => this.createCharts(), 300);
-      },
-      error: (error) => {
-        console.error('Error loading dashboard:', error);
-        this.dashboardData = this.apiService.getMockDashboardData();
-        this.loading = false;
-        this.animateStatistics();
-        setTimeout(() => this.createCharts(), 300);
-      },
-    });
-    this.subscriptions.push(sub);
-  }
+          this.dashboard = {
+            userStats: { totalUsers: 780, activeUsers: 432 },
+            eventStats: { totalEvents: 58 },
+            badgeStats: {
+              totalBadges: 320,
+              badgeDistribution: { NDORTE: 110, NDJED: 150, ANKH: 60 },
+            },
+            courseProgress: {
+              completionRate: '72%',
+              completionRateChange: '+4%',
+              averageTime: '2h 15m',
+              averageTimeChange: '-3%',
+            },
+            communityEngagement: { engagementRate: '18%', engagementRateChange: '+2.5%' },
+          };
 
-  loadUserProgress(): void {
-    const sub = this.apiService.getUserProgress().subscribe({
-      next: (progress) => {
-        this.userProgress = progress;
-      },
-      error: (error) => {
-        console.error('Error loading progress:', error);
-        this.userProgress = this.apiService.getMockUserProgress();
-      },
-    });
-    this.subscriptions.push(sub);
-  }
+          // populate charts from mock
+          this.usersLineLabels = labels;
+          this.usersLineData = [{ data: users, label: 'Nouveaux utilisateurs' }];
+          this.badgesPieLabels = Object.keys(this.dashboard.badgeStats.badgeDistribution);
+          this.badgesPieData = Object.values(this.dashboard.badgeStats.badgeDistribution);
+        } else {
+          // Use real API response structure (assumes API returns the same shape)
+          this.dashboard = resp as DashboardResponseDto;
 
-  private animateStatistics(): void {
-    if (!this.dashboardData) return;
+          // Build a small synthetic timeseries for users (for visualization) - best-effort
+          this.usersLineLabels = ['-6j', '-5j', '-4j', '-3j', '-2j', '-1j', "Aujourd'hui"];
+          const total = this.dashboard.userStats.totalUsers;
+          // crude synthetic distribution
+          const base = Math.max(5, Math.floor(total / 60));
+          const usersSerie = Array.from(
+            { length: 7 },
+            (_, i) => base * (i + 1) + Math.floor(Math.random() * (base * 2))
+          );
+          this.usersLineData = [{ data: usersSerie, label: 'Nouveaux utilisateurs' }];
 
-    const duration = 2000;
-    const steps = 60;
-    const interval = duration / steps;
-
-    const statsToAnimate = [
-      {
-        target: this.dashboardData.userStats.totalUsers,
-        current: this.animatedStats.totalUsers,
-        key: 'totalUsers',
-      },
-      {
-        target: this.dashboardData.userStats.activeUsers,
-        current: this.animatedStats.activeUsers,
-        key: 'activeUsers',
-      },
-      {
-        target: this.dashboardData.eventStats.totalEvents,
-        current: this.animatedStats.totalEvents,
-        key: 'totalEvents',
-      },
-      {
-        target: this.dashboardData.badgeStats.totalBadges,
-        current: this.animatedStats.totalBadges,
-        key: 'totalBadges',
-      },
-    ];
-
-    statsToAnimate.forEach((stat) => {
-      const stepValue = (stat.target - stat.current) / steps;
-      let currentStep = 0;
-
-      const timer = setInterval(() => {
-        currentStep++;
-        this.animatedStats[stat.key] = Math.round(stat.current + stepValue * currentStep);
-
-        if (currentStep >= steps) {
-          this.animatedStats[stat.key] = stat.target;
-          clearInterval(timer);
+          this.badgesPieLabels = Object.keys(this.dashboard.badgeStats.badgeDistribution || {});
+          this.badgesPieData = Object.values(this.dashboard.badgeStats.badgeDistribution || {});
         }
-      }, interval);
-    });
+
+        // summary metrics
+        this.totalUsers = this.dashboard.userStats.totalUsers;
+        this.activeUsers = this.dashboard.userStats.activeUsers;
+        this.totalEvents = this.dashboard.eventStats.totalEvents;
+        this.totalBadges = this.dashboard.badgeStats.totalBadges;
+        this.engagementRate = this.dashboard.communityEngagement.engagementRate;
+        this.completionRate = this.dashboard.courseProgress.completionRate;
+
+        // doughnut progress (parse percentage string)
+        const parsed = parseInt(String(this.completionRate || '0').replace('%', ''), 10) || 0;
+        this.progressDoughnutData = [parsed, 100 - parsed];
+
+        this.loading = false;
+      });
   }
 
-  private createCharts(): void {
-    this.createBadgeDistributionChart();
-    this.createUserGrowthChart();
-    this.createEngagementChart();
+  // get progress by category (calls backend route)
+  loadCategoryProgress(category: 'ENVIRONNEMENT' | 'DROIT_DU_CITOYEN' | 'DEVOIR_DU_CITOYEN') {
+    if (typeof this.apiService.getCategoryProgress === 'function') {
+      this.apiService
+        .getCategoryProgress(category)
+        .pipe(
+          catchError((err) => {
+            console.error('Category progress error', err);
+            return of(null);
+          })
+        )
+        .subscribe((resp: any) => {
+          if (resp && resp.data) {
+            // animate or show a toast: here we update a small visual
+            const pct = resp.data.progressPercentage || 0;
+            this.progressDoughnutData = [pct, 100 - pct];
+          }
+        });
+    }
   }
 
-  private createBadgeDistributionChart(): void {
-    const ctx = document.getElementById('badgeChart') as HTMLCanvasElement;
-    if (!ctx || !this.dashboardData?.badgeStats?.badgeDistribution) return;
+  // Small helper for chart gradient (if needed in templates)
+  getGradient(
+    ctx: CanvasRenderingContext2D,
+    area: { top: number; bottom: number; left: number; right: number }
+  ) {
+    const g = ctx.createLinearGradient(0, area.top, 0, area.bottom);
+    g.addColorStop(0, this.chartColors.red);
+    g.addColorStop(1, this.chartColors.redSoft);
+    return g;
+  }
 
-    const distribution = this.dashboardData.badgeStats.badgeDistribution;
-    const labels = Object.keys(distribution);
-    const data = Object.values(distribution);
-
-    this.badgeChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            data: data,
-            backgroundColor: [
-              'rgba(239, 68, 68, 0.8)',
-              'rgba(31, 41, 55, 0.8)',
-              'rgba(249, 115, 22, 0.8)',
-              'rgba(107, 114, 128, 0.8)',
-              'rgba(16, 185, 129, 0.8)',
-            ],
-            borderColor: [
-              'rgb(239, 68, 68)',
-              'rgb(31, 41, 55)',
-              'rgb(249, 115, 22)',
-              'rgb(107, 114, 128)',
-              'rgb(16, 185, 129)',
-            ],
-            borderWidth: 2,
-            hoverOffset: 12,
-          },
-        ],
+  // quick refresh
+  refresh(): void {
+    this.loading = true;
+    this.apiService.getDashboard().subscribe({
+      next: (res) => {
+        this.dashboard = res;
+        this.lastRefresh = new Date().toLocaleString();
+        this.loading = false;
       },
-      options: {
-        responsive: true,
-        cutout: '70%',
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              color: '#6b7280',
-              font: {
-                size: 12,
-                family: 'Inter',
-              },
-              padding: 20,
-            },
-          },
-          tooltip: {
-            backgroundColor: 'rgba(31, 41, 55, 0.95)',
-            titleColor: '#fff',
-            bodyColor: '#fff',
-            borderColor: '#374151',
-            borderWidth: 1,
-            cornerRadius: 8,
-          },
-        },
-        animation: {
-          animateScale: true,
-          animateRotate: true,
-          duration: 2000,
-          easing: 'easeOutQuart',
-        },
+      error: (err) => {
+        this.error = 'Erreur lors du chargement du dashboard';
+        this.loading = false;
       },
     });
   }
 
-  private createUserGrowthChart(): void {
-    const ctx = document.getElementById('userGrowthChart') as HTMLCanvasElement;
-    if (!ctx) return;
-
-    // Données simulées pour la croissance (à remplacer par des données réelles)
-    const months = [
-      'Jan',
-      'Fév',
-      'Mar',
-      'Avr',
-      'Mai',
-      'Jun',
-      'Jul',
-      'Aoû',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Déc',
-    ];
-    const userData = [120, 145, 180, 210, 250, 300, 350, 400, 450, 500, 550, 600];
-    const activeData = [80, 100, 130, 160, 200, 240, 280, 320, 360, 400, 440, 480];
-
-    this.userGrowthChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: months,
-        datasets: [
-          {
-            label: 'Utilisateurs totaux',
-            data: userData,
-            borderColor: 'rgb(239, 68, 68)',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: 'rgb(239, 68, 68)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 5,
-            pointHoverRadius: 8,
-          },
-          {
-            label: 'Utilisateurs actifs',
-            data: activeData,
-            borderColor: 'rgb(31, 41, 55)',
-            backgroundColor: 'rgba(31, 41, 55, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: 'rgb(31, 41, 55)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 5,
-            pointHoverRadius: 8,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-            labels: {
-              color: '#6b7280',
-              font: {
-                family: 'Inter',
-              },
-            },
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.1)',
-            },
-            ticks: {
-              color: '#6b7280',
-            },
-          },
-          x: {
-            grid: {
-              color: 'rgba(0, 0, 0, 0.1)',
-            },
-            ticks: {
-              color: '#6b7280',
-            },
-          },
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-      },
-    });
-  }
-
-  private createEngagementChart(): void {
-    const ctx = document.getElementById('engagementChart') as HTMLCanvasElement;
-    if (!ctx) return;
-
-    // Données simulées pour l'engagement
-    const engagementData = [65, 70, 75, 80, 78, 82, 85, 88, 90, 92, 95, 97];
-
-    this.engagementChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [
-          'Jan',
-          'Fév',
-          'Mar',
-          'Avr',
-          'Mai',
-          'Jun',
-          'Jul',
-          'Aoû',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Déc',
-        ],
-        datasets: [
-          {
-            label: "Taux d'engagement (%)",
-            data: engagementData,
-            backgroundColor: 'rgba(16, 185, 129, 0.8)',
-            borderColor: 'rgb(16, 185, 129)',
-            borderWidth: 2,
-            borderRadius: 6,
-            hoverBackgroundColor: 'rgba(16, 185, 129, 1)',
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 100,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.1)',
-            },
-            ticks: {
-              color: '#6b7280',
-            },
-          },
-          x: {
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: '#6b7280',
-            },
-          },
-        },
-      },
-    });
-  }
-
-  getProgressColor(percentage: number): string {
-    if (percentage >= 80) return '#10b981';
-    if (percentage >= 50) return '#f59e0b';
-    return '#ef4444';
-  }
-
-  formatPercentage(value: string): string {
-    return `${parseFloat(value).toFixed(1)}%`;
-  }
-
-  getChangeIcon(change: string): string {
-    if (change.includes('+')) return '↗';
-    if (change.includes('-')) return '↘';
-    return '→';
-  }
-
-  getChangeColor(change: string): string {
-    if (change.includes('+')) return '#10b981';
-    if (change.includes('-')) return '#ef4444';
-    return '#6b7280';
-  }
-
-  getTotalQuizzes(): number {
-    if (!this.userProgress?.data?.categories) return 0;
-    return this.userProgress.data.categories.reduce(
-      (total, category) => total + category.totalQuizzes,
-      0
-    );
-  }
-
-  getCompletedQuizzes(): number {
-    if (!this.userProgress?.data?.categories) return 0;
-    return this.userProgress.data.categories.reduce(
-      (total, category) => total + category.completedQuizzes,
-      0
-    );
-  }
+  lastRefresh = new Date().toLocaleString();
 }

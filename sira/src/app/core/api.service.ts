@@ -123,6 +123,19 @@ export class ApiService {
       );
   }
 
+    getDashboard(): Observable<DashboardData> {
+    return this.http
+      .get<DashboardData>(`${this.baseUrl}/dashboard`, {
+        headers: this.authHeaders(),
+      })
+      .pipe(
+        catchError((err) => {
+          console.error('API getDashboardData error', err);
+          return throwError(() => err);
+        })
+      );
+  }
+
   // ==================== PROGRESSION ====================
 
   getUserProgress(): Observable<UserProgress> {
