@@ -865,7 +865,7 @@ $transition-speed: 0.3s;
           
           &:hover {
             background: $red-light;
-            color: darken($red, 10%);
+            color: adjust-color($red, $lightness: -10%);
           }
         }
       }
