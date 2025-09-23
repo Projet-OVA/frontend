@@ -1,0 +1,818 @@
+// =============================================
+// VARIABLES CHALLENGES SPECIFIQUES
+// =============================================
+
+$challenges-orange: #ff6b35;
+$challenges-orange-light: #ff8e65;
+$challenges-orange-dark: #e55a2b;
+$challenges-black: #1a1a1a;
+$challenges-white: #ffffff;
+$challenges-gray-dark: #2d3748;
+$challenges-gray-medium: #4a5568;
+$challenges-gray-light: #e2e8f0;
+$challenges-gray-extra-light: #f7fafc;
+
+// Couleurs des statuts
+$status-pending: #ff9800;
+$status-approved: #4caf50;
+$status-rejected: #f44336;
+
+// Animations spécifiques challenges
+@keyframes targetAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(20deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes arrowBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba($status-pending, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba($status-pending, 0.8);
+  }
+}
+
+@keyframes approvalGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba($status-approved, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba($status-approved, 0.6);
+  }
+}
+
+@keyframes rejectionShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-5px) rotate(-2deg); }
+  75% { transform: translateX(5px) rotate(2deg); }
+}
+
+@keyframes challengeFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(4px) rotate(-1deg);
+  }
+}
+
+// =============================================
+// STRUCTURE PRINCIPALE
+// =============================================
+
+.challenges-page {
+  padding: 2rem;
+  animation: targetAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// =============================================
+// HEADER STYLES
+// =============================================
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: slideInFromBottom 0.8s ease-out;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: $challenges-black;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, $challenges-orange, #ff4081);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    animation: challengeFloat 6s ease-in-out infinite;
+
+    &::before {
+      content: '🎯';
+      position: absolute;
+      left: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5rem;
+      animation: arrowBounce 2s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, $challenges-orange, transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: $challenges-gray-medium;
+    margin: 0;
+    animation: fadeIn 1s ease-out;
+  }
+}
+
+// =============================================
+// FILTERS STYLES
+// =============================================
+
+.filters {
+  background: linear-gradient(135deg, $challenges-white, $challenges-gray-extra-light);
+  border: 2px solid $challenges-gray-light;
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideInFromBottom 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($challenges-orange, 0.1), transparent);
+    transition: left 0.8s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    label {
+      font-weight: 600;
+      color: $challenges-black;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    select {
+      padding: 0.8rem 1.2rem;
+      border: 2px solid $challenges-gray-light;
+      border-radius: 12px;
+      background: $challenges-white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      animation: targetAppear 0.5s ease-out;
+
+      &:focus {
+        outline: none;
+        border-color: $challenges-orange;
+        box-shadow: 0 0 0 4px rgba($challenges-orange, 0.1);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .btn-primary {
+    background: linear-gradient(45deg, $challenges-orange, $challenges-orange-dark);
+    color: $challenges-white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    animation: statusPulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '🔄';
+      margin-right: 0.5rem;
+      animation: spin 1.5s linear infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba($challenges-orange, 0.4);
+      animation: none;
+
+      &::after {
+        left: 100%;
+      }
+    }
+  }
+}
+
+// =============================================
+// LOADING STATE
+// =============================================
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  animation: fadeIn 0.5s ease-out;
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba($challenges-orange, 0.3);
+    border-top: 4px solid $challenges-orange;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    color: $challenges-gray-medium;
+    font-size: 1.1rem;
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+// =============================================
+// TABLE STYLES
+// =============================================
+
+.card {
+  background: $challenges-white;
+  border-radius: 20px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideInFromBottom 0.8s ease-out;
+  border: 1px solid $challenges-gray-light;
+  transition: all 0.4s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $challenges-white;
+
+  thead {
+    background: linear-gradient(135deg, $challenges-black, $challenges-gray-dark);
+    
+    tr {
+      animation: slideInFromBottom 0.6s ease-out;
+    }
+
+    th {
+      padding: 1.5rem 1rem;
+      text-align: left;
+      color: $challenges-white;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 3px solid $challenges-orange;
+      position: relative;
+      animation: challengeFloat 4s ease-in-out infinite;
+
+      &:hover::after {
+        content: '▼';
+        position: absolute;
+        right: 10px;
+        animation: arrowBounce 0.5s ease-in-out;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $challenges-gray-light;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: targetAppear 0.6s ease-out both;
+
+      @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.08}s;
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba($challenges-orange, 0.05), rgba($challenges-orange, 0.1));
+        transform: translateX(15px) scale(1.02);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        td {
+          color: $challenges-black;
+          
+          &:first-child {
+            font-weight: 700;
+            color: $challenges-orange;
+          }
+        }
+      }
+
+      &.clickable-row {
+        cursor: pointer;
+        position: relative;
+
+        &::after {
+          content: '🎯';
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%) scale(0) rotate(0deg);
+          opacity: 0;
+          transition: all 0.4s ease;
+        }
+
+        &:hover::after {
+          opacity: 1;
+          transform: translateY(-50%) scale(1) rotate(360deg);
+          animation: arrowBounce 0.6s ease-in-out;
+        }
+      }
+
+      td {
+        padding: 1.3rem 1rem;
+        color: $challenges-gray-dark;
+        transition: all 0.3s ease;
+      }
+    }
+  }
+}
+
+// =============================================
+// STATUS BADGES
+// =============================================
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: statusPulse 2s ease-in-out infinite;
+
+  &.status-pending {
+    background: linear-gradient(45deg, $status-pending, darken($status-pending, 10%));
+    color: $challenges-white;
+    animation: statusPulse 1.5s ease-in-out infinite;
+  }
+
+  &.status-approved {
+    background: linear-gradient(45deg, $status-approved, darken($status-approved, 10%));
+    color: $challenges-white;
+    animation: approvalGlow 2s ease-in-out infinite;
+  }
+
+  &.status-rejected {
+    background: linear-gradient(45deg, $status-rejected, darken($status-rejected, 10%));
+    color: $challenges-white;
+    animation: rejectionShake 1s ease-in-out infinite;
+  }
+}
+
+// =============================================
+// ACTION BUTTONS
+// =============================================
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: targetAppear 0.5s ease-out;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    &:hover::after {
+      left: 100%;
+    }
+  }
+
+  .btn-ghost {
+    background: rgba($challenges-orange, 0.1);
+    color: $challenges-orange;
+    border: 1px solid $challenges-orange;
+
+    &:hover {
+      background: $challenges-orange;
+      color: $challenges-white;
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+
+  .btn-success {
+    background: linear-gradient(45deg, $status-approved, darken($status-approved, 10%));
+    color: $challenges-white;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba($status-approved, 0.4);
+      animation: approvalGlow 1s ease-in-out;
+    }
+  }
+
+  .btn-danger {
+    background: linear-gradient(45deg, $status-rejected, darken($status-rejected, 10%));
+    color: $challenges-white;
+
+    &:hover {
+      transform: scale(1.1) rotate(-5deg);
+      box-shadow: 0 5px 15px rgba($status-rejected, 0.4);
+      animation: rejectionShake 0.5s ease-in-out;
+    }
+  }
+}
+
+.muted {
+  text-align: center;
+  padding: 3rem;
+  color: $challenges-gray-medium;
+  font-style: italic;
+  animation: fadeIn 1s ease-out;
+
+  &::before {
+    content: '📋';
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    animation: challengeFloat 4s ease-in-out infinite;
+  }
+}
+
+// =============================================
+// DIALOG STYLES
+// =============================================
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($challenges-black, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(10px);
+
+  .dialog-content {
+    background: $challenges-white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: targetAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid $challenges-orange-light;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, $challenges-orange, $challenges-orange-light, $challenges-orange);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    h3 {
+      color: $challenges-black;
+      margin-bottom: 2rem;
+      font-size: 1.6rem;
+      text-align: center;
+      background: linear-gradient(45deg, $challenges-orange, #ff4081);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: challengeFloat 3s ease-in-out infinite;
+    }
+  }
+}
+
+// =============================================
+// PROPOSAL DETAILS
+// =============================================
+
+.proposal-details {
+  .detail-row {
+    display: flex;
+    margin: 1.2rem 0;
+    padding: 1rem;
+    background: $challenges-gray-extra-light;
+    border-radius: 12px;
+    border-left: 4px solid $challenges-orange;
+    animation: slideInFromBottom 0.6s ease-out both;
+
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+
+    label {
+      font-weight: 600;
+      color: $challenges-black;
+      min-width: 120px;
+      margin-right: 1rem;
+    }
+
+    span {
+      color: $challenges-gray-dark;
+      flex: 1;
+    }
+
+    &:hover {
+      transform: translateX(5px);
+      background: linear-gradient(135deg, rgba($challenges-orange, 0.1), $challenges-gray-extra-light);
+    }
+  }
+}
+
+// =============================================
+// REJECT DIALOG SPECIFIC
+// =============================================
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border: 2px solid $challenges-gray-light;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: $challenges-white;
+  resize: vertical;
+  min-height: 100px;
+  animation: slideInFromBottom 0.6s ease-out;
+
+  &:focus {
+    outline: none;
+    border-color: $status-rejected;
+    box-shadow: 0 0 0 4px rgba($status-rejected, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &::placeholder {
+    color: $challenges-gray-medium;
+  }
+}
+
+// =============================================
+// DIALOG ACTIONS
+// =============================================
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $challenges-gray-light;
+
+  button {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    animation: bounceIn 0.8s ease-out;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    &.btn {
+      background: $challenges-gray-light;
+      color: $challenges-gray-dark;
+
+      &:hover:not(:disabled) {
+        background: $challenges-gray-medium;
+        color: $challenges-white;
+        transform: translateY(-2px);
+      }
+    }
+
+    &.btn-success, &.btn-danger {
+      color: $challenges-white;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px) scale(1.05);
+      }
+    }
+  }
+}
+
+// =============================================
+// ANIMATION UTILITIES
+// =============================================
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// =============================================
+// RESPONSIVE DESIGN
+// =============================================
+
+@media (max-width: 768px) {
+  .challenges-page {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.2rem;
+    
+    &::before {
+      display: none;
+    }
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .table {
+    font-size: 0.9rem;
+
+    thead {
+      display: none;
+    }
+
+    tbody tr {
+      display: block;
+      margin-bottom: 1rem;
+      border: 2px solid $challenges-gray-light;
+      border-radius: 15px;
+
+      td {
+        display: block;
+        text-align: right;
+        padding: 1rem;
+
+        &::before {
+          content: attr(data-label);
+          float: left;
+          font-weight: 600;
+          color: $challenges-black;
+          text-transform: uppercase;
+          font-size: 0.8rem;
+        }
+      }
+
+      &.clickable-row::after {
+        display: none;
+      }
+    }
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+
+  .proposal-details .detail-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .challenges-page {
+    padding: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+}

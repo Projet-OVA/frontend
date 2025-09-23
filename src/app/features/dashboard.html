@@ -42,19 +42,38 @@
 
     <!-- CHARTS ROW -->
     <section class="charts-row">
-      <div class="card chart-card big">
+      <div class="card wide">
         <div class="card-header">
-          <h3>📈 Nouveaux utilisateurs (7j)</h3>
-          <small>Évolution récente</small>
+          <h3>📋 Détails & indicateurs</h3>
+          <small>Temps moyen, variations et conseils</small>
         </div>
-        <div class="chart-container">
-          <canvas
-            baseChart
-            [data]="{ labels: usersLineLabels, datasets: usersLineData }"
-            [options]="lineOptions"
-            chartType="line"
-          >
-          </canvas>
+
+        <div class="details-grid">
+          <div class="detail">
+            <div class="label">Taux de complétion</div>
+            <div class="value">{{ dashboard?.courseProgress?.completionRate || '—' }}</div>
+            <div class="muted">∆ {{ dashboard?.courseProgress?.completionRateChange || '—' }}</div>
+          </div>
+          <div class="detail">
+            <div class="label">Temps moyen</div>
+            <div class="value">{{ dashboard?.courseProgress?.averageTime || '—' }}</div>
+            <div class="muted">∆ {{ dashboard?.courseProgress?.averageTimeChange || '—' }}</div>
+          </div>
+          <div class="detail">
+            <div class="label">Engagement communautaire</div>
+            <div class="value">{{ dashboard?.communityEngagement?.engagementRate || '—' }}</div>
+            <div class="muted">
+              ∆ {{ dashboard?.communityEngagement?.engagementRateChange || '—' }}
+            </div>
+          </div>
+          <div class="detail">
+            <div class="label">Dernier rafraîchissement</div>
+            <div class="value">
+              {{ loading ? 'En cours...' : lastRefresh }}
+            </div>
+
+            <div class="muted">Actualise pour mettre à jour</div>
+          </div>
         </div>
       </div>
 
@@ -107,58 +126,6 @@
               DEVOIR
             </button>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FOOTER / DETAILS -->
-    <section class="details-row">
-      <div class="card wide">
-        <div class="card-header">
-          <h3>📋 Détails & indicateurs</h3>
-          <small>Temps moyen, variations et conseils</small>
-        </div>
-
-        <div class="details-grid">
-          <div class="detail">
-            <div class="label">Taux de complétion</div>
-            <div class="value">{{ dashboard?.courseProgress?.completionRate || '—' }}</div>
-            <div class="muted">∆ {{ dashboard?.courseProgress?.completionRateChange || '—' }}</div>
-          </div>
-          <div class="detail">
-            <div class="label">Temps moyen</div>
-            <div class="value">{{ dashboard?.courseProgress?.averageTime || '—' }}</div>
-            <div class="muted">∆ {{ dashboard?.courseProgress?.averageTimeChange || '—' }}</div>
-          </div>
-          <div class="detail">
-            <div class="label">Engagement communautaire</div>
-            <div class="value">{{ dashboard?.communityEngagement?.engagementRate || '—' }}</div>
-            <div class="muted">
-              ∆ {{ dashboard?.communityEngagement?.engagementRateChange || '—' }}
-            </div>
-          </div>
-          <div class="detail">
-            <div class="label">Dernier rafraîchissement</div>
-            <div class="value">
-              {{ loading ? 'En cours...' : lastRefresh }}
-            </div>
-
-            <div class="muted">Actualise pour mettre à jour</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card narrow">
-        <div class="card-header">
-          <h3>✨ Astuce du jour</h3>
-          <small>Boostez l'engagement</small>
-        </div>
-        <div class="tip">
-          Encourage les badges rares dans les défis communautaires et envoie des notifications
-          ciblées aux utilisateurs inactifs.
-        </div>
-        <div class="cta">
-          <button class="btn-primary">Créer un challenge</button>
         </div>
       </div>
     </section>

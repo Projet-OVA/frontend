@@ -1,0 +1,663 @@
+// =============================================
+// VARIABLES BADGES SPECIFIQUES
+// =============================================
+
+$badges-orange: #ff6b35;
+$badges-orange-light: #ff8e65;
+$badges-orange-dark: #e55a2b;
+$badges-gold: #ffd700;
+$badges-silver: #c0c0c0;
+$badges-bronze: #cd7f32;
+$badges-black: #1a1a1a;
+$badges-white: #ffffff;
+$badges-gray-dark: #2d3748;
+$badges-gray-medium: #4a5568;
+$badges-gray-light: #e2e8f0;
+$badges-gray-extra-light: #f7fafc;
+
+// Animations spécifiques badges
+@keyframes trophyRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(5deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.15);
+  }
+  75% {
+    transform: rotate(-5deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes medalBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-15px) scale(1.2);
+  }
+  60% {
+    transform: translateY(-7px) scale(1.1);
+  }
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.3);
+    filter: brightness(1.5);
+  }
+}
+
+@keyframes rankGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba($badges-gold, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba($badges-gold, 0.8);
+  }
+}
+
+@keyframes chartGrow {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes badgeFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-3deg);
+  }
+}
+
+@keyframes shimmerGold {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+// =============================================
+// STRUCTURE PRINCIPALE
+// =============================================
+
+.badges-page {
+  padding: 2rem;
+  animation: fadeIn 0.8s ease-out;
+  background: linear-gradient(135deg, $badges-gray-extra-light 0%, $badges-white 100%);
+  min-height: 100vh;
+}
+
+// =============================================
+// HEADER STYLES
+// =============================================
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: slideInFromBottom 0.8s ease-out;
+
+  h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: $badges-black;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, $badges-gold, $badges-orange, $badges-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    animation: trophyRotate 4s ease-in-out infinite;
+
+    &::before {
+      content: '🏆';
+      position: absolute;
+      left: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      animation: medalBounce 2s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, $badges-gold, $badges-orange, $badges-gold, transparent);
+      animation: shimmerGold 3s linear infinite;
+    }
+  }
+
+  p {
+    font-size: 1.3rem;
+    color: $badges-gray-medium;
+    margin: 0;
+    animation: fadeIn 1.2s ease-out;
+    font-style: italic;
+  }
+}
+
+// =============================================
+// LOADING STATE
+// =============================================
+
+.loading-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  animation: fadeIn 0.5s ease-out;
+
+  .spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid rgba($badges-gold, 0.3);
+    border-top: 6px solid $badges-gold;
+    border-radius: 50%;
+    margin: 0 auto 2rem;
+    animation: spin 1.5s linear infinite;
+    position: relative;
+
+    &::after {
+      content: '⭐';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      animation: starPulse 1s ease-in-out infinite;
+    }
+  }
+
+  p {
+    color: $badges-gray-medium;
+    font-size: 1.3rem;
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+// =============================================
+// KPI CARDS STYLES
+// =============================================
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  animation: slideInFromBottom 0.8s ease-out;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, $badges-white, $badges-gray-extra-light);
+  border: 3px solid;
+  border-image: linear-gradient(45deg, $badges-orange, $badges-gold) 1;
+  border-radius: 25px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: badgeFloat 6s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($badges-gold, 0.2), transparent);
+    transition: left 0.8s ease;
+  }
+
+  &:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 25px 50px rgba($badges-gold, 0.3);
+    animation: none;
+
+    &::before {
+      left: 100%;
+    }
+
+    .kpi-icon {
+      transform: scale(1.3) rotate(360deg);
+      animation: starPulse 0.5s ease-in-out;
+    }
+  }
+
+  &:nth-child(1) {
+    animation-delay: 0s;
+    border-image: linear-gradient(45deg, $badges-gold, #ff6b35) 1;
+  }
+
+  &:nth-child(2) {
+    animation-delay: 1s;
+    border-image: linear-gradient(45deg, $badges-silver, #ff6b35) 1;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 2s;
+    border-image: linear-gradient(45deg, $badges-bronze, #ff6b35) 1;
+  }
+
+  .kpi-icon {
+    font-size: 4rem;
+    transition: all 0.4s ease;
+    animation: medalBounce 3s ease-in-out infinite;
+  }
+
+  .kpi-content {
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 0;
+      background: linear-gradient(45deg, $badges-orange, $badges-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: numberCount 1s ease-out;
+    }
+
+    p {
+      color: $badges-gray-medium;
+      margin: 0.5rem 0 0 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+}
+
+@keyframes numberCount {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// =============================================
+// CHARTS SECTION
+// =============================================
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  animation: slideInFromBottom 1s ease-out;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  background: $badges-white;
+  border-radius: 25px;
+  padding: 2rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  border: 2px solid $badges-gray-light;
+  transition: all 0.4s ease;
+  animation: chartGrow 0.8s ease-out;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 60px rgba($badges-gold, 0.2);
+    border-color: $badges-gold;
+  }
+
+  h3 {
+    color: $badges-black;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    text-align: center;
+    background: linear-gradient(45deg, $badges-orange, $badges-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: trophyRotate 3s ease-in-out infinite;
+  }
+
+  .chart-container {
+    height: 300px;
+    position: relative;
+    animation: chartGrow 1s ease-out;
+
+    canvas {
+      animation: fadeIn 1.2s ease-out;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+}
+
+// =============================================
+// TOP BADGES LIST
+// =============================================
+
+.card {
+  background: $badges-white;
+  border-radius: 25px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  margin-bottom: 2rem;
+  animation: slideInFromBottom 1.2s ease-out;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, $badges-gold, $badges-orange, $badges-gold);
+    border-radius: 27px;
+    z-index: -1;
+    animation: rankGlow 3s ease-in-out infinite;
+  }
+
+  h3 {
+    color: $badges-black;
+    margin-bottom: 2rem;
+    font-size: 1.6rem;
+    text-align: center;
+    animation: starPulse 2s ease-in-out infinite;
+
+    &::before {
+      content: '⭐';
+      margin-right: 0.5rem;
+      animation: medalBounce 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+.top-badges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.top-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, $badges-gray-extra-light, $badges-white);
+  border-radius: 15px;
+  transition: all 0.4s ease;
+  animation: slideInFromBottom 0.6s ease-out both;
+  border-left: 4px solid;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+
+  &:hover {
+    transform: translateX(15px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  &:nth-child(1) {
+    border-left-color: $badges-gold;
+    background: linear-gradient(135deg, lighten($badges-gold, 40%), $badges-white);
+
+    .rank {
+      background: linear-gradient(45deg, $badges-gold, darken($badges-gold, 20%));
+      animation: rankGlow 2s ease-in-out infinite;
+    }
+  }
+
+  &:nth-child(2) {
+    border-left-color: $badges-silver;
+    background: linear-gradient(135deg, lighten($badges-silver, 40%), $badges-white);
+
+    .rank {
+      background: linear-gradient(45deg, $badges-silver, darken($badges-silver, 20%));
+    }
+  }
+
+  &:nth-child(3) {
+    border-left-color: $badges-bronze;
+    background: linear-gradient(135deg, lighten($badges-bronze, 40%), $badges-white);
+
+    .rank {
+      background: linear-gradient(45deg, $badges-bronze, darken($badges-bronze, 20%));
+    }
+  }
+
+  &:nth-child(n+4) {
+    border-left-color: $badges-orange;
+
+    .rank {
+      background: linear-gradient(45deg, $badges-orange, $badges-orange-dark);
+    }
+  }
+
+  .rank {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $badges-white;
+    font-weight: 800;
+    font-size: 1.2rem;
+    animation: medalBounce 1s ease-out;
+  }
+
+  .badge-name {
+    flex: 1;
+    font-weight: 600;
+    color: $badges-black;
+    font-size: 1.1rem;
+  }
+
+  .badge-count {
+    color: $badges-gray-medium;
+    font-weight: 600;
+    background: rgba($badges-orange, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+// =============================================
+// ERROR STATE
+// =============================================
+
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, $badges-white, $badges-gray-extra-light);
+  border-radius: 25px;
+  border: 3px solid #f44336;
+  animation: shake 0.5s ease-in-out, fadeIn 0.8s ease-out;
+
+  .error-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: medalBounce 1s ease-in-out infinite;
+  }
+
+  h3 {
+    color: #f44336;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+  }
+
+  p {
+    color: $badges-gray-medium;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-primary {
+    background: linear-gradient(45deg, $badges-orange, $badges-orange-dark);
+    color: $badges-white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    animation: buttonPulse 2s ease-in-out infinite;
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba($badges-orange, 0.4);
+      animation: none;
+    }
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba($badges-orange, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba($badges-orange, 0.6);
+  }
+}
+
+// =============================================
+// ANIMATION UTILITIES
+// =============================================
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// =============================================
+// RESPONSIVE DESIGN
+// =============================================
+
+@media (max-width: 768px) {
+  .badges-page {
+    padding: 1rem;
+  }
+
+  .page-header {
+    h1 {
+      font-size: 2.2rem;
+      
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    padding: 1.5rem;
+    
+    .chart-container {
+      height: 250px;
+    }
+  }
+
+  .top-badge-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .badges-page {
+    padding: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .kpi-card .kpi-content h3 {
+    font-size: 2rem;
+  }
+}

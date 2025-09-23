@@ -1,66 +1,59 @@
-# 🌐 SIRA — Frontend Administrateur (Angular)
+# SiraAdmin
 
-> Branche : `frontend`  
-> Responsable : Mouhamed Diouf
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.0.
 
-## 🎯 Objectif
+## Development server
 
-La partie backoffice est l’outil interne pour l’équipe OVA afin de:
-- Gérer les contenus (parcours éducatifs, défis, récits audio, quiz).
-- Gérer les utilisateurs (employés, jeunes participants, mentors).
-- Analyser les statistiques (complétion, rétention, badges obtenus…).
-- Produire des rapports et visualisations (diagrammes, graphiques, cartes).
-- Contrôler la qualité et valider les contenus avant publication.
-
----
-
-## 🚀 Stack technique
-
-- Angular 20+
-- TypeScript
-- Angular Material
-- NGXS ou RxJS pour la gestion d’état
-- Auth via Firebase / Token JWT
-- API REST NestJS (backend)
-
----
-
-## ⚙️ Prérequis
-
-- Node.js v18+
-- Angular CLI (`npm install -g @angular/cli`)
-- Navigateur moderne
-
----
-
-## 🧪 Installation locale
+To start a local development server, run:
 
 ```bash
-npm install
 ng serve
 ```
 
----
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Structure
-```
-/src
- ├─ app/
- │   ├─ pages/        # Pages principales (dashboard, parcours, etc.)
- │   ├─ components/   # Composants réutilisables
- │   ├─ services/     # Appels API
- │   └─ guards/       # Authentification
- ├─ assets/           # Logos, images, traductions
- └─ environments/     # Variables (dev, prod)
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
+```bash
+ng generate component component-name
 ```
 
----
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-## 📌 Fonctionnalités cibles
-- Connexion sécurisée (auth + rôles)
-- Tableau de bord administrateur
-- Création/édition de parcours & récits
-- Statistiques d’usage
-- Multilingue (ngx-translate)
-- Publication et modération de contenus
+```bash
+ng generate --help
+```
 
+## Building
+
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

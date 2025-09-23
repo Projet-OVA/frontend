@@ -1,0 +1,671 @@
+// =============================================
+// VARIABLES SETTINGS SPECIFIQUES
+// =============================================
+
+$settings-orange: #ff6b35;
+$settings-orange-light: #ff8e65;
+$settings-orange-dark: #e55a2b;
+$settings-blue: #2196f3;
+$settings-green: #4caf50;
+$settings-red: #f44336;
+$settings-purple: #9c27b0;
+$settings-black: #1a1a1a;
+$settings-white: #ffffff;
+$settings-gray-dark: #2d3748;
+$settings-gray-medium: #4a5568;
+$settings-gray-light: #e2e8f0;
+$settings-gray-extra-light: #f7fafc;
+
+// Animations spécifiques settings
+@keyframes settingsGear {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(90deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+  75% {
+    transform: rotate(270deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes securityScan {
+  0% {
+    background-position: -100px 0;
+  }
+  100% {
+    background-position: calc(100% + 100px) 0;
+  }
+}
+
+@keyframes adminAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.8);
+  }
+  60% {
+    transform: translateX(10px) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes logStream {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes languageSwitch {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes superAdminGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba($settings-purple, 0.3);
+    border-color: $settings-purple;
+  }
+  50% {
+    box-shadow: 0 0 40px rgba($settings-purple, 0.6);
+    border-color: lighten($settings-purple, 20%);
+  }
+}
+
+@keyframes savePulse {
+  0%, 100% {
+    transform: scale(1);
+    background-position: 0% 50%;
+  }
+  50% {
+    transform: scale(1.05);
+    background-position: 100% 50%;
+  }
+}
+
+// =============================================
+// STRUCTURE PRINCIPALE
+// =============================================
+
+.settings-page {
+  padding: 2rem;
+  animation: adminAppear 0.8s ease-out;
+  background: linear-gradient(135deg, $settings-gray-extra-light 0%, $settings-white 100%);
+  min-height: 100vh;
+  position: relative;
+
+  &::before {
+    content: '⚙️';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20rem;
+    opacity: 0.02;
+    z-index: 0;
+    animation: settingsGear 20s linear infinite;
+    pointer-events: none;
+  }
+}
+
+// =============================================
+// GRID LAYOUT
+// =============================================
+
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  animation: adminAppear 1s ease-out;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// =============================================
+// CARD STYLES
+// =============================================
+
+.card {
+  background: $settings-white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  border: 3px solid $settings-gray-light;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: adminAppear 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($settings-orange, 0.05), transparent);
+    transition: left 0.8s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
+    border-color: $settings-orange;
+  }
+
+  h3 {
+    color: $settings-black;
+    margin-bottom: 2rem;
+    font-size: 1.6rem;
+    text-align: center;
+    background: linear-gradient(45deg, $settings-orange, $settings-blue);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    animation: savePulse 3s ease-in-out infinite;
+
+    &::before {
+      content: '⚙️';
+      margin-right: 0.5rem;
+      animation: settingsGear 2s linear infinite;
+    }
+  }
+
+  h4 {
+    color: $settings-gray-dark;
+    margin: 2rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid $settings-gray-light;
+    animation: adminAppear 0.8s ease-out;
+  }
+}
+
+// =============================================
+// SUPERADMIN SPECIAL STYLES
+// =============================================
+
+.card:has(+ .card) {
+  // Première carte (générale)
+  border-image: linear-gradient(45deg, $settings-orange, $settings-green) 1;
+}
+
+.card:nth-child(2) {
+  // Deuxième carte (admin - SUPERADMIN seulement)
+  border: 3px solid;
+  border-image: linear-gradient(45deg, $settings-purple, $settings-red) 1;
+  animation: superAdminGlow 3s ease-in-out infinite;
+
+  &::before {
+    background: linear-gradient(90deg, transparent, rgba($settings-purple, 0.1), transparent);
+  }
+
+  h3 {
+    background: linear-gradient(45deg, $settings-purple, $settings-red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    &::before {
+      content: '👑';
+      animation: bounce 1s ease-in-out infinite;
+    }
+  }
+}
+
+// =============================================
+// FORM STYLES
+// =============================================
+
+label {
+  display: block;
+  margin: 1.5rem 0 0.8rem 0;
+  font-weight: 600;
+  color: $settings-black;
+  animation: adminAppear 0.6s ease-out both;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+}
+
+input[type="text"],
+input[type="email"],
+select {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 2px solid $settings-gray-light;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: $settings-white;
+  animation: adminAppear 0.5s ease-out;
+
+  &:focus {
+    outline: none;
+    border-color: $settings-orange;
+    box-shadow: 0 0 0 4px rgba($settings-orange, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &::placeholder {
+    color: $settings-gray-medium;
+  }
+}
+
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234a5568'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 3rem;
+
+  &:hover {
+    animation: languageSwitch 0.3s ease;
+  }
+}
+
+// =============================================
+// BUTTON STYLES
+// =============================================
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: adminAppear 0.5s ease-out;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover::after {
+    left: 100%;
+  }
+
+  &.btn-primary {
+    background: linear-gradient(45deg, $settings-orange, $settings-orange-dark);
+    color: $settings-white;
+    animation: savePulse 2s ease-in-out infinite;
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 30px rgba($settings-orange, 0.4);
+      animation: none;
+    }
+
+    &[onclick*="openAdminDialog"]::before {
+      content: '👑';
+      margin-right: 0.5rem;
+      animation: bounce 1s ease-in-out infinite;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    animation: none;
+  }
+}
+
+// =============================================
+// ADMIN MANAGEMENT STYLES
+// =============================================
+
+.admin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, $settings-gray-extra-light, $settings-white);
+  border-radius: 12px;
+  border-left: 4px solid $settings-purple;
+  transition: all 0.3s ease;
+  animation: adminAppear 0.6s ease-out both;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+
+  &:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-left-color: $settings-red;
+  }
+
+  .name {
+    font-weight: 600;
+    color: $settings-black;
+    font-size: 1.1rem;
+  }
+
+  .meta {
+    color: $settings-gray-medium;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+
+  > div:last-child {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.btn-ghost, .btn-danger {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+
+  &.btn-ghost {
+    background: rgba($settings-blue, 0.1);
+    color: $settings-blue;
+    border: 1px solid $settings-blue;
+
+    &:hover {
+      background: $settings-blue;
+      color: $settings-white;
+      transform: scale(1.1) rotate(3deg);
+    }
+  }
+
+  &.btn-danger {
+    background: linear-gradient(45deg, $settings-red, darken($settings-red, 10%));
+    color: $settings-white;
+
+    &:hover {
+      transform: scale(1.1) rotate(-3deg);
+      box-shadow: 0 5px 15px rgba($settings-red, 0.4);
+    }
+  }
+}
+
+// =============================================
+// SECURITY LOGS STYLES
+// =============================================
+
+.logs {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 2px solid $settings-gray-light;
+  border-radius: 12px;
+  padding: 1rem;
+  background: $settings-gray-extra-light;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, $settings-green, $settings-blue, $settings-red);
+    animation: securityScan 2s linear infinite;
+  }
+}
+
+.log-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  background: $settings-white;
+  border-radius: 8px;
+  border-left: 3px solid $settings-green;
+  animation: logStream 0.5s ease-out both;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+
+  &:nth-child(odd) {
+    border-left-color: $settings-blue;
+  }
+
+  &:nth-child(3n) {
+    border-left-color: $settings-orange;
+  }
+
+  &:hover {
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .left {
+    font-size: 0.9rem;
+    color: $settings-black;
+  }
+
+  .right {
+    font-size: 0.8rem;
+  }
+
+  .muted {
+    color: $settings-gray-medium;
+    font-style: italic;
+  }
+}
+
+// =============================================
+// DIALOG STYLES
+// =============================================
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($settings-black, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(10px);
+
+  .dialog-content {
+    background: $settings-white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: adminAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid $settings-purple;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, $settings-purple, $settings-red, $settings-purple);
+      animation: securityScan 2s linear infinite;
+    }
+
+    h3 {
+      color: $settings-black;
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      text-align: center;
+      background: linear-gradient(45deg, $settings-purple, $settings-red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+}
+
+// =============================================
+// ACTIONS STYLES
+// =============================================
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $settings-gray-light;
+
+  button {
+    animation: adminAppear 0.8s ease-out;
+  }
+}
+
+// =============================================
+// ANIMATION UTILITIES
+// =============================================
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
+}
+
+.muted {
+  color: $settings-gray-medium;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeIn 1s ease-out;
+
+  &::before {
+    content: '📋';
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    animation: settingsGear 3s linear infinite;
+  }
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, $settings-gray-light, transparent);
+  margin: 2rem 0;
+  animation: securityScan 3s linear infinite;
+}
+
+// =============================================
+// RESPONSIVE DESIGN
+// =============================================
+
+@media (max-width: 768px) {
+  .settings-page {
+    padding: 1rem;
+  }
+
+  .grid-two {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .admin-row {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .log-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .dialog .dialog-content {
+    padding: 1.5rem;
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-page {
+    padding: 0.5rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}

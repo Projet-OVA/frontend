@@ -1,0 +1,647 @@
+// =============================================
+// VARIABLES USERS SPECIFIQUES
+// =============================================
+
+$users-orange: #ff6b35;
+$users-orange-light: #ff8e65;
+$users-orange-dark: #e55a2b;
+$users-black: #1a1a1a;
+$users-white: #ffffff;
+$users-gray-dark: #2d3748;
+$users-gray-medium: #4a5568;
+$users-gray-light: #e2e8f0;
+$users-gray-extra-light: #f7fafc;
+
+// Animations spécifiques users
+@keyframes tableRowEntrance {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes dialogAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes rowHover {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes deletePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes badgeGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba($users-orange, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba($users-orange, 0.6);
+  }
+}
+
+@keyframes shimmerLoading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+// =============================================
+// STRUCTURE PRINCIPALE
+// =============================================
+
+.users-page {
+  padding: 2rem;
+  animation: tableRowEntrance 0.8s ease-out;
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: $users-black;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, $users-orange, $users-orange-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    animation: badgeGlow 3s ease-in-out infinite;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, $users-orange, transparent);
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
+  }
+}
+
+// =============================================
+// LOADING STATES
+// =============================================
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: $users-gray-medium;
+  position: relative;
+
+  &::before {
+    content: '🔄';
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: spin 1.5s linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, $users-orange, transparent);
+    animation: shimmerLoading 1.5s ease-in-out infinite;
+  }
+}
+
+.muted {
+  text-align: center;
+  padding: 3rem;
+  color: $users-gray-medium;
+  font-style: italic;
+  font-size: 1.1rem;
+  animation: fadeIn 1s ease-out;
+
+  &::before {
+    content: '👥';
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// =============================================
+// TABLE STYLES
+// =============================================
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $users-white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  animation: tableRowEntrance 1s ease-out;
+
+  thead {
+    background: linear-gradient(135deg, $users-black, $users-gray-dark);
+    
+    tr {
+      animation: slideInFromBottom 0.6s ease-out;
+    }
+
+    th {
+      padding: 1.2rem 1rem;
+      text-align: left;
+      color: $users-white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 3px solid $users-orange;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba($users-orange, 0.3), transparent);
+        transition: left 0.6s ease;
+      }
+
+      &:hover::before {
+        left: 100%;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $users-gray-light;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: tableRowEntrance 0.8s ease-out both;
+
+      @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.05}s;
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba($users-orange, 0.03), rgba($users-orange, 0.08));
+        transform: translateY(-2px) scale(1.002);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid $users-orange;
+
+        td {
+          color: $users-black;
+          transform: translateX(5px);
+        }
+      }
+
+      &.clickable-row {
+        cursor: pointer;
+        position: relative;
+
+        &::after {
+          content: '👉';
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%) scale(0);
+          opacity: 0;
+          transition: all 0.3s ease;
+          font-size: 0.8rem;
+        }
+
+        &:hover::after {
+          opacity: 1;
+          transform: translateY(-50%) scale(1);
+          animation: rowHover 0.5s ease-in-out;
+        }
+      }
+
+      td {
+        padding: 1.2rem 1rem;
+        color: $users-gray-dark;
+        transition: all 0.3s ease;
+        position: relative;
+
+        &:first-child {
+          font-weight: 600;
+          color: $users-black;
+        }
+
+        &:hover {
+          color: $users-orange;
+        }
+      }
+    }
+  }
+}
+
+// =============================================
+// BUTTONS
+// =============================================
+
+.btn-danger {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: $users-white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  position: relative;
+  overflow: hidden;
+  animation: deletePulse 2s ease-in-out infinite;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+    animation: none;
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// =============================================
+// DIALOG STYLES
+// =============================================
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($users-black, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+
+  .dialog-content {
+    background: $users-white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: dialogAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid $users-orange-light;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, $users-orange, $users-orange-light, $users-orange);
+      animation: shimmerLoading 2s ease-in-out infinite;
+    }
+
+    h3 {
+      color: $users-black;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      text-align: center;
+      background: linear-gradient(45deg, $users-orange, $users-orange-light);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h4 {
+      color: $users-gray-dark;
+      margin: 1.5rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid $users-gray-light;
+      animation: slideInFromBottom 0.6s ease-out;
+    }
+
+    p {
+      margin: 0.8rem 0;
+      padding: 0.5rem;
+      background: $users-gray-extra-light;
+      border-radius: 8px;
+      border-left: 3px solid $users-orange;
+      animation: slideInFromBottom 0.8s ease-out;
+
+      strong {
+        color: $users-black;
+      }
+    }
+  }
+}
+
+// =============================================
+// BADGES LIST
+// =============================================
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+
+  li {
+    background: linear-gradient(135deg, $users-gray-extra-light, $users-white);
+    padding: 0.8rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 10px;
+    border: 1px solid $users-gray-light;
+    transition: all 0.3s ease;
+    animation: tableRowEntrance 0.6s ease-out both;
+    position: relative;
+    overflow: hidden;
+
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+
+    &::before {
+      content: '🏆';
+      margin-right: 0.5rem;
+      animation: bounce 1s ease-in-out infinite;
+    }
+
+    &:hover {
+      transform: translateX(10px) scale(1.02);
+      border-color: $users-orange;
+      box-shadow: 0 5px 15px rgba($users-orange, 0.2);
+      background: linear-gradient(135deg, rgba($users-orange, 0.1), $users-white);
+
+      &::after {
+        content: '✨';
+        position: absolute;
+        right: 10px;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+// =============================================
+// ACTIONS BUTTONS IN DIALOG
+// =============================================
+
+.actions {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $users-gray-light;
+
+  .btn {
+    background: linear-gradient(45deg, $users-orange, $users-orange-dark);
+    color: $users-white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    animation: bounceIn 0.8s ease-out;
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba($users-orange, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+}
+
+// =============================================
+// ANIMATION UTILITIES
+// =============================================
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    transform: translate3d(0,-8px,0);
+  }
+  70% {
+    transform: translate3d(0,-4px,0);
+  }
+  90% {
+    transform: translate3d(0,-2px,0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// =============================================
+// RESPONSIVE DESIGN
+// =============================================
+
+@media (max-width: 768px) {
+  .users-page {
+    padding: 1rem;
+    
+    h2 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .table {
+    font-size: 0.9rem;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid $users-gray-light;
+        border-radius: 12px;
+        animation: tableRowEntrance 0.6s ease-out;
+
+        td {
+          display: block;
+          text-align: right;
+          padding: 0.8rem 1rem;
+          border-bottom: 1px solid $users-gray-light;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &::before {
+            content: attr(data-label);
+            float: left;
+            font-weight: 600;
+            color: $users-black;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+          }
+
+          &:hover {
+            transform: none;
+          }
+        }
+
+        &.clickable-row::after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .dialog .dialog-content {
+    padding: 1.5rem;
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .users-page {
+    padding: 0.5rem;
+  }
+
+  .table tbody tr td {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .dialog .dialog-content {
+    padding: 1rem;
+  }
+}
+
+// =============================================
+// LOADING BADGES STATE
+// =============================================
+
+div:contains("Chargement des badges...") {
+  text-align: center;
+  padding: 1rem;
+  color: $users-gray-medium;
+  font-style: italic;
+  animation: pulseGlow 1.5s ease-in-out infinite;
+
+  &::before {
+    content: '🔄';
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    animation: spin 1s linear infinite;
+  }
+}

@@ -15,19 +15,39 @@ import { AuthService } from '../../core/auth.service';
 export class LoginComponent {
   email = '';
   password = '';
+  isLoading = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
+    // Validation basique
+    if (!this.email || !this.password) {
+      alert('Veuillez remplir tous les champs');
+      return;
+    }
+
+    // Activation du loading
+    this.isLoading = true;
+
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         console.log('Login successful, redirecting...');
-        // Redirection vers le dashboard (qui est maintenant une route enfant)
-        this.router.navigate(['/dashboard']);
+        
+        // Petit délai pour montrer le succès avant la redirection
+        setTimeout(() => {
+          this.isLoading = false;
+          this.router.navigate(['/dashboard']);
+        }, 1000);
       },
       error: (error) => {
         console.error('Login error', error);
-        alert('Erreur de connexion: ' + (error.error?.message || error.message));
+        this.isLoading = false;
+        
+        // Message d'erreur plus détaillé
+        const errorMessage = error.error?.message || 
+                           error.message || 
+                           'Erreur de connexion au serveur';
+        alert('Erreur de connexion: ' + errorMessage);
       },
     });
   }

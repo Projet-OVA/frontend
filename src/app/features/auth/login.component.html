@@ -1,0 +1,61 @@
+<div class="login-page">
+  <div class="login-panel card" role="form" aria-labelledby="login-title">
+    <h1 id="login-title">Connexion — SIRA Admin</h1>
+    <p class="muted">Identifie-toi pour accéder au backoffice.</p>
+
+    <form (ngSubmit)="login()" class="login-form" autocomplete="on" [class.loading]="isLoading">
+      <label>
+        <span class="label">Email</span>
+        <input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="email" 
+          required 
+          placeholder="admin@domain.tld"
+          [disabled]="isLoading"
+        />
+      </label>
+
+      <label>
+        <span class="label">Mot de passe</span>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="password" 
+          required 
+          placeholder="••••••••"
+          [disabled]="isLoading"
+        />
+      </label>
+
+      <!-- État de chargement -->
+      <div *ngIf="isLoading" class="loading-overlay">
+        <div class="loading-content">
+          <div class="spinner"></div>
+          <p>Connexion en cours...</p>
+          <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button 
+          class="btn btn-primary" 
+          type="submit"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">Se connecter</span>
+          <span *ngIf="isLoading">Connexion...</span>
+        </button>
+        <a class="link-muted" routerLink="/" [class.disabled]="isLoading">Retour</a>
+      </div>
+
+      <div class="help">
+        <small>Problème d'accès ? Contacte <strong>admin@ova.org</strong></small>
+      </div>
+    </form>
+  </div>
+</div>

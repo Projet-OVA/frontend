@@ -13,6 +13,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class AdminLayoutComponent implements OnInit {
   currentYear = new Date().getFullYear();
+  showBreadcrumb = false; 
 
   constructor(
     private auth: AuthService,
