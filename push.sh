@@ -4,8 +4,7 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-        Nouveaux changements le $(date +"%Y-%m-%d %H:%M:%S")
-        
+        ci: add GitHub Actions workflow to build and deploy to gh-pages
                     "
 fi
 

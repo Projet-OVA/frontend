@@ -6,7 +6,9 @@
       <p class="subtitle">Aperçu global — utilisateurs, badges, progression & engagement</p>
     </div>
     <div class="header-actions">
-      <button class="btn-ghost" (click)="refresh()">🔄 Actualiser</button>
+      <button class="btn-ghost" (click)="refresh()" [disabled]="loading">
+        🔄 {{ refreshing ? 'Actualisation...' : 'Actualiser' }}
+      </button>
     </div>
   </header>
 
@@ -35,7 +37,7 @@
         <div class="metric-title">Engagement</div>
         <div class="metric-value">{{ engagementRate }}</div>
         <div class="metric-sub">
-          Variation: {{ dashboard?.communityEngagement?.engagementRateChange }}
+          Variation: {{ dashboard?.communityEngagement?.engagementRateChange || '0%' }}
         </div>
       </div>
     </section>
@@ -52,79 +54,181 @@
           <div class="detail">
             <div class="label">Taux de complétion</div>
             <div class="value">{{ dashboard?.courseProgress?.completionRate || '—' }}</div>
-            <div class="muted">∆ {{ dashboard?.courseProgress?.completionRateChange || '—' }}</div>
+            <div
+              class="muted"
+              [class.positive]="isPositive(dashboard?.courseProgress?.completionRateChange)"
+              [class.negative]="isNegative(dashboard?.courseProgress?.completionRateChange)"
+            >
+              ∆ {{ dashboard?.courseProgress?.completionRateChange || '0%' }}
+            </div>
           </div>
           <div class="detail">
             <div class="label">Temps moyen</div>
             <div class="value">{{ dashboard?.courseProgress?.averageTime || '—' }}</div>
-            <div class="muted">∆ {{ dashboard?.courseProgress?.averageTimeChange || '—' }}</div>
+            <div
+              class="muted"
+              [class.positive]="isNegative(dashboard?.courseProgress?.averageTimeChange)"
+              [class.negative]="isPositive(dashboard?.courseProgress?.averageTimeChange)"
+            >
+              ∆ {{ dashboard?.courseProgress?.averageTimeChange || '0%' }}
+            </div>
           </div>
           <div class="detail">
             <div class="label">Engagement communautaire</div>
             <div class="value">{{ dashboard?.communityEngagement?.engagementRate || '—' }}</div>
-            <div class="muted">
-              ∆ {{ dashboard?.communityEngagement?.engagementRateChange || '—' }}
+            <div
+              class="muted"
+              [class.positive]="isPositive(dashboard?.communityEngagement?.engagementRateChange)"
+              [class.negative]="isNegative(dashboard?.communityEngagement?.engagementRateChange)"
+            >
+              ∆ {{ dashboard?.communityEngagement?.engagementRateChange || '0%' }}
             </div>
           </div>
           <div class="detail">
             <div class="label">Dernier rafraîchissement</div>
-            <div class="value">
-              {{ loading ? 'En cours...' : lastRefresh }}
-            </div>
-
+            <div class="value">{{ loading ? 'En cours...' : lastRefresh }}</div>
             <div class="muted">Actualise pour mettre à jour</div>
           </div>
         </div>
       </div>
 
-      <div class="card chart-card side">
-        <div class="card-header">
-          <h3>🏅 Répartition des badges</h3>
-          <small>Types populaires</small>
-        </div>
-        <div class="chart-container small">
-          <canvas
-            baseChart
-            [data]="{
-              labels: badgesPieLabels,
-              datasets: [
-                { data: badgesPieData, backgroundColor: ['#e53935', '#ff8a80', '#ffffff'] }
-              ]
-            }"
-            [options]="pieOptions"
-            chartType="pie"
-          >
-          </canvas>
+      <div class="side-cards">
+        <!-- Carte Répartition des badges -->
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3>🏅 Répartition des badges</h3>
+            <small>Types populaires</small>
+          </div>
+          <div class="chart-container">
+            <canvas
+              baseChart
+              [data]="{
+                labels: badgesPieLabels,
+                datasets: [
+                  {
+                    data: badgesPieData,
+                    backgroundColor: ['#FF9800', '#F57C00', '#E65100', '#FFB74D', '#FFA726']
+                  }
+                ]
+              }"
+              [options]="pieOptions"
+              chartType="pie"
+            >
+            </canvas>
+          </div>
         </div>
 
-        <div class="mini-stats">
-          <div class="progress-wrap">
-            <label>Progression parcours</label>
-            <div class="doughnut">
-              <canvas
-                baseChart
-                [data]="{
-                  labels: ['Complété', 'Restant'],
-                  datasets: [{ data: progressDoughnutData }]
-                }"
-                [options]="doughnutOptions"
-                chartType="doughnut"
-              >
-              </canvas>
-              <div class="doughnut-center">{{ completionRate }}</div>
-            </div>
+        <!-- Carte Progression Globale -->
+        <div class="card progress-card">
+          <div class="card-header">
+            <h3>📊 Progression Globale</h3>
+            <small>Avancement par catégorie</small>
           </div>
 
-          <div class="category-buttons">
-            <button (click)="loadCategoryProgress('ENVIRONNEMENT')" class="btn-ghost small">
-              ENVIRONNEMENT
-            </button>
-            <button (click)="loadCategoryProgress('DROIT_DU_CITOYEN')" class="btn-ghost small">
-              DROIT
-            </button>
-            <button (click)="loadCategoryProgress('DEVOIR_DU_CITOYEN')" class="btn-ghost small">
-              DEVOIR
-            </button>
+          <div class="category-selector">
+            <h4>Filtrer par catégorie:</h4>
+            <div class="category-buttons">
+              <button
+                (click)="loadCategoryProgress('ENVIRONNEMENT')"
+                class="btn-category"
+                [class.active]="activeCategory === 'ENVIRONNEMENT'"
+              >
+                🌱 ENVIRONNEMENT
+              </button>
+              <button
+                (click)="loadCategoryProgress('DROIT_DU_CITOYEN')"
+                class="btn-category"
+                [class.active]="activeCategory === 'DROIT_DU_CITOYEN'"
+              >
+                ⚖️ DROIT
+              </button>
+              <button
+                (click)="loadCategoryProgress('DEVOIR_DU_CITOYEN')"
+                class="btn-category"
+                [class.active]="activeCategory === 'DEVOIR_DU_CITOYEN'"
+              >
+                📚 DEVOIR
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOUVELLE SECTION : 3 DIAGRAMMES DE PROGRESSION -->
+    <section class="progress-diagrams">
+      <!-- ENVIRONNEMENT - Diagramme circulaire -->
+      <div class="card diagram-card environment-card">
+        <div class="card-header">
+          <h3>🌱 Progression Environnement</h3>
+          <small
+            >{{ getCategoryStats('ENVIRONNEMENT') }} -
+            {{ categoryProgress['ENVIRONNEMENT'].progressPercentage }}% complété</small
+          >
+        </div>
+        <div class="chart-container">
+          <canvas #envChart width="400" height="300"></canvas>
+        </div>
+        <div class="diagram-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{ categoryProgress['ENVIRONNEMENT'].completedQuizzes }}</span>
+            <span class="stat-label">Quizzes complétés</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ categoryProgress['ENVIRONNEMENT'].totalQuizzes }}</span>
+            <span class="stat-label">Quizzes total</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DROIT_DU_CITOYEN - Diagramme barres horizontales -->
+      <div class="card diagram-card droit-card">
+        <div class="card-header">
+          <h3>⚖️ Progression Droit du Citoyen</h3>
+          <small
+            >{{ getCategoryStats('DROIT_DU_CITOYEN') }} -
+            {{ categoryProgress['DROIT_DU_CITOYEN'].progressPercentage }}% complété</small
+          >
+        </div>
+        <div class="chart-container">
+          <canvas #droitChart width="400" height="300"></canvas>
+        </div>
+        <div class="diagram-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{
+              categoryProgress['DROIT_DU_CITOYEN'].completedQuizzes
+            }}</span>
+            <span class="stat-label">Quizzes complétés</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ categoryProgress['DROIT_DU_CITOYEN'].totalQuizzes }}</span>
+            <span class="stat-label">Quizzes total</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEVOIR_DU_CITOYEN - Diagramme jauge circulaire -->
+      <div class="card diagram-card devoir-card">
+        <div class="card-header">
+          <h3>📚 Progression Devoir du Citoyen</h3>
+          <small
+            >{{ getCategoryStats('DEVOIR_DU_CITOYEN') }} -
+            {{ categoryProgress['DEVOIR_DU_CITOYEN'].progressPercentage }}% complété</small
+          >
+        </div>
+        <div class="chart-container">
+          <canvas #devoirChart width="400" height="300"></canvas>
+        </div>
+        <div class="diagram-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{
+              categoryProgress['DEVOIR_DU_CITOYEN'].completedQuizzes
+            }}</span>
+            <span class="stat-label">Quizzes complétés</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ categoryProgress['DEVOIR_DU_CITOYEN'].totalQuizzes }}</span>
+            <span class="stat-label">Quizzes total</span>
           </div>
         </div>
       </div>

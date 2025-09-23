@@ -1,818 +1,701 @@
-// =============================================
-// VARIABLES CHALLENGES SPECIFIQUES
-// =============================================
+// Variables couleurs challenges
+$white: #ffffff;
+$black: #000000;
+$orange: #ff9800;
+$orange-dark: #f57c00;
+$orange-darker: #e65100;
+$orange-light: #fff3e0;
+$orange-extra-light: #fffaf0;
+$gray-light: #f5f5f5;
+$gray: #9e9e9e;
+$gray-dark: #424242;
+$green: #4caf50;
+$green-light: #e8f5e9;
+$red: #f44336;
+$red-light: #ffebee;
+$yellow: #ffc107;
+$yellow-light: #fff8e1;
+$blue: #2196f3;
+$blue-light: #e3f2fd;
 
-$challenges-orange: #ff6b35;
-$challenges-orange-light: #ff8e65;
-$challenges-orange-dark: #e55a2b;
-$challenges-black: #1a1a1a;
-$challenges-white: #ffffff;
-$challenges-gray-dark: #2d3748;
-$challenges-gray-medium: #4a5568;
-$challenges-gray-light: #e2e8f0;
-$challenges-gray-extra-light: #f7fafc;
+// Variables layout
+$page-spacing: 2rem;
+$card-radius: 12px;
+$table-radius: 8px;
 
-// Couleurs des statuts
-$status-pending: #ff9800;
-$status-approved: #4caf50;
-$status-rejected: #f44336;
-
-// Animations spécifiques challenges
-@keyframes targetAppear {
-  0% {
-    opacity: 0;
-    transform: scale(0) rotate(-180deg);
-  }
-  60% {
-    transform: scale(1.2) rotate(20deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes arrowBounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
+@mixin transition($property: all) {
+  transition: $property 0.3s ease-in-out;
 }
 
-@keyframes statusPulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba($status-pending, 0.4);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba($status-pending, 0.8);
-  }
+@mixin card-shadow {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.02);
 }
-
-@keyframes approvalGlow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba($status-approved, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba($status-approved, 0.6);
-  }
-}
-
-@keyframes rejectionShake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(-5px) rotate(-2deg); }
-  75% { transform: translateX(5px) rotate(2deg); }
-}
-
-@keyframes challengeFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(4px) rotate(-1deg);
-  }
-}
-
-// =============================================
-// STRUCTURE PRINCIPALE
-// =============================================
 
 .challenges-page {
-  padding: 2rem;
-  animation: targetAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $white 0%, $orange-extra-light 100%);
 }
 
-// =============================================
-// HEADER STYLES
-// =============================================
-
+// Header
 .page-header {
   text-align: center;
-  margin-bottom: 3rem;
-  animation: slideInFromBottom 0.8s ease-out;
-
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  
   h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 800;
-    color: $challenges-black;
-    margin-bottom: 1rem;
-    background: linear-gradient(45deg, $challenges-orange, #ff4081);
+    color: $black;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, $orange, $orange-dark);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    position: relative;
-    animation: challengeFloat 6s ease-in-out infinite;
-
-    &::before {
-      content: '🎯';
-      position: absolute;
-      left: -60px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2.5rem;
-      animation: arrowBounce 2s ease-in-out infinite;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 200px;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, $challenges-orange, transparent);
-      animation: shimmer 3s ease-in-out infinite;
-    }
+    background-clip: text;
+    text-shadow: 0 2px 10px rgba($orange, 0.1);
   }
-
+  
   p {
-    font-size: 1.2rem;
-    color: $challenges-gray-medium;
+    font-size: 1.1rem;
+    color: $gray-dark;
     margin: 0;
-    animation: fadeIn 1s ease-out;
+    opacity: 0.8;
   }
 }
 
-// =============================================
-// FILTERS STYLES
-// =============================================
-
+// Filtres
 .filters {
-  background: linear-gradient(135deg, $challenges-white, $challenges-gray-extra-light);
-  border: 2px solid $challenges-gray-light;
-  border-radius: 20px;
-  padding: 1.5rem 2rem;
+  background: $white;
+  padding: 1.5rem;
   margin-bottom: 2rem;
+  border-radius: $card-radius;
+  @include card-shadow;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  animation: slideInFromBottom 0.6s ease-out;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba($challenges-orange, 0.1), transparent);
-    transition: left 0.8s ease;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
-
+  flex-wrap: wrap;
+  gap: 1rem;
+  
   .filter-group {
     display: flex;
     align-items: center;
     gap: 1rem;
-
+    
     label {
       font-weight: 600;
-      color: $challenges-black;
-      animation: fadeIn 0.8s ease-out;
+      color: $gray-dark;
+      white-space: nowrap;
     }
-
+    
     select {
-      padding: 0.8rem 1.2rem;
-      border: 2px solid $challenges-gray-light;
-      border-radius: 12px;
-      background: $challenges-white;
+      padding: 0.5rem 1rem;
+      border: 2px solid $gray-light;
+      border-radius: 8px;
+      background: $white;
+      color: $gray-dark;
       font-size: 1rem;
-      transition: all 0.3s ease;
-      animation: targetAppear 0.5s ease-out;
-
+      @include transition;
+      cursor: pointer;
+      
       &:focus {
         outline: none;
-        border-color: $challenges-orange;
-        box-shadow: 0 0 0 4px rgba($challenges-orange, 0.1);
-        transform: translateY(-2px);
+        border-color: $orange;
+        box-shadow: 0 0 0 3px rgba($orange, 0.1);
       }
     }
   }
-
-  .btn-primary {
-    background: linear-gradient(45deg, $challenges-orange, $challenges-orange-dark);
-    color: $challenges-white;
+  
+  .btn {
+    background: linear-gradient(135deg, $orange, $orange-dark);
+    color: $white;
     border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
+    @include transition;
     font-weight: 600;
-    transition: all 0.3s ease;
-    animation: statusPulse 2s ease-in-out infinite;
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-      content: '🔄';
-      margin-right: 0.5rem;
-      animation: spin 1.5s linear infinite;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.6s ease;
-    }
-
+    
     &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 10px 25px rgba($challenges-orange, 0.4);
-      animation: none;
-
-      &::after {
-        left: 100%;
-      }
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($orange, 0.3);
+    }
+    
+    &.btn-primary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
   }
 }
 
-// =============================================
-// LOADING STATE
-// =============================================
-
+// État de chargement
 .loading-state {
-  text-align: center;
+  @include flex-center;
+  flex-direction: column;
   padding: 4rem 2rem;
-  animation: fadeIn 0.5s ease-out;
-
+  text-align: center;
+  
   .spinner {
     width: 60px;
     height: 60px;
-    border: 4px solid rgba($challenges-orange, 0.3);
-    border-top: 4px solid $challenges-orange;
+    border: 4px solid $orange-light;
+    border-top: 4px solid $orange;
     border-radius: 50%;
-    margin: 0 auto 1.5rem;
     animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
   }
-
+  
   p {
-    color: $challenges-gray-medium;
-    font-size: 1.1rem;
-    animation: pulseGlow 2s ease-in-out infinite;
+    font-size: 1.2rem;
+    color: $gray-dark;
+    font-weight: 500;
   }
 }
 
-// =============================================
-// TABLE STYLES
-// =============================================
-
+// Tableau principal
 .card {
-  background: $challenges-white;
-  border-radius: 20px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  background: $white;
+  border-radius: $card-radius;
   overflow: hidden;
-  animation: slideInFromBottom 0.8s ease-out;
-  border: 1px solid $challenges-gray-light;
-  transition: all 0.4s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-  }
+  @include card-shadow;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: $challenges-white;
-
+  
   thead {
-    background: linear-gradient(135deg, $challenges-black, $challenges-gray-dark);
+    background: linear-gradient(135deg, $orange, $orange-dark);
     
     tr {
-      animation: slideInFromBottom 0.6s ease-out;
-    }
-
-    th {
-      padding: 1.5rem 1rem;
-      text-align: left;
-      color: $challenges-white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 3px solid $challenges-orange;
-      position: relative;
-      animation: challengeFloat 4s ease-in-out infinite;
-
-      &:hover::after {
-        content: '▼';
-        position: absolute;
-        right: 10px;
-        animation: arrowBounce 0.5s ease-in-out;
+      th {
+        padding: 1.2rem 1rem;
+        color: $white;
+        font-weight: 600;
+        text-align: left;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $orange-darker;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+        }
       }
     }
   }
-
+  
   tbody {
     tr {
-      border-bottom: 1px solid $challenges-gray-light;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: targetAppear 0.6s ease-out both;
-
-      @for $i from 1 through 20 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.08}s;
-        }
-      }
-
+      @include transition;
+      border-bottom: 1px solid $gray-light;
+      
       &:last-child {
         border-bottom: none;
       }
-
-      &:hover {
-        background: linear-gradient(135deg, rgba($challenges-orange, 0.05), rgba($challenges-orange, 0.1));
-        transform: translateX(15px) scale(1.02);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-
-        td {
-          color: $challenges-black;
+      
+      &.clickable-row {
+        cursor: pointer;
+        
+        &:hover {
+          background: $orange-light;
+          transform: scale(1.002);
           
-          &:first-child {
-            font-weight: 700;
-            color: $challenges-orange;
+          td {
+            color: $orange-darker;
+          }
+          
+          .status-badge {
+            transform: scale(1.05);
           }
         }
       }
-
-      &.clickable-row {
-        cursor: pointer;
-        position: relative;
-
-        &::after {
-          content: '🎯';
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%) scale(0) rotate(0deg);
-          opacity: 0;
-          transition: all 0.4s ease;
-        }
-
-        &:hover::after {
-          opacity: 1;
-          transform: translateY(-50%) scale(1) rotate(360deg);
-          animation: arrowBounce 0.6s ease-in-out;
-        }
-      }
-
+      
       td {
-        padding: 1.3rem 1rem;
-        color: $challenges-gray-dark;
-        transition: all 0.3s ease;
+        padding: 1.2rem 1rem;
+        color: $gray-dark;
+        font-weight: 500;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+          font-weight: 600;
+          color: $black;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+        }
       }
     }
   }
 }
 
-// =============================================
-// STATUS BADGES
-// =============================================
-
+// Badges de statut
 .status-badge {
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  animation: statusPulse 2s ease-in-out infinite;
-
-  &.status-pending {
-    background: linear-gradient(45deg, $status-pending, darken($status-pending, 10%));
-    color: $challenges-white;
-    animation: statusPulse 1.5s ease-in-out infinite;
+  @include transition;
+  
+  &.status-PENDING {
+    background: $yellow-light;
+    color: darken($yellow, 20%);
+    border: 1px solid $yellow;
   }
-
-  &.status-approved {
-    background: linear-gradient(45deg, $status-approved, darken($status-approved, 10%));
-    color: $challenges-white;
-    animation: approvalGlow 2s ease-in-out infinite;
+  
+  &.status-APPROVED {
+    background: $green-light;
+    color: darken($green, 20%);
+    border: 1px solid $green;
   }
-
-  &.status-rejected {
-    background: linear-gradient(45deg, $status-rejected, darken($status-rejected, 10%));
-    color: $challenges-white;
-    animation: rejectionShake 1s ease-in-out infinite;
+  
+  &.status-REJECTED {
+    background: $red-light;
+    color: darken($red, 20%);
+    border: 1px solid $red;
   }
 }
 
-// =============================================
-// ACTION BUTTONS
-// =============================================
-
+// Boutons d'action
 .action-buttons {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    animation: targetAppear 0.5s ease-out;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.6s ease;
-    }
-
-    &:hover::after {
-      left: 100%;
-    }
-  }
-
+  
   .btn-ghost {
-    background: rgba($challenges-orange, 0.1);
-    color: $challenges-orange;
-    border: 1px solid $challenges-orange;
-
+    background: transparent;
+    border: 1px solid $gray-light;
+    color: $gray-dark;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.85rem;
+    
     &:hover {
-      background: $challenges-orange;
-      color: $challenges-white;
-      transform: scale(1.1) rotate(5deg);
+      border-color: $blue;
+      color: $blue;
+      background: $blue-light;
+      transform: scale(1.05);
     }
   }
-
+  
   .btn-success {
-    background: linear-gradient(45deg, $status-approved, darken($status-approved, 10%));
-    color: $challenges-white;
-
+    background: $green;
+    color: $white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.85rem;
+    
     &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 5px 15px rgba($status-approved, 0.4);
-      animation: approvalGlow 1s ease-in-out;
+      background: darken($green, 10%);
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba($green, 0.3);
     }
   }
-
+  
   .btn-danger {
-    background: linear-gradient(45deg, $status-rejected, darken($status-rejected, 10%));
-    color: $challenges-white;
-
+    background: $red;
+    color: $white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.85rem;
+    
     &:hover {
-      transform: scale(1.1) rotate(-5deg);
-      box-shadow: 0 5px 15px rgba($status-rejected, 0.4);
-      animation: rejectionShake 0.5s ease-in-out;
+      background: darken($red, 10%);
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba($red, 0.3);
     }
   }
 }
 
 .muted {
-  text-align: center;
+  @include flex-center;
   padding: 3rem;
-  color: $challenges-gray-medium;
+  font-size: 1.1rem;
+  color: $gray;
   font-style: italic;
-  animation: fadeIn 1s ease-out;
-
-  &::before {
-    content: '📋';
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-    animation: challengeFloat 4s ease-in-out infinite;
-  }
 }
 
-// =============================================
-// DIALOG STYLES
-// =============================================
-
+// Dialogs modales
 .dialog {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba($challenges-black, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  animation: fadeIn 0.3s ease;
-  backdrop-filter: blur(10px);
-
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+  padding: 1rem;
+  
   .dialog-content {
-    background: $challenges-white;
-    padding: 2.5rem;
-    border-radius: 25px;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+    background: $white;
+    border-radius: $card-radius;
+    padding: 2rem;
     max-width: 600px;
-    width: 90%;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
-    animation: targetAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 3px solid $challenges-orange-light;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, $challenges-orange, $challenges-orange-light, $challenges-orange);
-      animation: shimmer 2s ease-in-out infinite;
-    }
-
+    @include card-shadow;
+    animation: slideUp 0.3s ease-out;
+    
     h3 {
-      color: $challenges-black;
-      margin-bottom: 2rem;
-      font-size: 1.6rem;
-      text-align: center;
-      background: linear-gradient(45deg, $challenges-orange, #ff4081);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: challengeFloat 3s ease-in-out infinite;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $black;
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid $orange;
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-  }
-}
-
-// =============================================
-// PROPOSAL DETAILS
-// =============================================
-
-.proposal-details {
-  .detail-row {
-    display: flex;
-    margin: 1.2rem 0;
-    padding: 1rem;
-    background: $challenges-gray-extra-light;
-    border-radius: 12px;
-    border-left: 4px solid $challenges-orange;
-    animation: slideInFromBottom 0.6s ease-out both;
-
-    @for $i from 1 through 10 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 0.1}s;
+    
+    p {
+      margin-bottom: 1.5rem;
+      color: $gray-dark;
+      line-height: 1.6;
+    }
+    
+    // Détails de la proposition
+    .proposal-details {
+      .detail-row {
+        display: flex;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $gray-light;
+        
+        &:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+        }
+        
+        label {
+          font-weight: 600;
+          color: $black;
+          min-width: 120px;
+          margin-right: 1rem;
+        }
+        
+        span {
+          color: $gray-dark;
+          flex: 1;
+          line-height: 1.5;
+        }
       }
     }
-
-    label {
-      font-weight: 600;
-      color: $challenges-black;
-      min-width: 120px;
-      margin-right: 1rem;
-    }
-
-    span {
-      color: $challenges-gray-dark;
-      flex: 1;
-    }
-
-    &:hover {
-      transform: translateX(5px);
-      background: linear-gradient(135deg, rgba($challenges-orange, 0.1), $challenges-gray-extra-light);
-    }
-  }
-}
-
-// =============================================
-// REJECT DIALOG SPECIFIC
-// =============================================
-
-textarea {
-  width: 100%;
-  padding: 1rem;
-  margin: 1.5rem 0;
-  border: 2px solid $challenges-gray-light;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: $challenges-white;
-  resize: vertical;
-  min-height: 100px;
-  animation: slideInFromBottom 0.6s ease-out;
-
-  &:focus {
-    outline: none;
-    border-color: $status-rejected;
-    box-shadow: 0 0 0 4px rgba($status-rejected, 0.1);
-    transform: translateY(-2px);
-  }
-
-  &::placeholder {
-    color: $challenges-gray-medium;
-  }
-}
-
-// =============================================
-// DIALOG ACTIONS
-// =============================================
-
-.dialog-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid $challenges-gray-light;
-
-  button {
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    animation: bounceIn 0.8s ease-out;
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    &.btn {
-      background: $challenges-gray-light;
-      color: $challenges-gray-dark;
-
-      &:hover:not(:disabled) {
-        background: $challenges-gray-medium;
-        color: $challenges-white;
-        transform: translateY(-2px);
+    
+    // Textarea pour le rejet
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid $gray-light;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 100px;
+      @include transition;
+      
+      &:focus {
+        outline: none;
+        border-color: $orange;
+        box-shadow: 0 0 0 3px rgba($orange, 0.1);
+      }
+      
+      &::placeholder {
+        color: $gray;
       }
     }
-
-    &.btn-success, &.btn-danger {
-      color: $challenges-white;
-
-      &:hover:not(:disabled) {
-        transform: translateY(-3px) scale(1.05);
+    
+    .dialog-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        @include transition;
+        font-weight: 600;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+        
+        &:not(.btn-success):not(.btn-danger) {
+          background: $gray-light;
+          color: $gray-dark;
+          
+          &:hover {
+            background: darken($gray-light, 10%);
+          }
+        }
+        
+        &.btn-success {
+          background: $green;
+          color: $white;
+          
+          &:hover {
+            background: darken($green, 10%);
+            box-shadow: 0 4px 12px rgba($green, 0.3);
+          }
+        }
+        
+        &.btn-danger {
+          background: $red;
+          color: $white;
+          
+          &:hover {
+            background: darken($red, 10%);
+            box-shadow: 0 4px 12px rgba($red, 0.3);
+          }
+          
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
       }
     }
   }
 }
 
-// =============================================
-// ANIMATION UTILITIES
-// =============================================
+// Animations
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes slideInFromBottom {
-  0% {
+@keyframes slideUp {
+  from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.95);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes bounceIn {
-  0% {
+// Effets de ligne alternés
+.table tbody tr:nth-child(even) {
+  background: rgba($orange-light, 0.2);
+}
+
+.table tbody tr:hover {
+  background: $orange-light !important;
+}
+
+// Indicateur de ligne cliquable
+.table tbody tr.clickable-row {
+  position: relative;
+  
+  &::after {
+    content: '📋';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-// =============================================
-// RESPONSIVE DESIGN
-// =============================================
-
-@media (max-width: 768px) {
-  .challenges-page {
-    padding: 1rem;
-  }
-
-  .page-header h1 {
-    font-size: 2.2rem;
-    
-    &::before {
-      display: none;
-    }
-  }
-
-  .filters {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-
-  .table {
+    @include transition;
     font-size: 0.9rem;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+}
 
+// Scrollbar personnalisée
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: $gray-light;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: $orange;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: $orange-dark;
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    
+    thead, tbody, tr, th, td {
+      display: block;
+    }
+    
     thead {
       display: none;
     }
-
-    tbody tr {
-      display: block;
-      margin-bottom: 1rem;
-      border: 2px solid $challenges-gray-light;
-      border-radius: 15px;
-
-      td {
-        display: block;
-        text-align: right;
+    
+    tbody {
+      tr {
+        margin-bottom: 1rem;
+        border: 1px solid $gray-light;
+        border-radius: $table-radius;
         padding: 1rem;
-
-        &::before {
-          content: attr(data-label);
-          float: left;
-          font-weight: 600;
-          color: $challenges-black;
-          text-transform: uppercase;
-          font-size: 0.8rem;
+        
+        td {
+          padding: 0.5rem 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          &::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: $black;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+          }
+          
+          &:last-child {
+            justify-content: flex-end;
+          }
         }
-      }
-
-      &.clickable-row::after {
-        display: none;
       }
     }
   }
-
-  .action-buttons {
-    justify-content: center;
-  }
-
-  .proposal-details .detail-row {
+  
+  .filters {
     flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .dialog-actions {
-    flex-direction: column;
+    align-items: stretch;
+    
+    .filter-group {
+      justify-content: space-between;
+    }
+    
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
 
-@media (max-width: 480px) {
-  .challenges-page {
+@media (max-width: 768px) {
+  .page-header {
+    h1 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .dialog {
     padding: 0.5rem;
+    
+    .dialog-content {
+      padding: 1.5rem;
+      
+      h3 {
+        font-size: 1.3rem;
+      }
+      
+      .proposal-details .detail-row {
+        flex-direction: column;
+        gap: 0.5rem;
+        
+        label {
+          min-width: auto;
+        }
+      }
+      
+      .dialog-actions {
+        flex-direction: column;
+        
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
   }
+  
+  .action-buttons {
+    flex-direction: column;
+    
+    .btn-ghost, .btn-success, .btn-danger {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
 
-  .page-header h1 {
-    font-size: 1.8rem;
-  }
+// États de validation
+textarea.ng-invalid.ng-touched {
+  border-color: $red !important;
+}
+
+// Amélioration de l'accessibilité
+.btn:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: 2px;
+}
+
+.table tbody tr:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: -2px;
+}
+
+// Effet de pulse pour les nouvelles propositions
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 0 0 rgba($orange, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba($orange, 0); }
+  100% { box-shadow: 0 0 0 0 rgba($orange, 0); }
+}
+
+.new-proposal {
+  animation: pulse-glow 2s infinite;
 }

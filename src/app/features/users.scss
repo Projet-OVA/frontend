@@ -1,169 +1,286 @@
-// =============================================
-// VARIABLES USERS SPECIFIQUES
-// =============================================
+// Variables couleurs users
+$white: #ffffff;
+$black: #000000;
+$orange: #ff9800;
+$orange-dark: #f57c00;
+$orange-darker: #e65100;
+$orange-light: #fff3e0;
+$orange-extra-light: #fffaf0;
+$gray-light: #f5f5f5;
+$gray: #9e9e9e;
+$gray-dark: #424242;
+$red: #f44336;
+$red-light: #ffebee;
 
-$users-orange: #ff6b35;
-$users-orange-light: #ff8e65;
-$users-orange-dark: #e55a2b;
-$users-black: #1a1a1a;
-$users-white: #ffffff;
-$users-gray-dark: #2d3748;
-$users-gray-medium: #4a5568;
-$users-gray-light: #e2e8f0;
-$users-gray-extra-light: #f7fafc;
+// Variables layout
+$page-spacing: 2rem;
+$card-radius: 12px;
+$table-radius: 8px;
 
-// Animations spécifiques users
-@keyframes tableRowEntrance {
-  0% {
-    opacity: 0;
-    transform: translateX(-50px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes dialogAppear {
-  0% {
-    opacity: 0;
-    transform: scale(0.7) rotate(-5deg);
-  }
-  50% {
-    transform: scale(1.05) rotate(2deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
+@mixin transition($property: all) {
+  transition: $property 0.3s ease-in-out;
 }
 
-@keyframes rowHover {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(5px);
-  }
-  75% {
-    transform: translateX(-3px);
-  }
-  100% {
-    transform: translateX(0);
-  }
+@mixin card-shadow {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.02);
 }
-
-@keyframes deletePulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-@keyframes badgeGlow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba($users-orange, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba($users-orange, 0.6);
-  }
-}
-
-@keyframes shimmerLoading {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-// =============================================
-// STRUCTURE PRINCIPALE
-// =============================================
 
 .users-page {
-  padding: 2rem;
-  animation: tableRowEntrance 0.8s ease-out;
-
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $white 0%, $orange-extra-light 100%);
+  
   h2 {
     font-size: 2.2rem;
-    font-weight: 700;
-    color: $users-black;
-    margin-bottom: 2rem;
-    background: linear-gradient(45deg, $users-orange, $users-orange-light);
+    font-weight: 800;
+    color: $black;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, $orange, $orange-dark);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-align: center;
-    animation: badgeGlow 3s ease-in-out infinite;
-    position: relative;
+    background-clip: text;
+    text-shadow: 0 2px 10px rgba($orange, 0.1);
+  }
+}
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, $users-orange, transparent);
-      animation: pulseGlow 2s ease-in-out infinite;
+// État de chargement
+.loading {
+  @include flex-center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: $gray-dark;
+  font-weight: 500;
+  
+  &::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid $orange-light;
+    border-top: 2px solid $orange;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 1rem;
+  }
+}
+
+// Tableau moderne
+.table {
+  width: 100%;
+  background: $white;
+  border-radius: $table-radius;
+  overflow: hidden;
+  @include card-shadow;
+  border-collapse: collapse;
+  
+  thead {
+    background: linear-gradient(135deg, $orange, $orange-dark);
+    
+    tr {
+      th {
+        padding: 1.2rem 1rem;
+        color: $white;
+        font-weight: 600;
+        text-align: left;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $orange-darker;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+        }
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      @include transition;
+      border-bottom: 1px solid $gray-light;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &.clickable-row {
+        cursor: pointer;
+        
+        &:hover {
+          background: $orange-light;
+          transform: scale(1.002);
+          
+          td {
+            color: $orange-darker;
+          }
+        }
+      }
+      
+      td {
+        padding: 1rem 1rem;
+        color: $gray-dark;
+        font-weight: 500;
+        border: none;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+          font-weight: 600;
+          color: $black;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+          text-align: center;
+        }
+      }
     }
   }
 }
 
-// =============================================
-// LOADING STATES
-// =============================================
-
-.loading {
-  text-align: center;
-  padding: 3rem;
-  font-size: 1.2rem;
-  color: $users-gray-medium;
-  position: relative;
-
-  &::before {
-    content: '🔄';
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 1rem;
-    animation: spin 1.5s linear infinite;
+// Bouton danger
+.btn-danger {
+  background: $red;
+  color: $white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  @include transition;
+  font-size: 1rem;
+  font-weight: 600;
+  
+  &:hover {
+    background: darken($red, 10%);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba($red, 0.3);
   }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, $users-orange, transparent);
-    animation: shimmerLoading 1.5s ease-in-out infinite;
+  
+  &:active {
+    transform: scale(0.95);
   }
 }
 
+// État vide
 .muted {
-  text-align: center;
+  @include flex-center;
   padding: 3rem;
-  color: $users-gray-medium;
-  font-style: italic;
   font-size: 1.1rem;
-  animation: fadeIn 1s ease-out;
+  color: $gray;
+  font-style: italic;
+  background: $white;
+  border-radius: $table-radius;
+  @include card-shadow;
+}
 
-  &::before {
-    content: '👥';
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-    animation: float 3s ease-in-out infinite;
+// Dialog modale
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+  
+  .dialog-content {
+    background: $white;
+    border-radius: $card-radius;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    @include card-shadow;
+    animation: slideUp 0.3s ease-out;
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $black;
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid $orange;
+      padding-bottom: 0.5rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      
+      strong {
+        color: $black;
+        font-weight: 600;
+      }
+    }
+    
+    h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: $orange-dark;
+      margin: 1.5rem 0 1rem 0;
+      padding-top: 1rem;
+      border-top: 1px solid $gray-light;
+    }
+    
+    // Liste des badges
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.75rem 1rem;
+        background: $orange-light;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        color: $orange-darker;
+        border-left: 4px solid $orange;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .actions {
+      margin-top: 2rem;
+      text-align: right;
+      
+      .btn {
+        background: $orange;
+        color: $white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        @include transition;
+        font-weight: 600;
+        
+        &:hover {
+          background: $orange-dark;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba($orange, 0.3);
+        }
+      }
+    }
   }
 }
 
+// Animations
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -174,474 +291,171 @@ $users-gray-extra-light: #f7fafc;
   to { opacity: 1; }
 }
 
-// =============================================
-// TABLE STYLES
-// =============================================
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background: $users-white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  animation: tableRowEntrance 1s ease-out;
-
-  thead {
-    background: linear-gradient(135deg, $users-black, $users-gray-dark);
-    
-    tr {
-      animation: slideInFromBottom 0.6s ease-out;
-    }
-
-    th {
-      padding: 1.2rem 1rem;
-      text-align: left;
-      color: $users-white;
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 3px solid $users-orange;
-      position: relative;
-      overflow: hidden;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba($users-orange, 0.3), transparent);
-        transition: left 0.6s ease;
-      }
-
-      &:hover::before {
-        left: 100%;
-      }
-    }
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
   }
-
-  tbody {
-    tr {
-      border-bottom: 1px solid $users-gray-light;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: tableRowEntrance 0.8s ease-out both;
-
-      @for $i from 1 through 20 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.05}s;
-        }
-      }
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background: linear-gradient(135deg, rgba($users-orange, 0.03), rgba($users-orange, 0.08));
-        transform: translateY(-2px) scale(1.002);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid $users-orange;
-
-        td {
-          color: $users-black;
-          transform: translateX(5px);
-        }
-      }
-
-      &.clickable-row {
-        cursor: pointer;
-        position: relative;
-
-        &::after {
-          content: '👉';
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%) scale(0);
-          opacity: 0;
-          transition: all 0.3s ease;
-          font-size: 0.8rem;
-        }
-
-        &:hover::after {
-          opacity: 1;
-          transform: translateY(-50%) scale(1);
-          animation: rowHover 0.5s ease-in-out;
-        }
-      }
-
-      td {
-        padding: 1.2rem 1rem;
-        color: $users-gray-dark;
-        transition: all 0.3s ease;
-        position: relative;
-
-        &:first-child {
-          font-weight: 600;
-          color: $users-black;
-        }
-
-        &:hover {
-          color: $users-orange;
-        }
-      }
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-// =============================================
-// BUTTONS
-// =============================================
+// Effets de ligne alternés
+.table tbody tr:nth-child(even) {
+  background: rgba($orange-light, 0.3);
+}
 
-.btn-danger {
-  background: linear-gradient(45deg, #f44336, #d32f2f);
-  color: $users-white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-  position: relative;
-  overflow: hidden;
-  animation: deletePulse 2s ease-in-out infinite;
+.table tbody tr:hover {
+  background: $orange-light !important;
+}
 
+// Badge loading state
+.loadingBadges {
+  @include flex-center;
+  padding: 1rem;
+  color: $gray;
+  font-style: italic;
+  
   &::before {
     content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-  }
-
-  &:hover {
-    transform: scale(1.1) rotate(-5deg);
-    box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
-    animation: none;
-
-    &::before {
-      left: 100%;
-    }
-  }
-
-  &:active {
-    transform: scale(0.95);
+    width: 16px;
+    height: 16px;
+    border: 2px solid $orange-light;
+    border-top: 2px solid $orange;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
   }
 }
 
-// =============================================
-// DIALOG STYLES
-// =============================================
-
-.dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba($users-black, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
-
-  .dialog-content {
-    background: $users-white;
-    padding: 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    animation: dialogAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid $users-orange-light;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, $users-orange, $users-orange-light, $users-orange);
-      animation: shimmerLoading 2s ease-in-out infinite;
-    }
-
-    h3 {
-      color: $users-black;
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
-      text-align: center;
-      background: linear-gradient(45deg, $users-orange, $users-orange-light);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    h4 {
-      color: $users-gray-dark;
-      margin: 1.5rem 0 1rem 0;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid $users-gray-light;
-      animation: slideInFromBottom 0.6s ease-out;
-    }
-
-    p {
-      margin: 0.8rem 0;
-      padding: 0.5rem;
-      background: $users-gray-extra-light;
-      border-radius: 8px;
-      border-left: 3px solid $users-orange;
-      animation: slideInFromBottom 0.8s ease-out;
-
-      strong {
-        color: $users-black;
-      }
-    }
-  }
-}
-
-// =============================================
-// BADGES LIST
-// =============================================
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-
-  li {
-    background: linear-gradient(135deg, $users-gray-extra-light, $users-white);
-    padding: 0.8rem 1rem;
-    margin: 0.5rem 0;
-    border-radius: 10px;
-    border: 1px solid $users-gray-light;
-    transition: all 0.3s ease;
-    animation: tableRowEntrance 0.6s ease-out both;
-    position: relative;
-    overflow: hidden;
-
-    @for $i from 1 through 10 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 0.1}s;
-      }
-    }
-
-    &::before {
-      content: '🏆';
-      margin-right: 0.5rem;
-      animation: bounce 1s ease-in-out infinite;
-    }
-
-    &:hover {
-      transform: translateX(10px) scale(1.02);
-      border-color: $users-orange;
-      box-shadow: 0 5px 15px rgba($users-orange, 0.2);
-      background: linear-gradient(135deg, rgba($users-orange, 0.1), $users-white);
-
-      &::after {
-        content: '✨';
-        position: absolute;
-        right: 10px;
-        animation: spin 1s linear infinite;
-      }
-    }
-  }
-}
-
-// =============================================
-// ACTIONS BUTTONS IN DIALOG
-// =============================================
-
-.actions {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid $users-gray-light;
-
-  .btn {
-    background: linear-gradient(45deg, $users-orange, $users-orange-dark);
-    color: $users-white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    animation: bounceIn 0.8s ease-out;
-
-    &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 10px 25px rgba($users-orange, 0.4);
-    }
-
-    &:active {
-      transform: translateY(0) scale(0.95);
-    }
-  }
-}
-
-// =============================================
-// ANIMATION UTILITIES
-// =============================================
-
-@keyframes bounce {
-  0%, 20%, 53%, 80%, 100% {
-    transform: translate3d(0,0,0);
-  }
-  40%, 43% {
-    transform: translate3d(0,-8px,0);
-  }
-  70% {
-    transform: translate3d(0,-4px,0);
-  }
-  90% {
-    transform: translate3d(0,-2px,0);
-  }
-}
-
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes slideInFromBottom {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-// =============================================
-// RESPONSIVE DESIGN
-// =============================================
-
-@media (max-width: 768px) {
-  .users-page {
-    padding: 1rem;
-    
-    h2 {
-      font-size: 1.8rem;
-    }
-  }
-
+// Responsive design
+@media (max-width: 1024px) {
   .table {
-    font-size: 0.9rem;
-
+    display: block;
+    overflow-x: auto;
+    
+    thead, tbody, tr, th, td {
+      display: block;
+    }
+    
     thead {
       display: none;
     }
-
+    
     tbody {
       tr {
-        display: block;
         margin-bottom: 1rem;
-        border: 1px solid $users-gray-light;
-        border-radius: 12px;
-        animation: tableRowEntrance 0.6s ease-out;
-
+        border: 1px solid $gray-light;
+        border-radius: $table-radius;
+        padding: 1rem;
+        
         td {
-          display: block;
-          text-align: right;
-          padding: 0.8rem 1rem;
-          border-bottom: 1px solid $users-gray-light;
-
-          &:last-child {
-            border-bottom: none;
-          }
-
+          padding: 0.5rem 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
           &::before {
             content: attr(data-label);
-            float: left;
             font-weight: 600;
-            color: $users-black;
+            color: $black;
             text-transform: uppercase;
             font-size: 0.8rem;
+            margin-right: 1rem;
           }
-
-          &:hover {
-            transform: none;
+          
+          &:last-child {
+            text-align: right;
+            justify-content: flex-end;
           }
-        }
-
-        &.clickable-row::after {
-          display: none;
         }
       }
     }
   }
-
-  .dialog .dialog-content {
-    padding: 1.5rem;
-    margin: 1rem;
-    width: calc(100% - 2rem);
-  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .users-page {
-    padding: 0.5rem;
+    h2 {
+      font-size: 1.8rem;
+      text-align: center;
+    }
   }
-
-  .table tbody tr td {
-    padding: 0.6rem 0.8rem;
-  }
-
-  .dialog .dialog-content {
+  
+  .dialog {
     padding: 1rem;
+    
+    .dialog-content {
+      padding: 1.5rem;
+      width: 95%;
+      
+      h3 {
+        font-size: 1.3rem;
+      }
+    }
   }
 }
 
-// =============================================
-// LOADING BADGES STATE
-// =============================================
+// Scrollbar personnalisée pour le dialog
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
 
-div:contains("Chargement des badges...") {
-  text-align: center;
-  padding: 1rem;
-  color: $users-gray-medium;
-  font-style: italic;
-  animation: pulseGlow 1.5s ease-in-out infinite;
+.dialog-content::-webkit-scrollbar-track {
+  background: $gray-light;
+  border-radius: 3px;
+}
 
-  &::before {
-    content: '🔄';
-    display: block;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    animation: spin 1s linear infinite;
+.dialog-content::-webkit-scrollbar-thumb {
+  background: $orange;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: $orange-dark;
+}
+
+// Effet de surbrillance sur les lignes au clic
+.table tbody tr:active {
+  transform: scale(0.98);
+  background: darken($orange-light, 5%) !important;
+}
+
+// Indicateur de ligne cliquable
+.table tbody tr.clickable-row {
+  position: relative;
+  
+  &::after {
+    content: '👁️';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    @include transition;
   }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+// Style pour les dates
+.date-cell {
+  font-size: 0.9rem;
+  color: $gray !important;
+}
+
+// Amélioration de l'accessibilité
+.btn:focus-visible,
+.btn-danger:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: 2px;
+}
+
+.table tbody tr:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: -2px;
 }

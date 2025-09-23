@@ -1,428 +1,278 @@
-// =============================================
-// VARIABLES REPORTS SPECIFIQUES
-// =============================================
+// Variables couleurs reports
+$white: #ffffff;
+$black: #000000;
+$orange: #ff9800;
+$orange-dark: #f57c00;
+$orange-darker: #e65100;
+$orange-light: #fff3e0;
+$orange-extra-light: #fffaf0;
+$gray-light: #f5f5f5;
+$gray: #9e9e9e;
+$gray-dark: #424242;
+$green: #4caf50;
+$green-light: #e8f5e9;
+$blue: #2196f3;
+$blue-light: #e3f2fd;
+$purple: #9c27b0;
+$purple-light: #f3e5f5;
 
-$reports-orange: #ff6b35;
-$reports-orange-light: #ff8e65;
-$reports-orange-dark: #e55a2b;
-$reports-blue: #2196f3;
-$reports-green: #4caf50;
-$reports-black: #1a1a1a;
-$reports-white: #ffffff;
-$reports-gray-dark: #2d3748;
-$reports-gray-medium: #4a5568;
-$reports-gray-light: #e2e8f0;
-$reports-gray-extra-light: #f7fafc;
+// Variables layout
+$page-spacing: 2rem;
+$card-radius: 12px;
+$table-radius: 8px;
 
-// Animations spécifiques reports
-@keyframes dataFlow {
-  0% {
-    transform: translateX(-100%) scale(0.8);
-    opacity: 0;
-  }
-  50% {
-    transform: translateX(0) scale(1.1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes chartDraw {
-  0% {
-    stroke-dashoffset: 1000;
-    opacity: 0;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
+@mixin transition($property: all) {
+  transition: $property 0.3s ease-in-out;
 }
 
-@keyframes printSimulate {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    transform: scale(0.95);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
-  }
+@mixin card-shadow {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.02);
 }
-
-@keyframes exportPulse {
-  0%, 100% {
-    transform: scale(1);
-    background-position: 0% 50%;
-  }
-  50% {
-    transform: scale(1.05);
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes dataGrid {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes calendarSlide {
-  0% {
-    opacity: 0;
-    transform: translateX(-30px) rotate(-5deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) rotate(0deg);
-  }
-}
-
-@keyframes reportScan {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(100% + 200px) 0;
-  }
-}
-
-// =============================================
-// STRUCTURE PRINCIPALE
-// =============================================
 
 .reports-page {
-  padding: 2rem;
-  animation: dataFlow 0.8s ease-out;
-  background: linear-gradient(135deg, $reports-gray-extra-light 0%, $reports-white 100%);
+  padding: 0;
   min-height: 100vh;
+  background: linear-gradient(135deg, $white 0%, $orange-extra-light 100%);
 }
 
-// =============================================
-// TOOLBAR STYLES
-// =============================================
-
+// Toolbar
 .toolbar {
-  background: linear-gradient(135deg, $reports-white, $reports-gray-extra-light);
-  border: 3px solid $reports-gray-light;
-  border-radius: 20px;
-  padding: 1.5rem 2rem;
+  background: $white;
+  padding: 1.5rem;
   margin-bottom: 2rem;
+  border-radius: $card-radius;
+  @include card-shadow;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  animation: dataGrid 0.6s ease-out;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba($reports-orange, 0.1), transparent);
-    transition: left 0.8s ease;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
-
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  
   .left, .right {
     display: flex;
     align-items: center;
     gap: 1rem;
-    animation: calendarSlide 0.8s ease-out;
+    flex-wrap: wrap;
   }
-
+  
   select, input[type="date"] {
-    padding: 0.8rem 1.2rem;
-    border: 2px solid $reports-gray-light;
-    border-radius: 12px;
-    background: $reports-white;
+    padding: 0.75rem 1rem;
+    border: 2px solid $gray-light;
+    border-radius: 8px;
+    background: $white;
+    color: $gray-dark;
     font-size: 1rem;
-    transition: all 0.3s ease;
-    animation: calendarSlide 0.5s ease-out;
-
+    @include transition;
+    cursor: pointer;
+    
     &:focus {
       outline: none;
-      border-color: $reports-orange;
-      box-shadow: 0 0 0 4px rgba($reports-orange, 0.1);
-      transform: translateY(-2px);
+      border-color: $orange;
+      box-shadow: 0 0 0 3px rgba($orange, 0.1);
     }
   }
-
+  
+  input[type="date"] {
+    min-width: 150px;
+    
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 3px;
+      @include transition;
+      
+      &:hover {
+        background: $orange-light;
+      }
+    }
+  }
+  
   span {
-    color: $reports-gray-medium;
+    color: $gray-dark;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    @include transition;
     font-weight: 600;
-    animation: fadeIn 1s ease-out;
-  }
-}
-
-// =============================================
-// BUTTON STYLES
-// =============================================
-
-.btn {
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  animation: dataGrid 0.5s ease-out;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-  }
-
-  &:hover::after {
-    left: 100%;
-  }
-
-  &.btn-primary {
-    background: linear-gradient(45deg, $reports-orange, $reports-orange-dark);
-    color: $reports-white;
-    animation: exportPulse 2s ease-in-out infinite;
-
-    &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 10px 25px rgba($reports-orange, 0.4);
-      animation: none;
-    }
-  }
-
-  &:not(.btn-primary) {
-    background: linear-gradient(45deg, $reports-gray-light, $reports-gray-medium);
-    color: $reports-white;
-
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-  }
-
-  &[onclick*="export"] {
-    &::before {
-      content: '📊';
-      margin-right: 0.5rem;
-      animation: chartDraw 1s ease-out;
+    
+    &:not(.btn-primary) {
+      background: $gray-light;
+      color: $gray-dark;
+      border: 2px solid transparent;
+      
+      &:hover {
+        background: darken($gray-light, 10%);
+        border-color: $gray;
+      }
     }
-  }
-
-  &[onclick*="print"] {
-    &::before {
-      content: '🖨️';
-      margin-right: 0.5rem;
-      animation: printSimulate 1s ease-in-out infinite;
-    }
-
-    &:hover {
-      animation: printSimulate 0.5s ease-in-out;
+    
+    &.btn-primary {
+      background: linear-gradient(135deg, $orange, $orange-dark);
+      color: $white;
+      
+      &:hover {
+        box-shadow: 0 6px 20px rgba($orange, 0.3);
+      }
     }
   }
 }
 
-// =============================================
-// LOADING STATE
-// =============================================
-
+// État de chargement
 .loading {
-  text-align: center;
+  @include flex-center;
+  flex-direction: column;
   padding: 4rem 2rem;
-  animation: fadeIn 0.5s ease-out;
-
+  text-align: center;
+  
   .spinner {
-    width: 70px;
-    height: 70px;
-    border: 5px solid rgba($reports-orange, 0.3);
-    border-top: 5px solid $reports-orange;
+    width: 60px;
+    height: 60px;
+    border: 4px solid $orange-light;
+    border-top: 4px solid $orange;
     border-radius: 50%;
-    margin: 0 auto 1.5rem;
-    animation: spin 1.2s linear infinite;
-    position: relative;
-
-    &::before {
-      content: '📈';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.5rem;
-      animation: pulseGlow 1.5s ease-in-out infinite;
-    }
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
   }
-
+  
   p {
-    color: $reports-gray-medium;
     font-size: 1.2rem;
-    animation: pulseGlow 2s ease-in-out infinite;
+    color: $gray-dark;
+    font-weight: 500;
   }
 }
 
-// =============================================
-// GRID LAYOUT
-// =============================================
-
+// Grille principale
 .grid-two {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  animation: dataGrid 0.8s ease-out;
-
+  margin-bottom: 2rem;
+  
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
 }
 
-// =============================================
-// CARD STYLES
-// =============================================
-
+// Cartes
 .card {
-  background: $reports-white;
-  border-radius: 20px;
+  background: $white;
+  border-radius: $card-radius;
   padding: 2rem;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-  border: 2px solid $reports-gray-light;
-  transition: all 0.4s ease;
-  animation: dataGrid 0.6s ease-out;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $reports-orange, $reports-blue, $reports-green);
-    animation: reportScan 3s linear infinite;
-  }
-
+  @include card-shadow;
+  @include transition;
+  
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-    border-color: $reports-orange;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   }
-
+  
   h3 {
-    color: $reports-black;
-    margin-bottom: 1.5rem;
     font-size: 1.4rem;
-    text-align: center;
-    background: linear-gradient(45deg, $reports-orange, $reports-blue);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: dataFlow 3s ease-in-out infinite;
+    font-weight: 700;
+    color: $black;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid $orange;
+    padding-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 
-// =============================================
-// TABLE STYLES
-// =============================================
-
+// Tableau des rapports
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: $reports-white;
-  animation: chartDraw 1s ease-out;
-
+  
   thead {
-    background: linear-gradient(135deg, $reports-black, $reports-gray-dark);
+    background: linear-gradient(135deg, $orange-light, $orange-extra-light);
     
     tr {
-      animation: slideInFromBottom 0.6s ease-out;
-    }
-
-    th {
-      padding: 1.2rem 1rem;
-      text-align: left;
-      color: $reports-white;
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 3px solid $reports-orange;
-      position: relative;
-      animation: dataFlow 2s ease-in-out infinite;
-
-      &:hover::after {
-        content: '↓';
-        position: absolute;
-        right: 10px;
-        animation: bounce 0.5s ease-in-out;
+      th {
+        padding: 1rem;
+        color: $orange-darker;
+        font-weight: 600;
+        text-align: left;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $orange;
+        
+        &:first-child {
+          padding-left: 0;
+          border-radius: $table-radius 0 0 0;
+        }
+        
+        &:last-child {
+          padding-right: 0;
+          border-radius: 0 $table-radius 0 0;
+        }
       }
     }
   }
-
+  
   tbody {
     tr {
-      border-bottom: 1px solid $reports-gray-light;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: dataGrid 0.5s ease-out both;
-
-      @for $i from 1 through 10 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.1}s;
-        }
-      }
-
+      @include transition;
+      border-bottom: 1px solid $gray-light;
+      
       &:last-child {
         border-bottom: none;
       }
-
+      
       &:hover {
-        background: linear-gradient(135deg, rgba($reports-orange, 0.05), rgba($reports-blue, 0.05));
-        transform: translateX(10px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-
+        background: $orange-light;
+        
         td {
-          color: $reports-black;
-          
-          &:first-child {
-            font-weight: 700;
-            color: $reports-orange;
-          }
-
-          strong {
-            animation: numberCount 0.5s ease-out;
-          }
+          color: $orange-darker;
+        }
+        
+        .btn-ghost {
+          border-color: $orange;
+          color: $orange-dark;
         }
       }
-
+      
       td {
         padding: 1.2rem 1rem;
-        color: $reports-gray-dark;
-        transition: all 0.3s ease;
-
+        color: $gray-dark;
+        font-weight: 500;
+        
+        &:first-child {
+          padding-left: 0;
+          font-weight: 600;
+          color: $black;
+        }
+        
+        &:last-child {
+          padding-right: 0;
+          text-align: right;
+        }
+        
         strong {
-          background: linear-gradient(45deg, $reports-orange, $reports-blue);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          color: $orange-dark;
           font-size: 1.1rem;
         }
       }
@@ -430,241 +280,306 @@ $reports-gray-extra-light: #f7fafc;
   }
 }
 
-// =============================================
-// CHART CONTAINER
-// =============================================
+// Bouton d'export dans le tableau
+.btn-ghost {
+  background: transparent;
+  border: 1px solid $gray-light;
+  color: $gray-dark;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  @include transition;
+  font-size: 0.85rem;
+  font-weight: 500;
+  
+  &:hover {
+    background: $orange-light;
+    border-color: $orange;
+    color: $orange-dark;
+    transform: scale(1.05);
+  }
+}
 
+// Container du graphique
 .chart-container {
   height: 300px;
   position: relative;
-  animation: chartDraw 1.2s ease-out;
-
+  margin-top: 1rem;
+  
   canvas {
-    animation: chartDraw 1.5s ease-out;
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: scale(1.02);
-      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
-    }
-  }
-
-  &::before {
-    content: '📈';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-size: 4rem;
-    opacity: 0;
-    transition: all 0.3s ease;
-    z-index: -1;
-  }
-
-  &:hover::before {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.1;
-    animation: pulseGlow 2s ease-in-out infinite;
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 
-// =============================================
-// ERROR MESSAGE
-// =============================================
-
+// Message d'erreur
 .error-message {
+  @include flex-center;
+  flex-direction: column;
   text-align: center;
   padding: 3rem 2rem;
-  background: linear-gradient(135deg, $reports-white, $reports-gray-extra-light);
-  border-radius: 20px;
-  border: 3px solid #f44336;
-  animation: shake 0.5s ease-in-out, fadeIn 0.8s ease-out;
-
+  background: $white;
+  border-radius: $card-radius;
+  @include card-shadow;
+  border-left: 4px solid $orange-dark;
+  
   h3 {
-    color: #f44336;
+    font-size: 1.5rem;
+    color: $orange-darker;
     margin-bottom: 1rem;
-    font-size: 1.6rem;
-    animation: rejectionShake 1s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
-
+  
   p {
-    color: $reports-gray-medium;
+    color: $gray-dark;
     font-size: 1.1rem;
-    margin-bottom: 2rem;
+    margin: 0;
   }
 }
 
-// =============================================
-// BUTTON GHOST STYLES
-// =============================================
-
-.btn-ghost {
-  background: rgba($reports-orange, 0.1);
-  color: $reports-orange;
-  border: 1px solid $reports-orange;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.85rem;
-  animation: exportPulse 1.5s ease-in-out infinite;
-
-  &:hover {
-    background: $reports-orange;
-    color: $reports-white;
-    transform: scale(1.1);
-    animation: none;
-  }
-}
-
-// =============================================
-// ANIMATION UTILITIES
-// =============================================
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideInFromBottom {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+// Animations
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
-  40% {
-    transform: translateY(-5px);
-  }
-  60% {
-    transform: translateY(-3px);
-  }
 }
 
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
 
-@keyframes numberCount {
-  0% {
-    transform: scale(0);
+// Effets d'apparition
+.card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+
+// Effet de pulse sur les données importantes
+.table tbody tr td strong {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: rgba($orange, 0.1);
+    border-radius: 4px;
     opacity: 0;
-  }
-  70% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
+    @include transition;
   }
 }
 
-@keyframes rejectionShake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(-5px) rotate(-2deg); }
-  75% { transform: translateX(5px) rotate(2deg); }
+.table tbody tr:hover td strong::after {
+  opacity: 1;
+  animation: pulse 2s infinite;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
-}
-
-// =============================================
-// RESPONSIVE DESIGN
-// =============================================
-
-@media (max-width: 768px) {
-  .reports-page {
-    padding: 1rem;
-  }
-
-  .toolbar {
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
-
-    .left, .right {
-      flex-direction: column;
-      width: 100%;
-      text-align: center;
+// Styles pour l'export
+.export-options {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  
+  .export-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid $gray-light;
+    border-radius: 6px;
+    background: $white;
+    color: $gray-dark;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.8rem;
+    font-weight: 500;
+    
+    &:hover {
+      border-color: $orange;
+      color: $orange-dark;
+      background: $orange-light;
+    }
+    
+    &.active {
+      border-color: $orange;
+      background: $orange;
+      color: $white;
     }
   }
+}
 
-  .grid-two {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+// Responsive design
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    
+    .left, .right {
+      justify-content: center;
+    }
+    
+    .left {
+      order: 2;
+    }
+    
+    .right {
+      order: 1;
+      justify-content: space-around;
+    }
+    
+    select, input[type="date"] {
+      flex: 1;
+      min-width: auto;
+    }
+    
+    .btn {
+      flex: 1;
+      justify-content: center;
+    }
   }
-
+  
+  .grid-two {
+    gap: 1rem;
+  }
+  
   .card {
     padding: 1.5rem;
+    
+    h3 {
+      font-size: 1.2rem;
+    }
   }
-
+  
   .table {
-    font-size: 0.9rem;
-
     thead {
       display: none;
     }
-
-    tbody tr {
-      display: block;
-      margin-bottom: 1rem;
-      border: 2px solid $reports-gray-light;
-      border-radius: 15px;
-
-      td {
+    
+    tbody {
+      tr {
         display: block;
-        text-align: right;
+        margin-bottom: 1rem;
+        border: 1px solid $gray-light;
+        border-radius: $table-radius;
         padding: 1rem;
-
-        &::before {
-          content: attr(data-label);
-          float: left;
-          font-weight: 600;
-          color: $reports-black;
-          text-transform: uppercase;
-          font-size: 0.8rem;
+        
+        td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 0;
+          border: none;
+          
+          &::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: $black;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+          }
+          
+          &:last-child {
+            justify-content: flex-end;
+            border-top: 1px solid $gray-light;
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+          }
         }
       }
     }
   }
+}
 
-  .chart-container {
-    height: 250px;
+// Styles d'impression
+@media print {
+  .toolbar, .btn-ghost {
+    display: none !important;
+  }
+  
+  .reports-page {
+    background: $white !important;
+  }
+  
+  .card {
+    box-shadow: none !important;
+    border: 1px solid $gray-light !important;
+    break-inside: avoid;
+  }
+  
+  .grid-two {
+    grid-template-columns: 1fr !important;
   }
 }
 
-@media (max-width: 480px) {
-  .reports-page {
-    padding: 0.5rem;
-  }
+// Scrollbar personnalisée
+.card::-webkit-scrollbar {
+  width: 6px;
+}
 
-  .btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
+.card::-webkit-scrollbar-track {
+  background: $gray-light;
+  border-radius: 3px;
+}
 
-  .card {
-    padding: 1rem;
+.card::-webkit-scrollbar-thumb {
+  background: $orange;
+  border-radius: 3px;
+}
+
+.card::-webkit-scrollbar-thumb:hover {
+  background: $orange-dark;
+}
+
+// Amélioration de l'accessibilité
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: 2px;
+}
+
+// Indicateur de période active
+input[type="date"]:not(:placeholder-shown) {
+  border-color: $green !important;
+  background: $green-light;
+}
+
+// Loading state pour les exports
+.exporting {
+  position: relative;
+  opacity: 0.7;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
 }

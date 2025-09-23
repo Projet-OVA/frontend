@@ -36,10 +36,6 @@ yarn-error.log*
 # Mac system files
 .DS_Store
 
-# npm lock files (optional)
-/package-lock.json
-/yarn.lock
-
 # Angular Universal / SSR server files
 /dist-server
 /server.js

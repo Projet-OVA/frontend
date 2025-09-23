@@ -1,733 +1,626 @@
-// =============================================
-// VARIABLES COURSES SPECIFIQUES
-// =============================================
+// Variables couleurs courses
+$white: #ffffff;
+$black: #000000;
+$orange: #ff9800;
+$orange-dark: #f57c00;
+$orange-darker: #e65100;
+$orange-light: #fff3e0;
+$orange-extra-light: #fffaf0;
+$gray-light: #f5f5f5;
+$gray: #9e9e9e;
+$gray-dark: #424242;
+$green: #4caf50;
+$green-light: #e8f5e9;
+$red: #f44336;
+$red-light: #ffebee;
+$blue: #2196f3;
+$blue-light: #e3f2fd;
 
-$courses-orange: #ff6b35;
-$courses-orange-light: #ff8e65;
-$courses-orange-dark: #e55a2b;
-$courses-black: #1a1a1a;
-$courses-white: #ffffff;
-$courses-gray-dark: #2d3748;
-$courses-gray-medium: #4a5568;
-$courses-gray-light: #e2e8f0;
-$courses-gray-extra-light: #f7fafc;
+// Variables layout
+$page-spacing: 2rem;
+$card-radius: 12px;
+$table-radius: 8px;
 
-// Animations spécifiques courses
-@keyframes courseCardEntrance {
-  0% {
-    opacity: 0;
-    transform: translateY(30px) rotateX(-90deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
-  }
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes buttonPulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 4px 15px rgba($courses-orange, 0.3);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba($courses-orange, 0.6);
-  }
+@mixin transition($property: all) {
+  transition: $property 0.3s ease-in-out;
 }
 
-@keyframes quizBounce {
-  0%, 20%, 53%, 80%, 100% {
-    transform: translate3d(0,0,0);
-  }
-  40%, 43% {
-    transform: translate3d(0,-15px,0);
-  }
-  70% {
-    transform: translate3d(0,-8px,0);
-  }
-  90% {
-    transform: translate3d(0,-4px,0);
-  }
+@mixin card-shadow {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.02);
 }
-
-@keyframes optionSlide {
-  0% {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes modal3D {
-  0% {
-    opacity: 0;
-    transform: perspective(1000px) rotateY(90deg) scale(0.5);
-  }
-  50% {
-    transform: perspective(1000px) rotateY(-10deg) scale(1.05);
-  }
-  100% {
-    opacity: 1;
-    transform: perspective(1000px) rotateY(0deg) scale(1);
-  }
-}
-
-@keyframes categoryGlow {
-  0%, 100% {
-    text-shadow: 0 0 5px rgba($courses-orange, 0.5);
-  }
-  50% {
-    text-shadow: 0 0 15px rgba($courses-orange, 0.8);
-  }
-}
-
-// =============================================
-// STRUCTURE PRINCIPALE
-// =============================================
 
 .courses-page {
-  padding: 2rem;
-  animation: courseCardEntrance 0.8s ease-out;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $white 0%, $orange-extra-light 100%);
 }
 
-// =============================================
-// TOOLBAR STYLES
-// =============================================
-
+// Toolbar
 .toolbar {
-  background: linear-gradient(135deg, $courses-white, $courses-gray-extra-light);
-  border: 2px solid $courses-gray-light;
-  border-radius: 20px;
-  padding: 1.5rem 2rem;
+  background: $white;
+  padding: 1.5rem;
   margin-bottom: 2rem;
-  animation: courseCardEntrance 0.6s ease-out;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba($courses-orange, 0.1), transparent);
-    transition: left 0.8s ease;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
-
+  border-radius: $card-radius;
+  @include card-shadow;
+  
   .left {
-    .btn-primary {
-      background: linear-gradient(45deg, $courses-orange, $courses-orange-dark);
-      color: $courses-white;
+    .btn {
+      background: linear-gradient(135deg, $orange, $orange-dark);
+      color: $white;
       border: none;
-      padding: 1rem 2rem;
-      border-radius: 15px;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
       cursor: pointer;
+      @include transition;
       font-weight: 600;
-      font-size: 1.1rem;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: buttonPulse 2s ease-in-out infinite;
-      position: relative;
-      overflow: hidden;
-
-      &::before {
-        content: '+';
-        margin-right: 0.5rem;
-        font-size: 1.3rem;
-        animation: quizBounce 1s ease-in-out infinite;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: left 0.6s ease;
-      }
-
+      font-size: 1rem;
+      
       &:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 15px 30px rgba($courses-orange, 0.4);
-        animation: none;
-
-        &::after {
-          left: 100%;
-        }
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($orange, 0.3);
       }
-
-      &:active {
-        transform: translateY(0) scale(0.95);
+      
+      &.btn-primary {
+        background: linear-gradient(135deg, $orange, $orange-dark);
+        
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
       }
     }
   }
 }
 
-// =============================================
-// TABLE STYLES
-// =============================================
-
+// Table principale
 .card {
-  background: $courses-white;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  background: $white;
+  border-radius: $card-radius;
   overflow: hidden;
-  animation: courseCardEntrance 0.8s ease-out;
-  border: 1px solid $courses-gray-light;
-  transition: all 0.4s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  }
+  @include card-shadow;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: $courses-white;
-
+  
   thead {
-    background: linear-gradient(135deg, $courses-black, $courses-gray-dark);
+    background: linear-gradient(135deg, $orange, $orange-dark);
     
     tr {
-      animation: slideInFromBottom 0.6s ease-out;
-    }
-
-    th {
-      padding: 1.5rem 1rem;
-      text-align: left;
-      color: $courses-white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 3px solid $courses-orange;
-      position: relative;
-      animation: categoryGlow 3s ease-in-out infinite;
-
-      &:hover {
-        &::after {
-          content: '▼';
-          position: absolute;
-          right: 10px;
-          animation: quizBounce 0.5s ease-in-out;
+      th {
+        padding: 1.2rem 1rem;
+        color: $white;
+        font-weight: 600;
+        text-align: left;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $orange-darker;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
         }
       }
     }
   }
-
+  
   tbody {
     tr {
-      border-bottom: 1px solid $courses-gray-light;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: courseCardEntrance 0.6s ease-out both;
-
-      @for $i from 1 through 20 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.07}s;
-        }
-      }
-
+      @include transition;
+      border-bottom: 1px solid $gray-light;
+      
       &:last-child {
         border-bottom: none;
       }
-
-      &:hover {
-        background: linear-gradient(135deg, rgba($courses-orange, 0.05), rgba($courses-orange, 0.1));
-        transform: translateX(10px) scale(1.01);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-
-        td {
-          color: $courses-black;
+      
+      &.clickable-row {
+        cursor: pointer;
+        
+        &:hover {
+          background: $orange-light;
+          transform: scale(1.002);
           
-          &:first-child {
-            font-weight: 700;
-            color: $courses-orange;
+          td {
+            color: $orange-darker;
           }
         }
       }
-
-      &.clickable-row {
-        cursor: pointer;
-        position: relative;
-
-        &::after {
-          content: '📚';
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%) scale(0) rotate(0deg);
-          opacity: 0;
-          transition: all 0.4s ease;
-          font-size: 1rem;
-        }
-
-        &:hover::after {
-          opacity: 1;
-          transform: translateY(-50%) scale(1) rotate(360deg);
-          animation: quizBounce 0.6s ease-in-out;
-        }
-      }
-
+      
       td {
-        padding: 1.3rem 1rem;
-        color: $courses-gray-dark;
-        transition: all 0.3s ease;
-
+        padding: 1.2rem 1rem;
+        color: $gray-dark;
+        font-weight: 500;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+          font-weight: 600;
+          color: $black;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+        }
+        
+        // Description truncate
         &.desc {
           max-width: 300px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-
-        &:hover {
-          transform: translateY(-2px);
-        }
       }
     }
   }
 }
 
-// =============================================
-// QUIZ LIST STYLES
-// =============================================
-
+// Liste des quizzes
 .quiz-list {
   list-style: none;
   padding: 0;
   margin: 0;
-
+  
   li {
-    background: linear-gradient(135deg, $courses-gray-extra-light, $courses-white);
-    padding: 0.5rem 0.8rem;
-    margin: 0.3rem 0;
-    border-radius: 8px;
-    border-left: 3px solid $courses-orange;
+    padding: 0.3rem 0.5rem;
+    margin-bottom: 0.2rem;
+    background: $green-light;
+    border-radius: 4px;
     font-size: 0.85rem;
-    transition: all 0.3s ease;
-    animation: optionSlide 0.5s ease-out;
-
-    &:hover {
-      transform: translateX(5px) scale(1.02);
-      background: linear-gradient(135deg, rgba($courses-orange, 0.1), $courses-white);
-      box-shadow: 0 3px 10px rgba($courses-orange, 0.2);
+    color: $green;
+    border-left: 3px solid $green;
+    
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }
 
 .muted {
-  color: $courses-gray-medium;
+  color: $gray;
   font-style: italic;
-  animation: fadeIn 1s ease-out;
-}
-
-// =============================================
-// BUTTON STYLES
-// =============================================
-
-.btn-ghost, .btn-danger, .btn-secondary {
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin: 0 0.2rem;
-  transition: all 0.3s ease;
   font-size: 0.9rem;
-  position: relative;
-  overflow: hidden;
 }
 
+// Boutons d'action
 .btn-ghost {
-  background: rgba($courses-orange, 0.1);
-  color: $courses-orange;
-  border: 1px solid $courses-orange;
-
-  &:hover {
-    background: $courses-orange;
-    color: $courses-white;
-    transform: scale(1.1) rotate(5deg);
-    animation: quizBounce 0.5s ease-in-out;
-  }
-}
-
-.btn-danger {
-  background: linear-gradient(45deg, #f44336, #d32f2f);
-  color: $courses-white;
-
-  &:hover {
-    transform: scale(1.1) rotate(-5deg);
-    box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
-    animation: shake 0.5s ease-in-out;
-  }
-}
-
-.btn-secondary {
-  background: linear-gradient(45deg, $courses-gray-medium, $courses-gray-dark);
-  color: $courses-white;
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba($courses-gray-dark, 0.4);
-    animation: quizBounce 0.5s ease-in-out;
-  }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
-}
-
-// =============================================
-// DIALOG STYLES
-// =============================================
-
-.dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba($courses-black, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  animation: fadeIn 0.3s ease;
-  backdrop-filter: blur(5px);
-
-  .dialog-content {
-    background: $courses-white;
-    padding: 2.5rem;
-    border-radius: 25px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: modal3D 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 3px solid $courses-orange-light;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, $courses-orange, $courses-orange-light, $courses-orange);
-      animation: shimmer 2s ease-in-out infinite;
-    }
-
-    h3 {
-      color: $courses-black;
-      margin-bottom: 2rem;
-      font-size: 1.6rem;
-      text-align: center;
-      background: linear-gradient(45deg, $courses-orange, $courses-orange-light);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: categoryGlow 2s ease-in-out infinite;
-    }
-
-    &.details {
-      max-width: 500px;
-      
-      h4 {
-        color: $courses-gray-dark;
-        margin: 1.5rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid $courses-gray-light;
-        animation: slideInFromBottom 0.6s ease-out;
-      }
-    }
-  }
-}
-
-// =============================================
-// FORM STYLES
-// =============================================
-
-input, select, textarea {
-  width: 100%;
-  padding: 1rem;
-  margin: 0.8rem 0;
-  border: 2px solid $courses-gray-light;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: $courses-white;
-  animation: optionSlide 0.5s ease-out;
-
-  &:focus {
-    outline: none;
-    border-color: $courses-orange;
-    box-shadow: 0 0 0 4px rgba($courses-orange, 0.1);
-    transform: translateY(-2px);
-  }
-
-  &::placeholder {
-    color: $courses-gray-medium;
-  }
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-// =============================================
-// QUESTIONS & OPTIONS STYLES
-// =============================================
-
-.questions {
-  margin: 1.5rem 0;
-  animation: slideInFromBottom 0.8s ease-out;
-}
-
-.question-block {
-  background: $courses-gray-extra-light;
-  padding: 1.5rem;
-  margin: 1rem 0;
-  border-radius: 15px;
-  border-left: 4px solid $courses-orange;
-  animation: courseCardEntrance 0.6s ease-out;
-
-  &:hover {
-    transform: translateX(5px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.option-block {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 0.8rem 0;
-  padding: 0.8rem;
-  background: $courses-white;
-  border-radius: 8px;
-  animation: optionSlide 0.4s ease-out;
-
-  input[type="text"] {
-    flex: 1;
-    margin: 0;
-  }
-
-  label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: $courses-gray-dark;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      color: $courses-orange;
-      transform: scale(1.05);
-    }
-  }
-}
-
-.btn-sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  background: $courses-gray-light;
-  color: $courses-gray-dark;
-  border: none;
+  background: transparent;
+  border: 1px solid $gray-light;
+  color: $gray-dark;
+  padding: 0.4rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 0.3rem;
-
+  @include transition;
+  margin-right: 0.5rem;
+  
   &:hover {
-    background: $courses-orange;
-    color: $courses-white;
+    border-color: $orange;
+    color: $orange-dark;
+    background: $orange-light;
     transform: scale(1.05);
   }
 }
 
-// =============================================
-// ACTIONS STYLES
-// =============================================
+.btn-danger {
+  background: $red;
+  color: $white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  @include transition;
+  margin-right: 0.5rem;
+  
+  &:hover {
+    background: darken($red, 10%);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba($red, 0.3);
+  }
+}
 
-.actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid $courses-gray-light;
+.btn-secondary {
+  background: $blue;
+  color: $white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  @include transition;
+  font-size: 0.85rem;
+  
+  &:hover {
+    background: darken($blue, 10%);
+    transform: scale(1.05);
+  }
+}
 
-  .btn {
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    animation: bounceIn 0.8s ease-out;
+.btn-sm {
+  padding: 0.3rem 0.6rem !important;
+  font-size: 0.8rem !important;
+}
 
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
+// Dialogs modales
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+  padding: 1rem;
+  
+  .dialog-content {
+    background: $white;
+    border-radius: $card-radius;
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    @include card-shadow;
+    animation: slideUp 0.3s ease-out;
+    
+    &.details {
+      max-width: 500px;
     }
-
-    &:not(.btn-primary) {
-      background: $courses-gray-light;
-      color: $courses-gray-dark;
-
-      &:hover:not(:disabled) {
-        background: $courses-gray-medium;
-        color: $courses-white;
-        transform: translateY(-2px);
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $black;
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid $orange;
+      padding-bottom: 0.5rem;
+    }
+    
+    h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: $orange-dark;
+      margin: 1.5rem 0 1rem 0;
+      padding-top: 1rem;
+      border-top: 1px solid $gray-light;
+    }
+    
+    // Form elements
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid $gray-light;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      @include transition;
+      
+      &:focus {
+        outline: none;
+        border-color: $orange;
+        box-shadow: 0 0 0 3px rgba($orange, 0.1);
+      }
+      
+      &::placeholder {
+        color: $gray;
       }
     }
-
-    &.btn-primary {
-      background: linear-gradient(45deg, $courses-orange, $courses-orange-dark);
-      color: $courses-white;
-
-      &:hover:not(:disabled) {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 10px 25px rgba($courses-orange, 0.4);
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    // Questions et options
+    .questions {
+      margin: 1.5rem 0;
+      
+      .question-block {
+        background: $orange-extra-light;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid $orange;
+        
+        .option-block {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 0.5rem;
+          padding: 0.5rem;
+          background: $white;
+          border-radius: 4px;
+          
+          input[type="text"] {
+            flex: 1;
+            margin-bottom: 0;
+          }
+          
+          label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: $gray-dark;
+            white-space: nowrap;
+            
+            input[type="checkbox"] {
+              width: auto;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+    
+    // Liste dans les détails
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        padding: 0.75rem 1rem;
+        background: $orange-light;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        color: $orange-darker;
+        border-left: 4px solid $orange;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        em {
+          color: $green;
+          font-style: normal;
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .actions {
+      margin-top: 2rem;
+      text-align: right;
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      
+      .btn {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        @include transition;
+        font-weight: 600;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+        
+        &:not(.btn-primary) {
+          background: $gray-light;
+          color: $gray-dark;
+          
+          &:hover {
+            background: darken($gray-light, 10%);
+          }
+        }
+        
+        &.btn-primary {
+          background: linear-gradient(135deg, $orange, $orange-dark);
+          color: $white;
+          
+          &:hover {
+            box-shadow: 0 4px 12px rgba($orange, 0.3);
+          }
+          
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
       }
     }
   }
 }
 
-// =============================================
-// ANIMATION UTILITIES
-// =============================================
-
+// Animations
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes slideInFromBottom {
-  0% {
+@keyframes slideUp {
+  from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.95);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes bounceIn {
-  0% {
+// Effets de ligne alternés
+.table tbody tr:nth-child(even) {
+  background: rgba($orange-light, 0.2);
+}
+
+.table tbody tr:hover {
+  background: $orange-light !important;
+}
+
+// Indicateur de ligne cliquable
+.table tbody tr.clickable-row {
+  position: relative;
+  
+  &::after {
+    content: '📖';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-// =============================================
-// RESPONSIVE DESIGN
-// =============================================
-
-@media (max-width: 768px) {
-  .courses-page {
-    padding: 1rem;
-  }
-
-  .toolbar {
-    padding: 1rem;
-    text-align: center;
-  }
-
-  .table {
+    @include transition;
     font-size: 0.9rem;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+}
 
+// Scrollbar personnalisée
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: $gray-light;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: $orange;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: $orange-dark;
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    
+    thead, tbody, tr, th, td {
+      display: block;
+    }
+    
     thead {
       display: none;
     }
-
-    tbody tr {
-      display: block;
-      margin-bottom: 1rem;
-      border: 2px solid $courses-gray-light;
-      border-radius: 15px;
-
-      td {
-        display: block;
-        text-align: right;
+    
+    tbody {
+      tr {
+        margin-bottom: 1rem;
+        border: 1px solid $gray-light;
+        border-radius: $table-radius;
         padding: 1rem;
-
-        &::before {
-          content: attr(data-label);
-          float: left;
-          font-weight: 600;
-          color: $courses-black;
-          text-transform: uppercase;
-          font-size: 0.8rem;
+        
+        td {
+          padding: 0.5rem 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          &::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: $black;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+          }
+          
+          &:last-child {
+            justify-content: flex-end;
+            gap: 0.5rem;
+          }
         }
-      }
-
-      &.clickable-row::after {
-        display: none;
       }
     }
   }
+}
 
-  .dialog .dialog-content {
-    padding: 1.5rem;
-    margin: 1rem;
-    width: calc(100% - 2rem);
+@media (max-width: 768px) {
+  .dialog {
+    padding: 0.5rem;
+    
+    .dialog-content {
+      padding: 1.5rem;
+      
+      h3 {
+        font-size: 1.3rem;
+      }
+      
+      .actions {
+        flex-direction: column;
+        
+        .btn {
+          width: 100%;
+        }
+      }
+    }
   }
-
-  .option-block {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .actions {
-    flex-direction: column;
+  
+  .toolbar {
+    .left .btn {
+      width: 100%;
+      text-align: center;
+    }
   }
 }
 
-@media (max-width: 480px) {
-  .courses-page {
-    padding: 0.5rem;
-  }
+// États de validation
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: $red !important;
+}
 
-  .btn-primary, .btn-ghost, .btn-danger, .btn-secondary {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.8rem;
+// Loading states
+.saving {
+  opacity: 0.7;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid $white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 0.5rem;
   }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Amélioration de l'accessibilité
+.btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: 2px;
+}
+
+.table tbody tr:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: -2px;
 }

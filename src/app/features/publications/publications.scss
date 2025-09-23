@@ -1,805 +1,722 @@
-// =============================================
-// VARIABLES PUBLICATIONS SPECIFIQUES
-// =============================================
+// Variables couleurs publications
+$white: #ffffff;
+$black: #000000;
+$orange: #ff9800;
+$orange-dark: #f57c00;
+$orange-darker: #e65100;
+$orange-light: #fff3e0;
+$orange-extra-light: #fffaf0;
+$gray-light: #f5f5f5;
+$gray: #9e9e9e;
+$gray-dark: #424242;
+$green: #4caf50;
+$green-light: #e8f5e9;
+$red: #f44336;
+$red-light: #ffebee;
+$blue: #2196f3;
+$blue-light: #e3f2fd;
+$purple: #9c27b0;
+$purple-light: #f3e5f5;
 
-$pub-orange: #ff6b35;
-$pub-orange-light: #ff8e65;
-$pub-orange-dark: #e55a2b;
-$pub-blue: #2196f3;
-$pub-green: #4caf50;
-$pub-purple: #9c27b0;
-$pub-black: #1a1a1a;
-$pub-white: #ffffff;
-$pub-gray-dark: #2d3748;
-$pub-gray-medium: #4a5568;
-$pub-gray-light: #e2e8f0;
-$pub-gray-extra-light: #f7fafc;
+// Variables layout
+$page-spacing: 2rem;
+$card-radius: 12px;
+$table-radius: 8px;
 
-// Animations spécifiques publications
-@keyframes publishPulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba($pub-orange, 0.3);
-  }
-  50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 30px rgba($pub-orange, 0.6);
-  }
-}
-
-@keyframes mediaGlow {
-  0%, 100% {
-    filter: brightness(1) drop-shadow(0 0 10px rgba($pub-blue, 0.3));
-  }
-  50% {
-    filter: brightness(1.2) drop-shadow(0 0 20px rgba($pub-blue, 0.6));
-  }
-}
-
-@keyframes textReveal {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes fileUpload {
-  0% {
-    transform: translateX(-100%) rotate(-180deg);
-    opacity: 0;
-  }
-  60% {
-    transform: translateX(0) rotate(20deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-@keyframes podcastWave {
-  0%, 100% {
-    transform: scaleY(1);
-  }
-  25% {
-    transform: scaleY(1.5);
-  }
-  50% {
-    transform: scaleY(0.8);
-  }
-  75% {
-    transform: scaleY(1.2);
-  }
-}
-
-@keyframes imageZoom {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes statusChange {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-// =============================================
-// STRUCTURE PRINCIPALE
-// =============================================
-
-.publications-page {
-  padding: 2rem;
-  animation: textReveal 0.8s ease-out;
-  background: linear-gradient(135deg, $pub-gray-extra-light 0%, $pub-white 100%);
-  min-height: 100vh;
-}
-
-// =============================================
-// TOOLBAR STYLES
-// =============================================
-
-.toolbar {
-  background: linear-gradient(135deg, $pub-white, $pub-gray-extra-light);
-  border: 3px solid $pub-gray-light;
-  border-radius: 20px;
-  padding: 1.5rem 2rem;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: textReveal 0.6s ease-out;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba($pub-orange, 0.1), transparent);
-    transition: left 0.8s ease;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
-
-  .left, .right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    animation: textReveal 0.8s ease-out;
-  }
-}
-
-// =============================================
-// BUTTON STYLES
-// =============================================
-
-.btn {
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  animation: textReveal 0.5s ease-out;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-  }
-
-  &:hover::after {
-    left: 100%;
-  }
-
-  &.btn-primary {
-    background: linear-gradient(45deg, $pub-orange, $pub-orange-dark);
-    color: $pub-white;
-    animation: publishPulse 2s ease-in-out infinite;
-
-    &::before {
-      content: '+';
-      margin-right: 0.5rem;
-      font-size: 1.2rem;
-      animation: textReveal 0.5s ease-out;
-    }
-
-    &:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 15px 30px rgba($pub-orange, 0.4);
-      animation: none;
-    }
-  }
-}
-
-// =============================================
-// SEARCH & FILTERS
-// =============================================
-
-.search-input {
-  padding: 0.8rem 1.2rem;
-  border: 2px solid $pub-gray-light;
-  border-radius: 25px;
-  background: $pub-white;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  width: 300px;
-  animation: textReveal 0.6s ease-out;
-
-  &:focus {
-    outline: none;
-    border-color: $pub-orange;
-    box-shadow: 0 0 0 4px rgba($pub-orange, 0.1);
-    transform: translateY(-2px);
-  }
-
-  &::placeholder {
-    color: $pub-gray-medium;
-  }
-}
-
-.small-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  color: $pub-gray-dark;
-  font-weight: 600;
-  animation: textReveal 0.7s ease-out;
-
-  select {
-    padding: 0.5rem 0.8rem;
-    border: 2px solid $pub-gray-light;
-    border-radius: 8px;
-    background: $pub-white;
-    transition: all 0.3s ease;
-
-    &:focus {
-      outline: none;
-      border-color: $pub-blue;
-      box-shadow: 0 0 0 3px rgba($pub-blue, 0.1);
-    }
-  }
-}
-
-// =============================================
-// TABLE CARD
-// =============================================
-
-.table-card {
-  background: $pub-white;
-  border-radius: 20px;
-  padding: 0;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-  border: 2px solid $pub-gray-light;
-  overflow: hidden;
-  animation: textReveal 0.8s ease-out;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $pub-orange, $pub-blue, $pub-green, $pub-purple);
-    animation: statusChange 3s ease infinite;
-  }
-}
-
-// =============================================
-// TABLE STYLES
-// =============================================
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background: $pub-white;
-
-  thead {
-    background: linear-gradient(135deg, $pub-black, $pub-gray-dark);
-    
-    tr {
-      animation: slideInFromBottom 0.6s ease-out;
-    }
-
-    th {
-      padding: 1.5rem 1rem;
-      text-align: left;
-      color: $pub-white;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 3px solid $pub-orange;
-      position: relative;
-      animation: textReveal 0.8s ease-out;
-
-      &:hover::after {
-        content: '📋';
-        position: absolute;
-        right: 10px;
-        animation: bounce 0.5s ease-in-out;
-      }
-    }
-  }
-
-  tbody {
-    tr {
-      border-bottom: 1px solid $pub-gray-light;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      animation: textReveal 0.6s ease-out both;
-
-      @for $i from 1 through 20 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.07}s;
-        }
-      }
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background: linear-gradient(135deg, rgba($pub-orange, 0.05), rgba($pub-blue, 0.05));
-        transform: translateX(10px) scale(1.01);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-
-        td {
-          color: $pub-black;
-          
-          &:first-child {
-            font-weight: 700;
-          }
-        }
-      }
-
-      &.clickable-row {
-        cursor: pointer;
-        position: relative;
-
-        &::after {
-          content: '👁️';
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%) scale(0);
-          opacity: 0;
-          transition: all 0.4s ease;
-        }
-
-        &:hover::after {
-          opacity: 1;
-          transform: translateY(-50%) scale(1);
-          animation: bounce 0.6s ease-in-out;
-        }
-      }
-
-      td {
-        padding: 1.3rem 1rem;
-        color: $pub-gray-dark;
-        transition: all 0.3s ease;
-      }
-    }
-  }
-}
-
-// =============================================
-// PUBLICATION IMAGE
-// =============================================
-
-.publication-image {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid $pub-gray-light;
-  transition: all 0.3s ease;
-  animation: imageZoom 3s ease-in-out infinite;
-
-  &:hover {
-    transform: scale(2.5) rotate(5deg);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    position: relative;
-    animation: mediaGlow 1s ease-in-out infinite;
-  }
-}
-
-// =============================================
-// ACTIONS COLUMN
-// =============================================
-
-.actions-col {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    animation: textReveal 0.5s ease-out;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.6s ease;
-    }
-
-    &:hover::after {
-      left: 100%;
-    }
-  }
-
-  .btn-ghost {
-    background: rgba($pub-blue, 0.1);
-    color: $pub-blue;
-    border: 1px solid $pub-blue;
-
-    &:hover {
-      background: $pub-blue;
-      color: $pub-white;
-      transform: scale(1.1) rotate(3deg);
-    }
-  }
-
-  .btn-danger {
-    background: linear-gradient(45deg, #f44336, #d32f2f);
-    color: $pub-white;
-
-    &:hover {
-      transform: scale(1.1) rotate(-3deg);
-      box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
-    }
-  }
-
-  .btn:not(.btn-ghost):not(.btn-danger) {
-    background: linear-gradient(45deg, $pub-green, darken($pub-green, 10%));
-    color: $pub-white;
-
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 5px 15px rgba($pub-green, 0.4);
-    }
-  }
-}
-
-// =============================================
-// DIALOG STYLES
-// =============================================
-
-.dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba($pub-black, 0.9);
+// Mixins
+@mixin flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
-  animation: fadeIn 0.3s ease;
-  backdrop-filter: blur(10px);
-
-  .dialog-content {
-    background: $pub-white;
-    padding: 2.5rem;
-    border-radius: 25px;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: fileUpload 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 3px solid $pub-orange-light;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, $pub-orange, $pub-blue, $pub-green);
-      animation: statusChange 2s ease infinite;
-    }
-
-    h3 {
-      color: $pub-black;
-      margin-bottom: 2rem;
-      font-size: 1.6rem;
-      text-align: center;
-      background: linear-gradient(45deg, $pub-orange, $pub-blue);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: textReveal 0.8s ease-out;
-    }
-  }
 }
 
-// =============================================
-// FORM STYLES
-// =============================================
-
-label {
-  display: block;
-  margin: 1rem 0 0.5rem 0;
-  font-weight: 600;
-  color: $pub-black;
-  animation: textReveal 0.6s ease-out;
+@mixin transition($property: all) {
+  transition: $property 0.3s ease-in-out;
 }
 
-textarea, select, input[type="text"], input[type="file"] {
-  width: 100%;
-  padding: 1rem;
-  margin: 0.5rem 0;
-  border: 2px solid $pub-gray-light;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: $pub-white;
-  animation: textReveal 0.5s ease-out;
-
-  &:focus {
-    outline: none;
-    border-color: $pub-orange;
-    box-shadow: 0 0 0 4px rgba($pub-orange, 0.1);
-    transform: translateY(-2px);
-  }
+@mixin card-shadow {
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
-textarea {
-  min-height: 100px;
-  resize: vertical;
+.publications-page {
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $white 0%, $orange-extra-light 100%);
 }
 
-input[type="file"] {
-  padding: 0.8rem;
-  background: $pub-gray-extra-light;
-  animation: fileUpload 0.6s ease-out;
-
-  &:hover {
-    background: rgba($pub-orange, 0.1);
-  }
-}
-
-// =============================================
-// PREVIEW STYLES
-// =============================================
-
-.preview-img {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 12px;
-  border: 3px solid $pub-gray-light;
-  animation: imageZoom 3s ease-in-out infinite;
-  transition: all 0.3s ease;
-
-  &:hover {
-    animation: mediaGlow 1s ease-in-out infinite;
-    transform: scale(1.02);
-  }
-}
-
-.preview-video, audio {
-  width: 100%;
-  border-radius: 12px;
-  margin: 1rem 0;
-  animation: mediaGlow 2s ease-in-out infinite;
-}
-
-.preformatted {
-  background: $pub-gray-extra-light;
-  padding: 1rem;
-  border-radius: 8px;
-  border-left: 4px solid $pub-orange;
-  white-space: pre-wrap;
-  animation: textReveal 0.8s ease-out;
-}
-
-// =============================================
-// ACTIONS IN DIALOG
-// =============================================
-
-.actions {
+// Toolbar avancée
+.toolbar {
+  background: $white;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: $card-radius;
+  @include card-shadow;
   display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid $pub-gray-light;
-
-  button {
-    padding: 0.8rem 2rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  
+  .left, .right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    background: linear-gradient(135deg, $orange, $orange-dark);
+    color: $white;
     border: none;
-    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
+    @include transition;
     font-weight: 600;
-    transition: all 0.3s ease;
-    animation: textReveal 0.8s ease-out;
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($orange, 0.3);
     }
-
-    &.btn {
-      background: $pub-gray-light;
-      color: $pub-gray-dark;
-
-      &:hover:not(:disabled) {
-        background: $pub-gray-medium;
-        color: $pub-white;
-        transform: translateY(-2px);
+    
+    &.btn-primary {
+      background: linear-gradient(135deg, $orange, $orange-dark);
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
       }
     }
+  }
+  
+  .search-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid $gray-light;
+    border-radius: 8px;
+    font-size: 1rem;
+    min-width: 300px;
+    @include transition;
+    
+    &:focus {
+      outline: none;
+      border-color: $orange;
+      box-shadow: 0 0 0 3px rgba($orange, 0.1);
+    }
+    
+    &::placeholder {
+      color: $gray;
+    }
+  }
+  
+  .small-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $gray-dark;
+    
+    select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid $gray-light;
+      border-radius: 6px;
+      background: $white;
+      color: $gray-dark;
+      font-size: 0.9rem;
+      @include transition;
+      cursor: pointer;
+      
+      &:focus {
+        outline: none;
+        border-color: $orange;
+      }
+    }
+  }
+  
+  .muted {
+    color: $gray;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  
+  .error {
+    color: $red;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+}
 
-    &.btn-primary {
-      background: linear-gradient(45deg, $pub-orange, $pub-orange-dark);
-      color: $pub-white;
+// Carte tableau
+.table-card {
+  background: $white;
+  border-radius: $card-radius;
+  overflow: hidden;
+  @include card-shadow;
+}
 
-      &:hover:not(:disabled) {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 10px 25px rgba($pub-orange, 0.4);
+// Tableau principal
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  thead {
+    background: linear-gradient(135deg, $orange, $orange-dark);
+    
+    tr {
+      th {
+        padding: 1.2rem 1rem;
+        color: $white;
+        font-weight: 600;
+        text-align: left;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $orange-darker;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+        }
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      @include transition;
+      border-bottom: 1px solid $gray-light;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &.clickable-row {
+        cursor: pointer;
+        
+        &:hover {
+          background: $orange-light;
+          transform: scale(1.002);
+          
+          td {
+            color: $orange-darker;
+          }
+          
+          .publication-image {
+            transform: scale(1.1);
+          }
+        }
+      }
+      
+      td {
+        padding: 1.2rem 1rem;
+        color: $gray-dark;
+        font-weight: 500;
+        vertical-align: middle;
+        
+        &:first-child {
+          padding-left: 1.5rem;
+        }
+        
+        &:last-child {
+          padding-right: 1.5rem;
+        }
       }
     }
   }
 }
 
-// =============================================
-// STATUS & TYPE BADGES
-// =============================================
-
-td:first-child, td:nth-child(2) {
+// Styles spécifiques aux colonnes
+td:first-child { // Type
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
 }
 
-// =============================================
-// ANIMATION UTILITIES
-// =============================================
+td:nth-child(2) { // Statut
+  .status-badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    
+    &.DRAFT {
+      background: $gray-light;
+      color: $gray-dark;
+    }
+    
+    &.PUBLISHED {
+      background: $green-light;
+      color: $green;
+    }
+    
+    &.SUSPENDED {
+      background: $red-light;
+      color: $red;
+    }
+  }
+}
 
+// Image de publication
+.publication-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid $gray-light;
+  @include transition;
+  
+  &:hover {
+    border-color: $orange;
+  }
+}
+
+// Colonne actions
+.actions-col {
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid $gray-light;
+    color: $gray-dark;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.85rem;
+    margin-right: 0.3rem;
+    
+    &:hover {
+      border-color: $blue;
+      color: $blue;
+      background: $blue-light;
+      transform: scale(1.05);
+    }
+  }
+  
+  .btn-danger {
+    background: $red;
+    color: $white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.85rem;
+    margin-right: 0.3rem;
+    
+    &:hover {
+      background: darken($red, 10%);
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba($red, 0.3);
+    }
+  }
+  
+  .btn:not(.btn-ghost):not(.btn-danger) {
+    background: $green;
+    color: $white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition;
+    font-size: 0.85rem;
+    
+    &:hover {
+      background: darken($green, 10%);
+      transform: scale(1.05);
+    }
+  }
+}
+
+.muted {
+  @include flex-center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: $gray;
+  font-style: italic;
+}
+
+// Dialogs modales
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+  padding: 1rem;
+  
+  .dialog-content {
+    background: $white;
+    border-radius: $card-radius;
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    @include card-shadow;
+    animation: slideUp 0.3s ease-out;
+    
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $black;
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid $orange;
+      padding-bottom: 0.5rem;
+    }
+    
+    // Éléments de formulaire
+    label {
+      display: block;
+      font-weight: 600;
+      color: $gray-dark;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    
+    textarea, select, input:not([type="file"]) {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid $gray-light;
+      border-radius: 8px;
+      font-size: 1rem;
+      @include transition;
+      
+      &:focus {
+        outline: none;
+        border-color: $orange;
+        box-shadow: 0 0 0 3px rgba($orange, 0.1);
+      }
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    
+    input[type="file"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 2px dashed $gray-light;
+      border-radius: 8px;
+      background: $gray-light;
+      @include transition;
+      
+      &:hover {
+        border-color: $orange;
+        background: $orange-light;
+      }
+    }
+    
+    // Prévisualisation
+    .preformatted {
+      background: $gray-light;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      margin: 0.5rem 0;
+    }
+    
+    .preview-img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      border: 2px solid $gray-light;
+    }
+    
+    .preview-video, audio {
+      width: 100%;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+    }
+    
+    // Détails de publication
+    p {
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+      
+      strong {
+        color: $black;
+        font-weight: 600;
+      }
+    }
+    
+    a {
+      color: $orange;
+      text-decoration: none;
+      font-weight: 600;
+      @include transition;
+      
+      &:hover {
+        color: $orange-dark;
+        text-decoration: underline;
+      }
+    }
+    
+    .actions {
+      margin-top: 2rem;
+      text-align: right;
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        @include transition;
+        font-weight: 600;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+        
+        &:not(.btn-primary) {
+          background: $gray-light;
+          color: $gray-dark;
+          
+          &:hover {
+            background: darken($gray-light, 10%);
+          }
+        }
+        
+        &.btn-primary {
+          background: linear-gradient(135deg, $orange, $orange-dark);
+          color: $white;
+          
+          &:hover {
+            box-shadow: 0 4px 12px rgba($orange, 0.3);
+          }
+          
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes slideInFromBottom {
-  0% {
+@keyframes slideUp {
+  from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.95);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-5px);
-  }
-  60% {
-    transform: translateY(-3px);
-  }
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
-.muted {
-  text-align: center;
-  padding: 3rem;
-  color: $pub-gray-medium;
-  font-style: italic;
-  animation: fadeIn 1s ease-out;
-
-  &::before {
-    content: '📰';
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-    animation: textReveal 2s ease-in-out infinite;
-  }
+// Effets de ligne alternés
+.table tbody tr:nth-child(even) {
+  background: rgba($orange-light, 0.2);
 }
 
-.error {
-  color: #f44336;
-  font-weight: 600;
-  animation: shake 0.5s ease-in-out;
+.table tbody tr:hover {
+  background: $orange-light !important;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-// =============================================
-// RESPONSIVE DESIGN
-// =============================================
-
-@media (max-width: 768px) {
-  .publications-page {
-    padding: 1rem;
-  }
-
-  .toolbar {
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
-
-    .left, .right {
-      flex-direction: column;
-      width: 100%;
-      text-align: center;
-    }
-  }
-
-  .search-input {
-    width: 100%;
-  }
-
-  .table {
+// Indicateur de ligne cliquable
+.table tbody tr.clickable-row {
+  position: relative;
+  
+  &::after {
+    content: '📄';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    @include transition;
     font-size: 0.9rem;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+}
 
+// Scrollbar personnalisée
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: $gray-light;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: $orange;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: $orange-dark;
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    
+    thead, tbody, tr, th, td {
+      display: block;
+    }
+    
     thead {
       display: none;
     }
-
-    tbody tr {
-      display: block;
-      margin-bottom: 1rem;
-      border: 2px solid $pub-gray-light;
-      border-radius: 15px;
-
-      td {
-        display: block;
-        text-align: right;
+    
+    tbody {
+      tr {
+        margin-bottom: 1rem;
+        border: 1px solid $gray-light;
+        border-radius: $table-radius;
         padding: 1rem;
-
-        &::before {
-          content: attr(data-label);
-          float: left;
-          font-weight: 600;
-          color: $pub-black;
-          text-transform: uppercase;
-          font-size: 0.8rem;
+        
+        td {
+          padding: 0.5rem 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          &::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: $black;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+          }
+          
+          &.actions-col {
+            justify-content: flex-end;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+          }
         }
-      }
-
-      &.clickable-row::after {
-        display: none;
       }
     }
   }
+}
 
-  .actions-col {
-    justify-content: center;
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    
+    .left, .right {
+      justify-content: center;
+      flex-direction: column;
+    }
+    
+    .search-input {
+      min-width: auto;
+      width: 100%;
+    }
+    
+    .small-label {
+      width: 100%;
+    }
   }
-
-  .dialog .dialog-content {
-    padding: 1.5rem;
-    margin: 1rem;
-    width: calc(100% - 2rem);
+  
+  .dialog {
+    padding: 0.5rem;
+    
+    .dialog-content {
+      padding: 1.5rem;
+      
+      h3 {
+        font-size: 1.3rem;
+      }
+      
+      .actions {
+        flex-direction: column;
+        
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+  
+  .actions-col {
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    .btn-ghost, .btn-danger, .btn {
+      width: 100%;
+      text-align: center;
+      margin-right: 0;
+    }
   }
 }
 
-@media (max-width: 480px) {
-  .publications-page {
-    padding: 0.5rem;
-  }
+// États de validation
+textarea.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched,
+input.ng-invalid.ng-touched {
+  border-color: $red !important;
+}
 
-  .btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
+// Amélioration de l'accessibilité
+.btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: 2px;
+}
+
+.table tbody tr:focus-visible {
+  outline: 2px solid $orange;
+  outline-offset: -2px;
+}
+
+// Effet de succès pour la publication
+.published-success {
+  animation: pulse 0.5s ease-in-out;
+  background: $green-light !important;
 }
