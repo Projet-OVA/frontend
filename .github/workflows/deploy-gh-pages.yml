@@ -4,46 +4,63 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Build (production)
-        # --output-path override pour forcer le dossier de sortie
-        run: npx ng build --configuration production --output-path=dist/sira-admin --base-href '/frontend/'
-
-      - name: Add SPA fallback (404 -> index) so refresh works on GitHub Pages
         run: |
-          # remplace /frontend/ ci-dessous si ton repo n'est pas "frontend"
-          mkdir -p dist/sira-admin
-          cat > dist/sira-admin/404.html <<'HTML'
-          <!doctype html>
-          <meta http-equiv="refresh" content="0; url=/frontend/index.html">
-          HTML
+          npm ci
+          npm audit fix --audit-level moderate
+
+      - name: Run tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless --no-progress
+
+      - name: Build application
+        run: |
+          npx ng build --configuration production
+
+      - name: Copy SPA 404 page
+        run: |
+          cp static/404.html dist/sira-admin/404.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist/sira-admin
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/sira-admin
-          # facultatif :
-          # publish_branch: gh-pages
-          # user_name: 'github-actions[bot]'
-          # user_email: 'github-actions[bot]@users.noreply.github.com'
+        id: deployment
+        uses: actions/deploy-pages@v4

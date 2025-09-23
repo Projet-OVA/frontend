@@ -1,11 +1,9 @@
 import { Routes } from '@angular/router';
-import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout';
 import { AuthGuard } from './core/auth.guard';
-import { CommunitiesComponent } from './features/communities';
 
 export const routes: Routes = [
-  // Redirection de la racine vers le login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Redirection de la racine vers le dashboard (après login)
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   
   // Route pour le login (sans protection)
   {
@@ -16,55 +14,54 @@ export const routes: Routes = [
   // Routes protégées avec le layout admin
   {
     path: '',
-    component: AdminLayoutComponent,
+    loadComponent: () => import('./layouts/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'courses',
-        loadComponent: () => import('./features/courses').then((m) => m.CoursesComponent),
-      },
-      {
-        path: 'challenges',
-        loadComponent: () => import('./features/challenges').then((m) => m.ChallengesComponent),
-      },
-      {
         path: 'dashboard',
-        loadComponent: () => import('./features/dashboard').then((m) => m.DashboardComponent),
+        loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
         path: 'users',
-        loadComponent: () => import('./features/users').then((m) => m.UsersComponent),
+        loadComponent: () => import('./features/users/users.component').then((m) => m.UsersComponent),
       },
       {
-        path: 'contents',
-        loadComponent: () => import('./features/contents').then((m) => m.ContentsComponent),
+        path: 'courses',
+        loadComponent: () => import('./features/courses/courses.component').then((m) => m.CoursesComponent),
+      },
+      {
+        path: 'challenges',
+        loadComponent: () => import('./features/challenges/challenges.component').then((m) => m.ChallengesComponent),
       },
       {
         path: 'badges',
-        loadComponent: () => import('./features/badges').then((m) => m.BadgesComponent),
+        loadComponent: () => import('./features/badges/badges.component').then((m) => m.BadgesComponent),
       },
       {
         path: 'reports',
-        loadComponent: () => import('./features/reports').then((m) => m.ReportsComponent),
+        loadComponent: () => import('./features/reports/reports.component').then((m) => m.ReportsComponent),
       },
       {
         path: 'publications',
-        loadComponent: () =>
-          import('./features/publications/publications').then((m) => m.PublicationsComponent),
+        loadComponent: () => import('./features/publications/publications.component').then((m) => m.PublicationsComponent),
       },
       {
         path: 'settings',
-        loadComponent: () => import('./features/settings').then((m) => m.SettingsComponent),
+        loadComponent: () => import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
-      { 
-        path: 'communities', 
-        component: CommunitiesComponent 
+      {
+        path: 'communities',
+        loadComponent: () => import('./features/communities/communities.component').then((m) => m.CommunitiesComponent),
+      },
+      {
+        path: 'contents',
+        loadComponent: () => import('./features/contents/contents.component').then((m) => m.ContentsComponent),
       },
       // Redirection par défaut vers le dashboard pour les routes enfants
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
   
-  // Redirection des routes inconnues vers le login
-  { path: '**', redirectTo: 'login' },
+  // Redirection des routes inconnues vers le dashboard
+  { path: '**', redirectTo: 'dashboard' },
 ];

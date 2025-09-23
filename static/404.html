@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Redirection - SIRA Admin</title>
+    <script type="text/javascript">
+        // Redirection pour le routing SPA
+        const baseHref = '/frontend/';
+        const redirectUrl = baseHref + 'index.html';
+        
+        // Sauvegarde l'URL originale pour le routing Angular
+        sessionStorage.setItem('redirect', window.location.href);
+        
+        // Redirection vers l'application
+        window.location.replace(redirectUrl);
+    </script>
+</head>
+<body>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=/frontend/index.html">
+        <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+            <h1>Redirection en cours...</h1>
+            <p>Si la redirection ne se fait pas automatiquement, <a href="/frontend/index.html">cliquez ici</a>.</p>
+        </div>
+    </noscript>
+</body>
+</html>
