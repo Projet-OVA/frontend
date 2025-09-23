@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/sira-admin"
+  publish = "dist/sira-admin/browser"
   command = "npm run build"
 
 [[redirects]]
