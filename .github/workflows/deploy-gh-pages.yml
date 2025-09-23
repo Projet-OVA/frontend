@@ -1,0 +1,49 @@
+name: Build and deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (production)
+        # --output-path override pour forcer le dossier de sortie
+        run: npx ng build --configuration production --output-path=dist/sira-admin --base-href '/frontend/'
+
+      - name: Add SPA fallback (404 -> index) so refresh works on GitHub Pages
+        run: |
+          # remplace /frontend/ ci-dessous si ton repo n'est pas "frontend"
+          mkdir -p dist/sira-admin
+          cat > dist/sira-admin/404.html <<'HTML'
+          <!doctype html>
+          <meta http-equiv="refresh" content="0; url=/frontend/index.html">
+          HTML
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/sira-admin
+          # facultatif :
+          # publish_branch: gh-pages
+          # user_name: 'github-actions[bot]'
+          # user_email: 'github-actions[bot]@users.noreply.github.com'
