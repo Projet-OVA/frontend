@@ -38,8 +38,8 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/frontend/",
-              "deployUrl": "/frontend/",
+              "baseHref": "/",
+              "deployUrl": "/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
