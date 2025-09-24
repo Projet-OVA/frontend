@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables couleurs challenges
 $white: #ffffff;
 $black: #000000;
@@ -255,19 +257,19 @@ $table-radius: 8px;
   
   &.status-PENDING {
     background: $yellow-light;
-    color: darken($yellow, 20%);
+    color: color.adjust($yellow, $lightness: -20%);
     border: 1px solid $yellow;
   }
   
   &.status-APPROVED {
     background: $green-light;
-    color: darken($green, 20%);
+    color: color.adjust($green, $lightness: -20%);
     border: 1px solid $green;
   }
   
   &.status-REJECTED {
     background: $red-light;
-    color: darken($red, 20%);
+    color: color.adjust($red, $lightness: -20%);
     border: 1px solid $red;
   }
 }
@@ -307,7 +309,7 @@ $table-radius: 8px;
     font-size: 0.85rem;
     
     &:hover {
-      background: darken($green, 10%);
+      background: color.adjust($green, $lightness: -10%);
       transform: scale(1.05);
       box-shadow: 0 2px 8px rgba($green, 0.3);
     }
@@ -324,7 +326,7 @@ $table-radius: 8px;
     font-size: 0.85rem;
     
     &:hover {
-      background: darken($red, 10%);
+      background: color.adjust($red, $lightness: -10%);
       transform: scale(1.05);
       box-shadow: 0 2px 8px rgba($red, 0.3);
     }
@@ -456,7 +458,7 @@ $table-radius: 8px;
           color: $gray-dark;
           
           &:hover {
-            background: darken($gray-light, 10%);
+            background: color.adjust($gray-light, $lightness: -10%);
           }
         }
         
@@ -465,7 +467,7 @@ $table-radius: 8px;
           color: $white;
           
           &:hover {
-            background: darken($green, 10%);
+            background: color.adjust($green, $lightness: -10%);
             box-shadow: 0 4px 12px rgba($green, 0.3);
           }
         }
@@ -475,7 +477,7 @@ $table-radius: 8px;
           color: $white;
           
           &:hover {
-            background: darken($red, 10%);
+            background: color.adjust($red, $lightness: -10%);
             box-shadow: 0 4px 12px rgba($red, 0.3);
           }
           

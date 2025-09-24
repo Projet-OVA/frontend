@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables couleurs
 $white: #ffffff;
 $black: #000000;
@@ -491,7 +493,7 @@ button:focus-visible {
           
           &:hover {
             background: red-light;
-            color: darken(red, 10%);
+            color: color.adjust(red, $lightness: -10%);
           }
         }
       }
@@ -865,7 +867,7 @@ $transition-speed: 0.3s;
           
           &:hover {
             background: $red-light;
-            color: adjust-color($red, $lightness: -10%);
+            color: color.adjust($red, $lightness: -10%);
           }
         }
       }

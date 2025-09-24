@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables couleurs login
 $white: #ffffff;
 $black: #000000;
@@ -137,7 +139,7 @@ $input-height: 50px;
       }
       
       &:hover:not(:focus) {
-        border-color: darken($gray-light, 10%);
+        border-color: color.adjust($gray-light, $lightness: -10%);
       }
       
       &::placeholder {
@@ -345,7 +347,7 @@ $input-height: 50px;
 // Effets supplémentaires
 .login-form.loading {
   .btn {
-    background: linear-gradient(135deg, $gray, darken($gray, 10%));
+    background: linear-gradient(135deg, $gray, color.adjust($gray, $lightness: -10%));
   }
 }
 

@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables couleurs reports
 $white: #ffffff;
 $black: #000000;
@@ -123,7 +125,7 @@ $table-radius: 8px;
       border: 2px solid transparent;
       
       &:hover {
-        background: darken($gray-light, 10%);
+        background: color.adjust($gray-light, $lightness: -10%);
         border-color: $gray;
       }
     }

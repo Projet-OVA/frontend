@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables couleurs publications
 $white: #ffffff;
 $black: #000000;
@@ -314,7 +316,7 @@ td:nth-child(2) { // Statut
     margin-right: 0.3rem;
     
     &:hover {
-      background: darken($red, 10%);
+      background: color.adjust($red, $lightness: -10%);
       transform: scale(1.05);
       box-shadow: 0 2px 8px rgba($red, 0.3);
     }
@@ -331,7 +333,7 @@ td:nth-child(2) { // Statut
     font-size: 0.85rem;
     
     &:hover {
-      background: darken($green, 10%);
+      background: color.adjust($green, $lightness: -10%);
       transform: scale(1.05);
     }
   }
@@ -498,7 +500,7 @@ td:nth-child(2) { // Statut
           color: $gray-dark;
           
           &:hover {
-            background: darken($gray-light, 10%);
+            background: color.adjust($gray-light, $lightness: -10%);
           }
         }
         

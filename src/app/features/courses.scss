@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables couleurs courses
 $white: #ffffff;
 $black: #000000;
@@ -225,7 +227,7 @@ $table-radius: 8px;
   margin-right: 0.5rem;
   
   &:hover {
-    background: darken($red, 10%);
+    background: color.adjust($red, $lightness: -10%);
     transform: scale(1.05);
     box-shadow: 0 2px 8px rgba($red, 0.3);
   }
@@ -242,7 +244,7 @@ $table-radius: 8px;
   font-size: 0.85rem;
   
   &:hover {
-    background: darken($blue, 10%);
+    background: color.adjust($blue, $lightness: -10%);
     transform: scale(1.05);
   }
 }
@@ -417,7 +419,7 @@ $table-radius: 8px;
           color: $gray-dark;
           
           &:hover {
-            background: darken($gray-light, 10%);
+            background: color.adjust($gray-light, $lightness: -10%);
           }
         }
         

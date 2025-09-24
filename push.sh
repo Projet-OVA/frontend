@@ -4,7 +4,10 @@
 if ! git diff-index --quiet HEAD --; then
     git add .
     git commit -m "
-        ci: add GitHub Actions workflow to build and deploy to gh-pages
+        Reste:
+            - Super Admin doit modifier créer des Admins
+            - Super Admin doit créer des cours
+            - Admin doit GET api/progress
                     "
 fi
 
